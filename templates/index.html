@@ -971,100 +971,147 @@
             }
         }
 
-        /* Mobile map toggle */
-        .mobile-toggle {
+        /* Mobile tab navigation */
+        .mobile-tabs {
             display: none;
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 0;
+            left: 0;
+            right: 0;
             z-index: 1100;
-            background: var(--accent-green);
-            color: #000;
+            background: linear-gradient(135deg, #FDF6E3 0%, #F5E6D3 100%);
+            border-top: 1px solid #D4C4B0;
+            padding: 8px 0;
+            padding-bottom: max(8px, env(safe-area-inset-bottom));
+        }
+
+        .mobile-tabs-inner {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .mobile-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            background: none;
             border: none;
-            padding: 12px 24px;
-            border-radius: 24px;
-            font-weight: 600;
-            font-size: 14px;
+            color: #8B7355;
+            font-size: 11px;
+            font-weight: 500;
             cursor: pointer;
-            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-tab.active {
+            color: #8B4513;
+        }
+
+        .mobile-tab-icon {
+            font-size: 20px;
         }
 
         @media (max-width: 768px) {
-            .mobile-toggle {
+            .mobile-tabs {
                 display: block;
             }
 
-            .container.show-map .sidebar {
+            /* Hide old toggle button */
+            .mobile-toggle {
+                display: none !important;
+            }
+
+            /* Tab: Map */
+            .container.tab-map .sidebar {
                 display: none;
             }
 
-            .container.show-map .map-container {
-                height: 100vh;
-            }
-
-            .container.show-list .map-container {
-                display: none;
-            }
-
-            .container.show-list .sidebar {
-                width: 100%;
-                max-width: 100%;
+            .container.tab-map .map-container {
                 height: 100vh;
                 height: 100dvh;
-                max-height: 100vh;
-                max-height: 100dvh;
-                border-right: none;
+            }
+
+            /* Tab: Search */
+            .container.tab-search .map-container {
+                display: none;
+            }
+
+            .container.tab-search .sidebar {
+                width: 100%;
+                height: 100vh;
+                height: 100dvh;
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
             }
 
-            .container.show-list .header {
+            .container.tab-search .header {
                 flex-shrink: 0;
                 padding: 12px 16px;
             }
 
-            .container.show-list .header-logo {
-                width: 60px;
-                height: 60px;
+            .container.tab-search .header-logo {
+                width: 50px;
+                height: 50px;
             }
 
-            .container.show-list .stats {
+            .container.tab-search .stats {
                 display: none;
             }
 
-            .container.show-list .filters {
-                flex-shrink: 0;
-                padding: 8px 16px;
-            }
-
-            .container.show-list .filters .filter-row {
-                display: none;
-            }
-
-            .container.show-list .filters .filter-group:not(.full-width) {
-                display: none;
-            }
-
-            .container.show-list .filters .filter-label {
-                display: none;
-            }
-
-            .container.show-list .filters .filter-group.full-width:last-of-type {
-                display: none;
-            }
-
-            .container.show-list .results {
+            .container.tab-search .filters {
                 flex: 1;
-                overflow-y: scroll;
+                overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
                 padding: 12px 16px;
                 padding-bottom: 100px;
             }
 
-            .container.show-list .map-legend,
-            .container.show-list .info-btn {
+            .container.tab-search .results {
+                display: none;
+            }
+
+            /* Tab: Results */
+            .container.tab-results .map-container {
+                display: none;
+            }
+
+            .container.tab-results .sidebar {
+                width: 100%;
+                height: 100vh;
+                height: 100dvh;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            .container.tab-results .header {
+                display: none;
+            }
+
+            .container.tab-results .stats {
+                display: none;
+            }
+
+            .container.tab-results .filters {
+                display: none;
+            }
+
+            .container.tab-results .results {
+                flex: 1;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 12px 16px;
+                padding-bottom: 100px;
+            }
+
+            /* Hide legend/info in non-map tabs */
+            .container.tab-search .map-legend,
+            .container.tab-search .info-btn,
+            .container.tab-results .map-legend,
+            .container.tab-results .info-btn {
                 display: none !important;
             }
         }
@@ -1244,7 +1291,25 @@
             <div id="map"></div>
         </div>
 
-        <button class="mobile-toggle" id="mobile-toggle">Show Map</button>
+        <button class="mobile-toggle" id="mobile-toggle" style="display:none;">Show Map</button>
+
+        <!-- Mobile Tab Navigation -->
+        <div class="mobile-tabs">
+            <div class="mobile-tabs-inner">
+                <button class="mobile-tab active" data-tab="map">
+                    <span class="mobile-tab-icon">🗺️</span>
+                    <span>Map</span>
+                </button>
+                <button class="mobile-tab" data-tab="search">
+                    <span class="mobile-tab-icon">🔍</span>
+                    <span>Search</span>
+                </button>
+                <button class="mobile-tab" data-tab="results">
+                    <span class="mobile-tab-icon">📋</span>
+                    <span>Results</span>
+                </button>
+            </div>
+        </div>
         <button class="info-btn" id="info-btn">i</button>
         <div class="map-legend" id="legend-markers">
                 <div class="legend-title">Brussels Food Map</div>
@@ -2162,32 +2227,35 @@
 
         loadRestaurants();
 
-        // Mobile toggle functionality
-        const mobileToggle = document.getElementById('mobile-toggle');
+        // Mobile tab navigation
         const container = document.querySelector('.container');
-        let showingMap = false;
+        const mobileTabs = document.querySelectorAll('.mobile-tab');
 
-        mobileToggle.addEventListener('click', () => {
-            showingMap = !showingMap;
-            if (showingMap) {
-                container.classList.add('show-map');
-                container.classList.remove('show-list');
-                mobileToggle.textContent = 'Search resto';
-            } else {
-                container.classList.remove('show-map');
-                container.classList.add('show-list');
-                mobileToggle.textContent = 'Show Map';
+        function switchTab(tabName) {
+            // Update container class
+            container.classList.remove('tab-map', 'tab-search', 'tab-results');
+            container.classList.add(`tab-${tabName}`);
+
+            // Update active tab
+            mobileTabs.forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === tabName);
+            });
+
+            // Resize map when switching to map tab
+            if (tabName === 'map') {
+                setTimeout(() => map.invalidateSize(), 100);
             }
-            // Trigger map resize after visibility change
-            setTimeout(() => map.invalidateSize(), 100);
+        }
+
+        mobileTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                switchTab(tab.dataset.tab);
+            });
         });
 
-        // Start with map view on mobile
+        // Start with map tab on mobile
         if (window.innerWidth <= 768) {
-            container.classList.add('show-map');
-            showingMap = true;
-            mobileToggle.textContent = 'Search resto';
-            // Trigger map resize after visibility change
+            container.classList.add('tab-map');
             setTimeout(() => map.invalidateSize(), 100);
         }
 
