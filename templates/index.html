@@ -64,8 +64,8 @@
 
         .sidebar {
             width: 380px;
-            background: var(--bg-primary);
-            border-right: 1px solid var(--border-subtle);
+            background: linear-gradient(180deg, #FDF6E3 0%, #F8F1E4 100%);
+            border-right: 1px solid #D4C4B0;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -73,8 +73,39 @@
 
         .header {
             padding: 20px;
-            background: var(--bg-primary);
+            background: linear-gradient(135deg, #FDF6E3 0%, #F5E6D3 50%, #EDE0D4 100%);
             border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 14px;
+            object-fit: cover;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #8B4513 0%, #D4A574 50%, #8B4513 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.01em;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-style: italic;
         }
 
         .header h1 {
@@ -95,8 +126,8 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             padding: 12px 20px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-subtle);
+            background: linear-gradient(135deg, #EDE0D4 0%, #E6D5C3 100%);
+            border-bottom: 1px solid #D4C4B0;
         }
 
         .stat {
@@ -106,8 +137,8 @@
 
         .stat-value {
             font-size: 18px;
-            font-weight: 500;
-            color: var(--accent-blue);
+            font-weight: 600;
+            color: #8B4513;
         }
 
         .stat-label {
@@ -120,8 +151,8 @@
 
         .filters {
             padding: 12px 20px;
-            border-bottom: 1px solid var(--border-subtle);
-            background: var(--bg-primary);
+            border-bottom: 1px solid #D4C4B0;
+            background: #FDF6E3;
         }
 
         .filter-row {
@@ -154,8 +185,8 @@
         .search-input {
             width: 100%;
             padding: 10px 14px;
-            background: var(--bg-secondary);
-            border: none;
+            background: #FFFDF9;
+            border: 1px solid #D4C4B0;
             border-radius: 10px;
             color: var(--text-primary);
             font-size: 15px;
@@ -163,7 +194,7 @@
         }
 
         .search-input::placeholder {
-            color: var(--text-muted);
+            color: #A89B8C;
         }
 
         .search-input:focus {
@@ -175,15 +206,15 @@
         select {
             width: 100%;
             padding: 10px 14px;
-            background: var(--bg-secondary);
-            border: none;
+            background: #FFFDF9;
+            border: 1px solid #D4C4B0;
             border-radius: 10px;
             color: var(--text-primary);
             font-size: 15px;
             cursor: pointer;
             transition: all var(--transition-normal);
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23aeaeb2' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238B7355' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 12px center;
             padding-right: 32px;
@@ -191,8 +222,8 @@
 
         select:focus {
             outline: none;
-            background: var(--bg-primary);
-            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+            background: #FFFDF9;
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2);
         }
 
         .toggle-group {
@@ -205,10 +236,10 @@
             flex: 1;
             min-width: 70px;
             padding: 8px 12px;
-            background: var(--bg-secondary);
-            border: none;
+            background: #FFFDF9;
+            border: 1px solid #D4C4B0;
             border-radius: 20px;
-            color: var(--text-secondary);
+            color: #5D4E37;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
@@ -216,20 +247,21 @@
         }
 
         .toggle-btn:hover {
-            background: var(--bg-hover);
+            background: #EDE0D4;
         }
 
         .toggle-btn.active {
-            background: var(--accent-blue);
-            color: white;
+            background: #8B4513;
+            color: #FFFDF9;
             font-weight: 600;
+            border-color: #8B4513;
         }
 
         .results {
             flex: 1;
             overflow-y: auto;
             padding: 12px 16px;
-            background: var(--bg-secondary);
+            background: linear-gradient(180deg, #EDE0D4 0%, #E6D5C3 100%);
         }
 
         .results-header {
@@ -242,12 +274,12 @@
         .results-count {
             font-size: 12px;
             font-weight: 500;
-            color: var(--text-secondary);
+            color: #5D4E37;
         }
 
         .restaurant-card {
-            background: var(--bg-primary);
-            border: none;
+            background: #FFFDF9;
+            border: 1px solid #D4C4B0;
             border-radius: 12px;
             padding: 14px;
             margin-bottom: 10px;
@@ -381,10 +413,10 @@
             position: absolute;
             bottom: 24px;
             right: 16px;
-            background: rgba(255, 255, 255, 0.95);
+            background: linear-gradient(135deg, #FDF6E3 0%, #F5E6D3 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: none;
+            border: 1px solid #D4C4B0;
             border-radius: 14px;
             padding: 14px 16px;
             z-index: 1000;
@@ -395,7 +427,7 @@
         .legend-title {
             font-size: 13px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: #5D4E37;
             margin-bottom: 10px;
         }
 
@@ -404,7 +436,7 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 6px;
-            color: var(--text-secondary);
+            color: #5D4E37;
             font-size: 12px;
         }
 
@@ -417,6 +449,141 @@
             height: 16px;
             border-radius: 4px;
             box-shadow: var(--shadow-sm);
+        }
+
+        /* Info button */
+        .info-btn {
+            position: absolute;
+            top: 70px;
+            right: 16px;
+            background: linear-gradient(135deg, #FDF6E3 0%, #F5E6D3 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid #D4C4B0;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #8B4513;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-btn:hover {
+            background: #8B4513;
+            color: #FFFDF9;
+        }
+
+        /* Info popup overlay */
+        .info-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .info-overlay.active {
+            display: flex;
+        }
+
+        .info-popup {
+            background: linear-gradient(135deg, #FDF6E3 0%, #F5E6D3 100%);
+            border: 1px solid #D4C4B0;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 360px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .info-popup h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #5D4E37;
+        }
+
+        .info-popup .info-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .info-popup .info-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+            width: 24px;
+            text-align: center;
+        }
+
+        .info-popup .info-text {
+            color: #6B5D4D;
+        }
+
+        .info-popup .info-text strong {
+            color: #5D4E37;
+        }
+
+        .info-popup hr {
+            border: none;
+            border-top: 1px solid #D4C4B0;
+            margin: 16px 0;
+        }
+
+        .info-popup .info-icons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+            font-size: 13px;
+            color: #5D4E37;
+        }
+
+        .info-popup .info-icons span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-popup .info-icons .icon-circle {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .info-close {
+            display: block;
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            background: #8B4513;
+            color: #FFFDF9;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .info-close:hover {
+            background: #6B3410;
         }
 
         .leaflet-popup-content-wrapper {
@@ -638,10 +805,10 @@
             position: absolute;
             top: 16px;
             right: 16px;
-            background: rgba(255, 255, 255, 0.95);
+            background: linear-gradient(135deg, #FDF6E3 0%, #F5E6D3 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: none;
+            border: 1px solid #D4C4B0;
             border-radius: 22px;
             padding: 4px;
             z-index: 1000;
@@ -655,7 +822,7 @@
             background: transparent;
             border: none;
             border-radius: 18px;
-            color: var(--text-secondary);
+            color: #6B5D4D;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
@@ -663,12 +830,12 @@
         }
 
         .layer-btn:hover {
-            color: var(--text-primary);
+            color: #5D4E37;
         }
 
         .layer-btn.active {
-            background: var(--accent-blue);
-            color: white;
+            background: #8B4513;
+            color: #FFFDF9;
             font-weight: 600;
         }
 
@@ -839,8 +1006,16 @@
             }
 
             .container.show-list .sidebar {
-                max-height: 100vh;
-                height: 100vh;
+                max-height: calc(100vh - 70px);
+                height: calc(100vh - 70px);
+                overflow-y: auto;
+            }
+
+            .container.show-list .results {
+                max-height: none;
+                flex: 1;
+                overflow-y: auto;
+                padding-bottom: 80px;
             }
 
             .container.show-list .map-legend {
@@ -853,8 +1028,13 @@
     <div class="container">
         <div class="sidebar">
             <div class="header">
-                <h1>Brussels Food Map</h1>
-                <p>Discover hidden gems with Brussels-specific reranking</p>
+                <div class="header-content">
+                    <img src="/static/logo.jpg" alt="Brussels Food Map" class="header-logo">
+                    <div class="header-text">
+                        <h1>Brussels Food Map</h1>
+                        <p>Discover hidden gems</p>
+                    </div>
+                </div>
             </div>
 
             <div class="stats">
@@ -1019,6 +1199,7 @@
         </div>
 
         <button class="mobile-toggle" id="mobile-toggle">Show Map</button>
+        <button class="info-btn" id="info-btn">i</button>
         <div class="map-legend" id="legend-markers">
                 <div class="legend-title">Brussels Food Map</div>
                 <div class="legend-item">
@@ -1070,6 +1251,70 @@
                     <span>Emerging</span>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Info Popup Overlay -->
+    <div class="info-overlay" id="info-overlay">
+        <div class="info-popup">
+            <h3>How we find hidden gems</h3>
+            <div class="info-item">
+                <span class="info-icon">⭐</span>
+                <span class="info-text"><strong>Beats expectations</strong> — ML model detects places rated higher than predicted</span>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">🔒</span>
+                <span class="info-text"><strong>Scarce access</strong> — Limited hours or days? Locals know it's worth the effort</span>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">👥</span>
+                <span class="info-text"><strong>Right crowd</strong> — 50-500 reviews = known locally, not tourist-famous</span>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">🏪</span>
+                <span class="info-text"><strong>Independent</strong> — Non-chains get priority</span>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">📍</span>
+                <span class="info-text"><strong>Off the beaten path</strong> — Penalty near Grand Place & tourist traps</span>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">🏆</span>
+                <span class="info-text"><strong>Guide-approved</strong> — Michelin, Bib Gourmand, Gault&Millau bonus</span>
+            </div>
+            <hr>
+            <div class="info-icons">
+                <span>
+                    <svg width="16" height="16" viewBox="0 0 18 18">
+                        <circle cx="9" cy="9" r="8.5" fill="#FFD700"/>
+                        <path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/>
+                        <rect x="5" y="12" width="8" height="1.5" rx="0.5" fill="white"/>
+                    </svg>
+                    Must try
+                </span>
+                <span>
+                    <svg width="16" height="16" viewBox="0 0 18 18">
+                        <circle cx="9" cy="9" r="8.5" fill="#2ECC71"/>
+                        <path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/>
+                    </svg>
+                    Recommended
+                </span>
+                <span>
+                    <svg width="16" height="16" viewBox="0 0 18 18">
+                        <circle cx="9" cy="9" r="8.5" fill="#3498DB"/>
+                        <path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/>
+                    </svg>
+                    Above average
+                </span>
+                <span>
+                    <svg width="16" height="16" viewBox="0 0 18 18">
+                        <circle cx="9" cy="9" r="8.5" fill="#95A5A6"/>
+                        <circle cx="9" cy="9" r="2.5" fill="white"/>
+                    </svg>
+                    Average
+                </span>
+            </div>
+            <button class="info-close" id="info-close">Got it</button>
         </div>
     </div>
 
@@ -1677,12 +1922,34 @@
                 (a.brussels_score || 0) - (b.brussels_score || 0)
             );
 
-            sorted.forEach(restaurant => {
-                if (restaurant.lat && restaurant.lng) {
-                    const marker = createMarker(restaurant);
-                    markersLayer.addLayer(marker);
+            // On mobile, batch marker creation for better performance
+            if (isMobile && sorted.length > 100) {
+                // Add markers in chunks to avoid blocking UI
+                const chunkSize = 50;
+                let index = 0;
+
+                function addChunk() {
+                    const chunk = sorted.slice(index, index + chunkSize);
+                    chunk.forEach(restaurant => {
+                        if (restaurant.lat && restaurant.lng) {
+                            const marker = createMarker(restaurant);
+                            markersLayer.addLayer(marker);
+                        }
+                    });
+                    index += chunkSize;
+                    if (index < sorted.length) {
+                        requestAnimationFrame(addChunk);
+                    }
                 }
-            });
+                addChunk();
+            } else {
+                sorted.forEach(restaurant => {
+                    if (restaurant.lat && restaurant.lng) {
+                        const marker = createMarker(restaurant);
+                        markersLayer.addLayer(marker);
+                    }
+                });
+            }
         }
 
         function updateList() {
@@ -1877,6 +2144,25 @@
             // Trigger map resize after visibility change
             setTimeout(() => map.invalidateSize(), 100);
         }
+
+        // Info popup functionality
+        const infoBtn = document.getElementById('info-btn');
+        const infoOverlay = document.getElementById('info-overlay');
+        const infoClose = document.getElementById('info-close');
+
+        infoBtn.addEventListener('click', () => {
+            infoOverlay.classList.add('active');
+        });
+
+        infoClose.addEventListener('click', () => {
+            infoOverlay.classList.remove('active');
+        });
+
+        infoOverlay.addEventListener('click', (e) => {
+            if (e.target === infoOverlay) {
+                infoOverlay.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>

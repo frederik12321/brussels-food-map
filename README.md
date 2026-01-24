@@ -286,9 +286,60 @@ The algorithm incorporates local knowledge about Brussels:
 
 ---
 
+## Inspiration & Differences from Original
+
+This project is inspired by **[Lauren Leek's London Food Dashboard](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates)**, which brilliantly exposed how Google Maps ratings systematically undervalue certain restaurants.
+
+### What We Kept from Lauren's Approach ✅
+
+| Feature | Description |
+|---------|-------------|
+| **ML Residual Analysis** | Core concept: predict expected rating, find places that exceed it |
+| **Review Count Sweet Spot** | Too few = unreliable, too many = tourist trap |
+| **Chain Detection** | Penalize chain restaurants |
+| **Spatial Clustering (H3)** | Hexagonal grid for neighborhood analysis |
+| **Tourist Trap Signals** | Proximity-based penalties |
+
+### What We Added for Brussels 🆕
+
+| Feature | Description |
+|---------|-------------|
+| **Scarcity Score** | Limited hours/days = local favorite (lunch-only spots, weekday-only places) |
+| **Guide Recognition** | Michelin stars, Bib Gourmand, Gault&Millau bonuses |
+| **Local Street Bonus** | Known foodie streets (Rue de Flandre, Parvis Saint-Gilles, etc.) |
+| **EU Bubble Penalty** | Schuman area expat-targeted restaurant detection |
+| **Diaspora Authenticity Matrix** | Congolese in Matongé, Moroccan in Molenbeek, Turkish in Saint-Josse |
+| **19 Commune Classification** | Each Brussels commune tagged by food scene type |
+| **Café/Bar Detection** | Name-based classification to separate from restaurants |
+| **Opening Hours Analysis** | Closes early, weekdays only, closed Sunday signals |
+
+### What We Didn't Implement ❌
+
+| Feature | Reason |
+|---------|--------|
+| **Review Language Analysis** | Google API doesn't provide this easily |
+| **Review Text Sentiment** | Would require NLP pipeline, scope creep |
+| **Photo Analysis** | Food photos vs selfies ratio - interesting but complex |
+| **Time-based Review Patterns** | When locals vs tourists review - data not available |
+
+### Design Philosophy Differences
+
+Lauren's dashboard focused on **data visualization and exploration**. We focused on:
+
+1. **Actionable Rankings** - Clear tier system (Must Try → Average)
+2. **Mobile-First UX** - Optimized for on-the-go restaurant discovery
+3. **Local Context** - Deep Brussels-specific knowledge baked into scoring
+4. **Visual Identity** - Flemish feast painting aesthetic matching Brussels' rich culinary heritage
+
+---
+
 ## Credits
 
-Inspired by [Lauren Leek's London Food Dashboard](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates) and the concept of algorithmic undervaluation in rating systems.
+**Original Inspiration**: [Lauren Leek](https://laurenleek.substack.com/) - Her article ["How Google Maps Quietly Allocates Fame"](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates) sparked this entire project. The core insight that ML residuals can identify undervalued restaurants is brilliant.
+
+**Brussels Adaptation**: Frederik Beliën - Local context, scarcity scoring, guide recognition, and the Flemish feast UI.
+
+**Built with**: Claude (Anthropic) - Pair programming partner for the entire codebase.
 
 ---
 
