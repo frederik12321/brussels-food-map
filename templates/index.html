@@ -1114,7 +1114,20 @@
                 border: none !important;
             }
 
-            .container.tab-results .header,
+            .container.tab-results .header {
+                display: block !important;
+                padding: 16px !important;
+            }
+
+            .container.tab-results .header-logo {
+                width: 80px !important;
+                height: 80px !important;
+            }
+
+            .container.tab-results .header-text h1 {
+                font-size: 22px !important;
+            }
+
             .container.tab-results .stats,
             .container.tab-results .filters {
                 display: none !important;
@@ -2129,8 +2142,9 @@
                     cardGuideBadges += `<span class="guide-badge gault-millau">Gault&Millau</span>`;
                 }
 
+                const isMobileView = window.innerWidth <= 768;
                 return `
-                    <div class="restaurant-card" onclick="flyTo(${r.lat}, ${r.lng})">
+                    <div class="restaurant-card" onclick="${isMobileView ? 'flyToMobile' : 'flyTo'}(${r.lat}, ${r.lng})">
                         <div class="restaurant-header">
                             <div class="restaurant-name">${r.name}</div>
                             <div class="restaurant-badges">
@@ -2164,17 +2178,18 @@
         }
 
         function flyTo(lat, lng) {
-            // On mobile, switch to map tab first
-            if (window.innerWidth <= 768) {
-                switchTab('map');
-                // Wait for tab switch and map resize before flying
+            map.flyTo([lat, lng], 16);
+        }
+
+        function flyToMobile(lat, lng) {
+            // Switch to map tab and fly to location
+            switchTab('map');
+            setTimeout(() => {
+                map.invalidateSize();
                 setTimeout(() => {
-                    map.invalidateSize();
                     map.flyTo([lat, lng], 16);
-                }, 150);
-            } else {
-                map.flyTo([lat, lng], 16);
-            }
+                }, 100);
+            }, 100);
         }
 
         async function loadHexagons() {
