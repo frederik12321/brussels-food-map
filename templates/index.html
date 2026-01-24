@@ -1061,12 +1061,17 @@
             }
 
             .container.tab-search .header {
-                padding: 12px 16px;
+                display: block !important;
+                padding: 16px !important;
             }
 
             .container.tab-search .header-logo {
-                width: 50px;
-                height: 50px;
+                width: 80px !important;
+                height: 80px !important;
+            }
+
+            .container.tab-search .header-text h1 {
+                font-size: 22px !important;
             }
 
             .container.tab-search .stats {
@@ -2188,6 +2193,21 @@
                 map.invalidateSize();
                 setTimeout(() => {
                     map.flyTo([lat, lng], 16);
+                    // Find and open the marker popup at this location
+                    setTimeout(() => {
+                        markersLayer.eachLayer(marker => {
+                            const markerLatLng = marker.getLatLng();
+                            if (Math.abs(markerLatLng.lat - lat) < 0.0001 && Math.abs(markerLatLng.lng - lng) < 0.0001) {
+                                marker.openPopup();
+                                // Also select the marker visually
+                                if (selectedMarker && selectedMarker !== marker) {
+                                    selectedMarker.setIcon(createPinIcon(selectedMarker.restaurantColor, false, selectedMarker.restaurantTier));
+                                }
+                                marker.setIcon(createPinIcon(marker.restaurantColor, true, marker.restaurantTier));
+                                selectedMarker = marker;
+                            }
+                        });
+                    }, 500);
                 }, 100);
             }, 100);
         }
