@@ -698,6 +698,130 @@
             color: #666;
             font-size: 13px;
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 50vh;
+                border-right: none;
+                border-bottom: 1px solid var(--border-subtle);
+            }
+
+            .map-container {
+                height: 50vh;
+                min-height: 300px;
+            }
+
+            .header {
+                padding: 16px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+                padding: 12px 16px;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .stat-label {
+                font-size: 9px;
+            }
+
+            .filters {
+                padding: 12px 16px;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .results {
+                padding: 12px 16px;
+                max-height: 200px;
+            }
+
+            .restaurant-card {
+                padding: 12px;
+            }
+
+            .toggle-btn {
+                min-width: 70px;
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .toggle-group {
+                flex-wrap: wrap;
+            }
+
+            .toggle-btn {
+                flex: 1 1 45%;
+            }
+        }
+
+        /* Mobile map toggle */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: var(--accent-green);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+
+            .container.show-map .sidebar {
+                display: none;
+            }
+
+            .container.show-map .map-container {
+                height: 100vh;
+            }
+
+            .container.show-list .map-container {
+                display: none;
+            }
+
+            .container.show-list .sidebar {
+                max-height: 100vh;
+                height: 100vh;
+            }
+        }
     </style>
 </head>
 <body>
@@ -867,7 +991,10 @@
                 <button class="layer-btn" id="layer-hexagons">Neighborhoods</button>
             </div>
             <div id="map"></div>
-            <div class="map-legend" id="legend-markers">
+        </div>
+
+        <button class="mobile-toggle" id="mobile-toggle">Show Map</button>
+        <div class="map-legend" id="legend-markers">
                 <div class="legend-title">Brussels Score</div>
                 <div class="legend-item">
                     <div class="legend-color" style="background: #059669;"></div>
@@ -1573,6 +1700,31 @@
         }
 
         loadRestaurants();
+
+        // Mobile toggle functionality
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const container = document.querySelector('.container');
+        let showingMap = false;
+
+        mobileToggle.addEventListener('click', () => {
+            showingMap = !showingMap;
+            if (showingMap) {
+                container.classList.add('show-map');
+                container.classList.remove('show-list');
+                mobileToggle.textContent = 'Show List';
+            } else {
+                container.classList.remove('show-map');
+                container.classList.add('show-list');
+                mobileToggle.textContent = 'Show Map';
+            }
+            // Trigger map resize after visibility change
+            setTimeout(() => map.invalidateSize(), 100);
+        });
+
+        // Start with list view on mobile
+        if (window.innerWidth <= 768) {
+            container.classList.add('show-list');
+        }
     </script>
 </body>
 </html>
