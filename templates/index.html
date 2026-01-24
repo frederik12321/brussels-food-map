@@ -2164,7 +2164,17 @@
         }
 
         function flyTo(lat, lng) {
-            map.flyTo([lat, lng], 16);
+            // On mobile, switch to map tab first
+            if (window.innerWidth <= 768) {
+                switchTab('map');
+                // Wait for tab switch and map resize before flying
+                setTimeout(() => {
+                    map.invalidateSize();
+                    map.flyTo([lat, lng], 16);
+                }, 150);
+            } else {
+                map.flyTo([lat, lng], 16);
+            }
         }
 
         async function loadHexagons() {
