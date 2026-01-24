@@ -788,6 +788,20 @@
             }
         }
 
+        /* Disable heavy transitions on mobile for snappier UX */
+        @media (max-width: 768px) {
+            .restaurant-card,
+            .toggle-btn,
+            select,
+            .search-input {
+                transition: none !important;
+            }
+
+            .restaurant-card:hover {
+                transform: none;
+            }
+        }
+
         /* Mobile map toggle */
         .mobile-toggle {
             display: none;
@@ -795,7 +809,7 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 1000;
+            z-index: 1100;
             background: var(--accent-green);
             color: #000;
             border: none;
@@ -1061,9 +1075,19 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Initialize map centered on Brussels
+        // Initialize map centered on Brussels - optimized for mobile
+        const isMobile = window.innerWidth <= 768;
         const map = L.map('map', {
-            zoomControl: false
+            zoomControl: false,
+            // Disable animations on mobile for snappier feel
+            zoomAnimation: !isMobile,
+            fadeAnimation: !isMobile,
+            markerZoomAnimation: !isMobile,
+            // Faster touch response
+            tap: true,
+            tapTolerance: 15,
+            touchZoom: 'center',
+            bounceAtZoomLimits: false
         }).setView([50.8503, 4.3517], 13);
 
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
@@ -1071,7 +1095,11 @@
         // Use CartoDB Voyager for clean Google Maps-like appearance
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap &copy; CARTO',
-            maxZoom: 19
+            maxZoom: 19,
+            // Better tile loading on mobile
+            updateWhenIdle: isMobile,
+            updateWhenZooming: false,
+            keepBuffer: isMobile ? 2 : 4
         }).addTo(map);
 
         let markersLayer = L.layerGroup().addTo(map);
@@ -1831,7 +1859,7 @@
             if (showingMap) {
                 container.classList.add('show-map');
                 container.classList.remove('show-list');
-                mobileToggle.textContent = 'Show List';
+                mobileToggle.textContent = 'Search resto';
             } else {
                 container.classList.remove('show-map');
                 container.classList.add('show-list');
@@ -1845,7 +1873,7 @@
         if (window.innerWidth <= 768) {
             container.classList.add('show-map');
             showingMap = true;
-            mobileToggle.textContent = 'Show List';
+            mobileToggle.textContent = 'Search resto';
             // Trigger map resize after visibility change
             setTimeout(() => map.invalidateSize(), 100);
         }
