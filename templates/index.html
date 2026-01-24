@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brussels Food Map - Hidden Gems</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            /* Dark theme colors - avoiding pure black for better readability */
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-elevated: #252525;
+            --bg-hover: #2d2d2d;
+
+            /* Border colors */
+            --border-subtle: #333;
+            --border-default: #404040;
+            --border-focus: #10b981;
+
+            /* Text colors */
+            --text-primary: #f5f5f5;
+            --text-secondary: #a3a3a3;
+            --text-muted: #737373;
+
+            /* Accent colors */
+            --accent-green: #10b981;
+            --accent-green-light: #34d399;
+            --accent-orange: #f59e0b;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
+            --accent-yellow: #fbbf24;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.5);
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 200ms ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 420px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 24px;
+            background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-secondary) 100%);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 16px 24px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .stat {
+            text-align: center;
+            padding: 8px;
+            background: var(--bg-elevated);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .filters {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            background: var(--bg-secondary);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .filter-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-group {
+            flex: 1;
+        }
+
+        .filter-group.full-width {
+            flex: none;
+            width: 100%;
+        }
+
+        .filter-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all var(--transition-fast);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:hover {
+            border-color: var(--border-default);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23737373' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        select:hover {
+            border-color: var(--border-default);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            min-width: 85px;
+            padding: 10px 12px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .toggle-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-default);
+            color: var(--text-primary);
+        }
+
+        .toggle-btn.active {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: #000;
+            font-weight: 600;
+        }
+
+        .results {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+            background: var(--bg-primary);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .results-count {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .restaurant-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .restaurant-card:hover {
+            border-color: var(--accent-green);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .restaurant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .restaurant-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            line-height: 1.3;
+        }
+
+        .restaurant-badges {
+            display: flex;
+            gap: 6px;
+            margin-left: 8px;
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-score {
+            background: linear-gradient(135deg, var(--accent-green-light) 0%, var(--accent-green) 100%);
+            color: #000;
+        }
+
+        .badge-underexplored {
+            background: var(--accent-purple);
+            color: #fff;
+        }
+
+        .restaurant-location {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .restaurant-cuisine {
+            font-size: 13px;
+            color: var(--accent-green);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .restaurant-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .restaurant-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .star {
+            color: var(--accent-yellow);
+        }
+
+        .restaurant-hours {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .restaurant-hours-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hours-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .hours-status-dot.open {
+            background: var(--accent-green);
+        }
+
+        .hours-status-dot.closed {
+            background: var(--accent-red);
+        }
+
+        .hours-status-dot.unknown {
+            background: var(--text-muted);
+        }
+
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-legend {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 1000;
+            font-size: 13px;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(8px);
+        }
+
+        .legend-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .leaflet-popup-content-wrapper {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .leaflet-popup-content {
+            color: var(--text-primary);
+            margin: 14px;
+            font-size: 13px;
+        }
+
+        .leaflet-popup-tip {
+            background: var(--bg-secondary);
+        }
+
+        .popup-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .popup-commune {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .popup-cuisine {
+            color: var(--accent-green);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .popup-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .popup-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: var(--bg-elevated);
+            border-radius: 6px;
+            color: var(--accent-green);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+
+        .popup-link:hover {
+            background: var(--bg-hover);
+            text-decoration: none;
+        }
+
+        .popup-hours {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .popup-hours-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .popup-hours-header:hover {
+            color: var(--text-primary);
+        }
+
+        .popup-hours-toggle {
+            font-size: 10px;
+            transition: transform var(--transition-fast);
+        }
+
+        .popup-hours-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        .popup-hours-list {
+            display: none;
+            font-size: 11px;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .popup-hours-list.show {
+            display: block;
+        }
+
+        .popup-hours-list div {
+            padding: 2px 0;
+        }
+
+        .popup-hours-list .today {
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        .popup-hours-list .closed {
+            color: var(--accent-red);
+        }
+
+        /* Guide recognition badges */
+        .guide-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .guide-badge.michelin {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+        }
+
+        .guide-badge.michelin-2 {
+            background: linear-gradient(135deg, #ffd700 0%, #c41e3a 100%);
+            color: white;
+        }
+
+        .guide-badge.bib-gourmand {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+            font-size: 9px;
+        }
+
+        .guide-badge.gault-millau {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+        }
+
+        .guide-badges {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .popup-explanation {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .explain-title {
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .explain-positive {
+            color: var(--accent-green-light);
+        }
+
+        .explain-negative {
+            color: var(--accent-red);
+        }
+
+        .explain-neutral {
+            color: var(--accent-yellow);
+        }
+
+        .commune-label {
+            background: transparent !important;
+            border: none !important;
+            pointer-events: none;
+        }
+
+        .commune-label div {
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .layer-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 6px;
+            z-index: 1000;
+            display: flex;
+            gap: 4px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .layer-btn {
+            padding: 8px 14px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .layer-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .layer-btn.active {
+            background: var(--accent-green);
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-default);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100px;
+            color: #666;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="header">
+                <h1>Brussels Food Map</h1>
+                <p>Discover hidden gems with Brussels-specific reranking</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="total-restaurants">-</div>
+                    <div class="stat-label">Restaurants</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="total-communes">19</div>
+                    <div class="stat-label">Communes</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="total-gems">-</div>
+                    <div class="stat-label">Top Picks</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="total-cuisines">-</div>
+                    <div class="stat-label">Cuisines</div>
+                </div>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group full-width">
+                    <label class="filter-label">Search</label>
+                    <input type="text" class="search-input" id="search" placeholder="Restaurant name...">
+                </div>
+
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Commune</label>
+                        <select id="commune-filter">
+                            <option value="all">All Communes</option>
+                            {% for commune in communes %}
+                            <option value="{{ commune }}">{{ commune }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Cuisine</label>
+                        <select id="cuisine-filter">
+                            <option value="all">All Cuisines</option>
+                            {% for cuisine in cuisines %}
+                            <option value="{{ cuisine }}">{{ cuisine }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Venue Type</label>
+                        <select id="venue-filter">
+                            <option value="all">All Venues</option>
+                            <option value="Restaurant" selected>Restaurants Only</option>
+                            <option value="Sandwich_shop">Sandwich Shops</option>
+                            <option value="Fast_food">Fast Food</option>
+                            <option value="Cafe">Cafes</option>
+                            <option value="Bar">Bars</option>
+                            <option value="Bakery">Bakeries</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Min Rating</label>
+                        <select id="rating-filter">
+                            <option value="">Any</option>
+                            <option value="3.5">3.5+</option>
+                            <option value="4.0">4.0+</option>
+                            <option value="4.5">4.5+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Price</label>
+                        <select id="price-filter">
+                            <option value="">Any</option>
+                            <option value="1">€ (Budget)</option>
+                            <option value="2">€€ (Moderate)</option>
+                            <option value="3">€€€ (Expensive)</option>
+                            <option value="4">€€€€ (Fine Dining)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Sort By</label>
+                        <select id="sort-filter">
+                            <option value="brussels_score">Brussels Score</option>
+                            <option value="rating">Rating</option>
+                            <option value="residual">Undervalued</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Open On</label>
+                        <select id="day-filter">
+                            <option value="">Any Day</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Open At</label>
+                        <select id="time-filter">
+                            <option value="">Any Time</option>
+                            <option value="12">12:00 (Lunch)</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00 (Dinner)</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                            <option value="22">22:00 (Late)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Recognition</label>
+                        <select id="guide-filter">
+                            <option value="">Any</option>
+                            <option value="michelin">Michelin Stars</option>
+                            <option value="bib">Bib Gourmand</option>
+                            <option value="gaultmillau">Gault & Millau</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group full-width">
+                    <label class="filter-label">Show</label>
+                    <div class="toggle-group">
+                        <button class="toggle-btn active" id="show-all">All</button>
+                        <button class="toggle-btn" id="show-brussels-gems">Brussels Gems</button>
+                        <button class="toggle-btn" id="show-underrated">Underrated</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results">
+                <div class="results-header">
+                    <span class="results-count" id="results-count">Loading...</span>
+                </div>
+                <div id="restaurant-list">
+                    <div class="loading">Loading restaurants...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div class="layer-toggle">
+                <button class="layer-btn active" id="layer-markers">Restaurants</button>
+                <button class="layer-btn" id="layer-hexagons">Neighborhoods</button>
+            </div>
+            <div id="map"></div>
+            <div class="map-legend" id="legend-markers">
+                <div class="legend-title">Brussels Score</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #059669;"></div>
+                    <span>Must try - Top 5%</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #10b981;"></div>
+                    <span>Recommended - Top 15%</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #6366f1;"></div>
+                    <span>Above average - Top 35%</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #94a3b8;"></div>
+                    <span>Average</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #64748b;"></div>
+                    <span>Below average</span>
+                </div>
+            </div>
+            <div class="map-legend" id="legend-hexagons" style="display: none;">
+                <div class="legend-title">Neighborhood Type</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4ade80;"></div>
+                    <span>Elite</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #60a5fa;"></div>
+                    <span>Strong</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #fbbf24;"></div>
+                    <span>Everyday</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #a78bfa;"></div>
+                    <span>Emerging</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize map centered on Brussels
+        const map = L.map('map', {
+            zoomControl: false
+        }).setView([50.8503, 4.3517], 13);
+
+        L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+        // Use CartoDB Positron for a clean, readable map that works with dark UI
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap &copy; CARTO',
+            maxZoom: 19
+        }).addTo(map);
+
+        let markersLayer = L.layerGroup().addTo(map);
+        let hexagonsLayer = L.layerGroup();
+        let communeLabelsLayer = L.layerGroup().addTo(map);
+
+        // Brussels commune centers for labels
+        const communeLabels = [
+            { name: "Bruxelles", lat: 50.8467, lng: 4.3517, tier: "tourist_heavy" },
+            { name: "Ixelles", lat: 50.8275, lng: 4.3697, tier: "mixed" },
+            { name: "Saint-Gilles", lat: 50.8261, lng: 4.3456, tier: "diaspora_hub" },
+            { name: "Etterbeek", lat: 50.8333, lng: 4.3833, tier: "eu_bubble" },
+            { name: "Schaerbeek", lat: 50.8653, lng: 4.3778, tier: "diaspora_hub" },
+            { name: "Anderlecht", lat: 50.8333, lng: 4.3072, tier: "underexplored" },
+            { name: "Molenbeek", lat: 50.8547, lng: 4.3286, tier: "diaspora_hub" },
+            { name: "Saint-Josse", lat: 50.8553, lng: 4.3703, tier: "diaspora_hub" },
+            { name: "Uccle", lat: 50.8000, lng: 4.3333, tier: "local_foodie" },
+            { name: "Forest", lat: 50.8103, lng: 4.3242, tier: "underexplored" },
+            { name: "Woluwe-St-Lambert", lat: 50.8417, lng: 4.4333, tier: "local_foodie" },
+            { name: "Woluwe-St-Pierre", lat: 50.8333, lng: 4.4500, tier: "local_foodie" },
+            { name: "Auderghem", lat: 50.8167, lng: 4.4333, tier: "local_foodie" },
+            { name: "Watermael", lat: 50.7958, lng: 4.4125, tier: "local_foodie" },
+            { name: "Evere", lat: 50.8667, lng: 4.4000, tier: "underexplored" },
+            { name: "Jette", lat: 50.8792, lng: 4.3250, tier: "underexplored" },
+            { name: "Ganshoren", lat: 50.8750, lng: 4.3083, tier: "underexplored" },
+            { name: "Koekelberg", lat: 50.8625, lng: 4.3292, tier: "underexplored" },
+            { name: "Berchem", lat: 50.8667, lng: 4.2917, tier: "underexplored" }
+        ];
+
+        // Add commune labels to map
+        function addCommuneLabels() {
+            communeLabelsLayer.clearLayers();
+
+            communeLabels.forEach(commune => {
+                const tierColors = {
+                    'tourist_heavy': '#f87171',
+                    'diaspora_hub': '#f59e0b',
+                    'local_foodie': '#4ade80',
+                    'underexplored': '#a78bfa',
+                    'eu_bubble': '#60a5fa',
+                    'mixed': '#94a3b8'
+                };
+                const color = tierColors[commune.tier] || '#888';
+
+                const label = L.divIcon({
+                    className: 'commune-label',
+                    html: `<div style="color: #374151; text-shadow: 0 1px 3px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.8); font-weight: 600; font-size: 12px; white-space: nowrap; text-transform: uppercase; letter-spacing: 1.5px;">${commune.name}</div>`,
+                    iconSize: [140, 24],
+                    iconAnchor: [70, 12]
+                });
+
+                L.marker([commune.lat, commune.lng], { icon: label, interactive: false })
+                    .addTo(communeLabelsLayer);
+            });
+        }
+
+        // Show/hide labels based on zoom level
+        map.on('zoomend', function() {
+            const zoom = map.getZoom();
+            if (zoom >= 12 && zoom <= 15) {
+                if (!map.hasLayer(communeLabelsLayer)) {
+                    communeLabelsLayer.addTo(map);
+                }
+            } else if (zoom < 12) {
+                if (map.hasLayer(communeLabelsLayer)) {
+                    map.removeLayer(communeLabelsLayer);
+                }
+            }
+        });
+
+        addCommuneLabels();
+
+        let restaurants = [];
+        let currentFilter = 'all';
+
+        // Day names to match opening_hours format
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        function getTodayIndex() {
+            return new Date().getDay(); // 0 = Sunday
+        }
+
+        function generateHoursHtml(openingHours) {
+            if (!openingHours || openingHours.length === 0) {
+                return '';
+            }
+
+            const todayIndex = getTodayIndex();
+            const todayName = dayNames[todayIndex];
+
+            // Find today's hours
+            let todayHours = openingHours.find(h => h && h.startsWith(todayName));
+            let statusText = 'Hours unknown';
+            let statusClass = 'unknown';
+
+            if (todayHours) {
+                const hoursPart = todayHours.split(': ')[1] || '';
+                if (hoursPart.toLowerCase().includes('closed')) {
+                    statusText = 'Closed today';
+                    statusClass = 'closed';
+                } else {
+                    statusText = `Today: ${hoursPart}`;
+                    statusClass = 'open';
+                }
+            }
+
+            // Build the hours list with today highlighted
+            const hoursListHtml = openingHours.map(h => {
+                if (!h) return '';
+                const isToday = h.startsWith(todayName);
+                const isClosed = h.toLowerCase().includes('closed');
+                let classes = [];
+                if (isToday) classes.push('today');
+                if (isClosed) classes.push('closed');
+                return `<div class="${classes.join(' ')}">${h}</div>`;
+            }).join('');
+
+            return `
+                <div class="popup-hours">
+                    <div class="popup-hours-header" onclick="toggleHours(this)">
+                        <span class="popup-hours-toggle">▶</span>
+                        <span class="hours-status-dot ${statusClass}"></span>
+                        <span>${statusText}</span>
+                    </div>
+                    <div class="popup-hours-list">
+                        ${hoursListHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleHours(header) {
+            const toggle = header.querySelector('.popup-hours-toggle');
+            const list = header.nextElementSibling;
+            toggle.classList.toggle('expanded');
+            list.classList.toggle('show');
+        }
+
+        function getOpenStatus(openingHours) {
+            if (!openingHours || openingHours.length === 0) {
+                return { status: 'unknown', text: '' };
+            }
+
+            const todayIndex = getTodayIndex();
+            const todayName = dayNames[todayIndex];
+            const todayHours = openingHours.find(h => h && h.startsWith(todayName));
+
+            if (!todayHours) {
+                return { status: 'unknown', text: '' };
+            }
+
+            const hoursPart = todayHours.split(': ')[1] || '';
+            if (hoursPart.toLowerCase().includes('closed')) {
+                return { status: 'closed', text: 'Closed today' };
+            }
+
+            return { status: 'open', text: hoursPart };
+        }
+
+        function getMarkerColor(restaurant) {
+            const score = restaurant.brussels_score || 0;
+            // Based on percentile distribution for meaningful differentiation:
+            // Top 5% (>=0.64), Top 15% (>=0.56), Top 35% (>=0.45), Top 75% (>=0.25)
+            if (score >= 0.64) return '#059669';  // Emerald - top 5% (must try)
+            if (score >= 0.56) return '#10b981';  // Green - top 15% (recommended)
+            if (score >= 0.45) return '#6366f1';  // Indigo - top 35% (above average)
+            if (score >= 0.25) return '#94a3b8';  // Slate gray - top 75% (average)
+            return '#64748b';  // Dark slate - bottom 25% (below average)
+        }
+
+        function getHexColor(cluster) {
+            const colors = {
+                'Elite': '#4ade80',
+                'Strong': '#60a5fa',
+                'Everyday': '#fbbf24',
+                'Emerging': '#a78bfa'
+            };
+            return colors[cluster] || '#666';
+        }
+
+        function getScoreExplanation(restaurant) {
+            const explanations = [];
+
+            // Residual explanation (beating expected rating)
+            if (restaurant.residual !== undefined && restaurant.residual !== null) {
+                const residualPct = Math.abs(restaurant.residual * 100).toFixed(0);
+                if (restaurant.residual > 0.25) {
+                    explanations.push(`<span class="explain-positive">💎 Underrated: +${residualPct}% above expected</span>`);
+                } else if (restaurant.residual > 0.1) {
+                    explanations.push(`<span class="explain-positive">⬆️ Above expected (+${residualPct}%)</span>`);
+                } else if (restaurant.residual < -0.2) {
+                    explanations.push(`<span class="explain-negative">⬇️ Below expected (-${residualPct}%)</span>`);
+                }
+            }
+
+            // Local street bonus
+            if (restaurant.local_street) {
+                explanations.push(`<span class="explain-positive">📍 ${restaurant.local_street} (local favorite)</span>`);
+            }
+
+            // UNIFIED SCARCITY - build a combined explanation
+            // Scarcity = hard to access = likely a local gem
+            if (restaurant.score_scarcity_bonus > 0.02) {
+                const scarcityParts = [];
+
+                // Hours scarcity
+                if (restaurant.closes_early && restaurant.typical_close_hour) {
+                    if (restaurant.typical_close_hour <= 16) {
+                        scarcityParts.push("lunch only");
+                    } else if (restaurant.typical_close_hour <= 20) {
+                        scarcityParts.push(`closes ${restaurant.typical_close_hour}:00`);
+                    }
+                }
+
+                // Days scarcity
+                if (restaurant.days_open_count && restaurant.days_open_count <= 5) {
+                    scarcityParts.push(`${restaurant.days_open_count} days/week`);
+                }
+
+                // Schedule scarcity
+                if (restaurant.weekdays_only) {
+                    scarcityParts.push("weekdays only");
+                } else if (restaurant.closed_sunday) {
+                    scarcityParts.push("closed Sundays");
+                }
+
+                // Rare cuisine
+                if (restaurant.is_rare_cuisine) {
+                    scarcityParts.push("rare cuisine");
+                }
+
+                // Build the scarcity message
+                if (scarcityParts.length > 0) {
+                    const scarcityLevel = restaurant.score_scarcity_bonus > 0.08 ? "🔒 Exclusive" : "✨ Scarce";
+                    explanations.push(`<span class="explain-positive">${scarcityLevel}: ${scarcityParts.join(", ")}</span>`);
+                } else if (restaurant.rating >= 4.5 && restaurant.review_count <= 300) {
+                    // Review-based scarcity only
+                    explanations.push(`<span class="explain-positive">🔒 Local gem (not over-hyped)</span>`);
+                }
+            }
+
+            // Tourist trap penalty
+            if (restaurant.score_tourist_penalty !== undefined && restaurant.score_tourist_penalty !== null) {
+                if (restaurant.score_tourist_penalty < -0.05) {
+                    explanations.push(`<span class="explain-negative">🚶 Tourist area penalty</span>`);
+                }
+            }
+
+            // Tier-based explanations
+            if (restaurant.tier) {
+                if (restaurant.tier === 'underexplored') {
+                    explanations.push(`<span class="explain-positive">🔍 Hidden gem in underexplored area</span>`);
+                } else if (restaurant.tier === 'tourist_trap') {
+                    explanations.push(`<span class="explain-negative">⚠️ Tourist trap zone</span>`);
+                } else if (restaurant.tier === 'eu_bubble') {
+                    explanations.push(`<span class="explain-neutral">🇪🇺 EU quarter area</span>`);
+                }
+            }
+
+            // Cold start (new promising place)
+            if (restaurant.review_count && restaurant.review_count < 50 && restaurant.rating >= 4.5) {
+                explanations.push(`<span class="explain-positive">🆕 Promising new spot (${restaurant.review_count} reviews)</span>`);
+            }
+
+            // Independent restaurant bonus
+            if (restaurant.is_chain === false || restaurant.is_chain === 0) {
+                // Only mention if it's a notable factor
+                if (restaurant.brussels_score > 0.4) {
+                    explanations.push(`<span class="explain-positive">🏠 Independent restaurant</span>`);
+                }
+            } else if (restaurant.is_chain === true || restaurant.is_chain === 1) {
+                explanations.push(`<span class="explain-negative">🔗 Chain restaurant</span>`);
+            }
+
+            // High rating with high review count (genuinely popular)
+            if (restaurant.rating >= 4.5 && restaurant.review_count > 500) {
+                explanations.push(`<span class="explain-positive">⭐ High rating despite popularity</span>`);
+            }
+
+            // Low confidence warning for few reviews
+            if (restaurant.review_count && restaurant.review_count < 20) {
+                explanations.push(`<span class="explain-neutral">⚠️ Low confidence (only ${restaurant.review_count} reviews)</span>`);
+            }
+
+            return explanations.slice(0, 4); // Limit to top 4 explanations
+        }
+
+        function createMarker(restaurant) {
+            const color = getMarkerColor(restaurant);
+            const score = restaurant.brussels_score || 0;
+            const residual = restaurant.residual || 0;
+
+            // Base size on score, but boost underrated restaurants
+            let size = Math.max(5, Math.min(12, 5 + score * 10));
+            if (residual > 0.25) size += 2; // Underrated gems get bigger markers
+
+            const marker = L.circleMarker([restaurant.lat, restaurant.lng], {
+                radius: size,
+                fillColor: color,
+                color: '#fff',
+                weight: 2,
+                fillOpacity: 0.9
+            });
+
+            const commune = restaurant.commune || 'Unknown';
+            const neighborhood = restaurant.neighborhood ? ` (${restaurant.neighborhood})` : '';
+
+            // Generate score explanation
+            const explanations = getScoreExplanation(restaurant);
+            const explanationHtml = explanations.length > 0
+                ? `<div class="popup-explanation">
+                    <div class="explain-title">Why it's ranked:</div>
+                    ${explanations.join('<br>')}
+                   </div>`
+                : '';
+
+            // Generate opening hours HTML
+            const hoursHtml = generateHoursHtml(restaurant.opening_hours);
+
+            // Generate guide badges - show ALL recognitions (not mutually exclusive)
+            let guideBadges = '';
+            if (restaurant.michelin_stars >= 2) {
+                guideBadges += `<span class="guide-badge michelin-2">${'⭐'.repeat(restaurant.michelin_stars)} Michelin</span>`;
+            } else if (restaurant.michelin_stars === 1) {
+                guideBadges += `<span class="guide-badge michelin">⭐ Michelin</span>`;
+            } else if (restaurant.bib_gourmand) {
+                guideBadges += `<span class="guide-badge bib-gourmand">Bib Gourmand</span>`;
+            }
+            // Gault & Millau is independent - can be shown alongside Michelin/Bib
+            if (restaurant.gault_millau) {
+                guideBadges += `<span class="guide-badge gault-millau">Gault&Millau</span>`;
+            }
+            const badgesHtml = guideBadges ? `<div class="guide-badges">${guideBadges}</div>` : '';
+
+            marker.bindPopup(`
+                <div class="popup-name">${restaurant.name}</div>
+                ${badgesHtml}
+                <div class="popup-commune">${commune}${neighborhood}</div>
+                <div class="popup-cuisine">${restaurant.cuisine || 'Restaurant'}</div>
+                <div class="popup-stats">
+                    <span>★ ${restaurant.rating?.toFixed(1) || 'N/A'}</span>
+                    <span>${restaurant.review_count || 0} reviews</span>
+                    ${score ? `<span>Score: ${score.toFixed(2)}</span>` : ''}
+                </div>
+                ${hoursHtml}
+                ${explanationHtml}
+                ${restaurant.google_maps_url ?
+                    `<a href="${restaurant.google_maps_url}" target="_blank" class="popup-link">View on Google Maps →</a>` : ''
+                }
+            `);
+
+            return marker;
+        }
+
+        // Helper function to check if restaurant is open on a specific day
+        function isOpenOnDay(openingHours, day) {
+            if (!openingHours || openingHours.length === 0) return true; // Include unknowns
+
+            const dayHours = openingHours.find(h => h && h.startsWith(day));
+            if (!dayHours) return false;
+
+            if (dayHours.toLowerCase().includes('closed')) return false;
+
+            return true;
+        }
+
+        // Helper function to check if restaurant is open at a specific time
+        function isOpenAtTime(openingHours, day, hour) {
+            if (!openingHours || openingHours.length === 0) return true; // Include unknowns
+
+            const dayHours = openingHours.find(h => h && h.startsWith(day));
+            if (!dayHours) return false;
+
+            if (dayHours.toLowerCase().includes('closed')) return false;
+
+            // Parse hours like "Monday: 12:00 – 2:30 PM, 6:00 – 10:00 PM"
+            const hoursPart = dayHours.split(': ')[1];
+            if (!hoursPart) return true;
+
+            // Split by comma for multiple time ranges
+            const ranges = hoursPart.split(',').map(r => r.trim());
+
+            for (const range of ranges) {
+                // Parse time range - handle various formats
+                // Google format: "6:30 – 9:30 PM" (PM applies to BOTH times)
+                const match = range.match(/(\d{1,2}):?(\d{2})?\s*(AM|PM)?\s*[–-]\s*(\d{1,2}):?(\d{2})?\s*(AM|PM)?/i);
+                if (!match) continue;
+
+                let startHour = parseInt(match[1]);
+                const startAMPM = match[3]?.toUpperCase();
+                let endHour = parseInt(match[4]);
+                const endAMPM = match[6]?.toUpperCase();
+
+                // If only end has AM/PM, it applies to both (Google format)
+                // e.g., "6:30 – 9:30 PM" means 6:30 PM – 9:30 PM
+                const effectiveStartAMPM = startAMPM || endAMPM;
+                const effectiveEndAMPM = endAMPM || startAMPM;
+
+                // Convert to 24h format
+                if (effectiveStartAMPM === 'PM' && startHour !== 12) startHour += 12;
+                if (effectiveStartAMPM === 'AM' && startHour === 12) startHour = 0;
+                if (effectiveEndAMPM === 'PM' && endHour !== 12) endHour += 12;
+                if (effectiveEndAMPM === 'AM' && endHour === 12) endHour = 0;
+
+                // Handle overnight hours (e.g., 6 PM - 2 AM)
+                if (endHour < startHour) endHour += 24;
+
+                if (hour >= startHour && hour < endHour) return true;
+            }
+
+            return false;
+        }
+
+        async function loadRestaurants() {
+            const params = new URLSearchParams();
+
+            const search = document.getElementById('search').value;
+            const commune = document.getElementById('commune-filter').value;
+            const cuisine = document.getElementById('cuisine-filter').value;
+            const minRating = document.getElementById('rating-filter').value;
+            const priceLevel = document.getElementById('price-filter').value;
+            const sortBy = document.getElementById('sort-filter').value;
+            const venueType = document.getElementById('venue-filter').value;
+            const guideFilter = document.getElementById('guide-filter').value;
+            const dayFilter = document.getElementById('day-filter').value;
+            const timeFilter = document.getElementById('time-filter').value;
+
+            if (search) params.append('search', search);
+            if (commune !== 'all') params.append('commune', commune);
+            if (cuisine !== 'all') params.append('cuisine', cuisine);
+            if (minRating) params.append('min_rating', minRating);
+            if (priceLevel) params.append('price_level', priceLevel);
+            if (venueType !== 'all') params.append('venue_type', venueType);
+            if (guideFilter) params.append('guide', guideFilter);
+            if (dayFilter) params.append('open_day', dayFilter);
+            params.append('sort_by', sortBy);
+
+            if (currentFilter === 'brussels_gems') params.append('brussels_gems', 'true');
+            if (currentFilter === 'underrated') params.append('gems_only', 'true');
+            if (currentFilter === 'diaspora') params.append('diaspora_only', 'true');
+
+            try {
+                const response = await fetch(`/api/restaurants?${params}`);
+                let data = await response.json();
+
+                // Client-side day/time filtering (more accurate than server-side)
+                if (dayFilter) {
+                    if (timeFilter) {
+                        // Filter by day AND specific time
+                        data = data.filter(r => isOpenAtTime(r.opening_hours, dayFilter, parseInt(timeFilter)));
+                    } else {
+                        // Filter by day only (any time that day)
+                        data = data.filter(r => isOpenOnDay(r.opening_hours, dayFilter));
+                    }
+                }
+
+                restaurants = data;
+
+                updateMarkers();
+                updateList();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading restaurants:', error);
+                document.getElementById('restaurant-list').innerHTML =
+                    '<div class="loading">Error loading data</div>';
+            }
+        }
+
+        function updateMarkers() {
+            markersLayer.clearLayers();
+
+            // Sort by score ascending so higher-scored restaurants are rendered last (on top)
+            const sorted = [...restaurants].sort((a, b) =>
+                (a.brussels_score || 0) - (b.brussels_score || 0)
+            );
+
+            sorted.forEach(restaurant => {
+                if (restaurant.lat && restaurant.lng) {
+                    const marker = createMarker(restaurant);
+                    markersLayer.addLayer(marker);
+                }
+            });
+        }
+
+        function updateList() {
+            const listEl = document.getElementById('restaurant-list');
+            const countEl = document.getElementById('results-count');
+
+            countEl.textContent = `${restaurants.length} restaurants`;
+
+            if (restaurants.length === 0) {
+                listEl.innerHTML = '<div class="loading">No restaurants found</div>';
+                return;
+            }
+
+            listEl.innerHTML = restaurants.slice(0, 50).map(r => {
+                const score = r.brussels_score?.toFixed(2) || '';
+                const isUnderexplored = r.tier === 'underexplored';
+                const commune = r.commune || '';
+                const openStatus = getOpenStatus(r.opening_hours);
+
+                // Build hours display for card
+                let hoursHtml = '';
+                if (openStatus.status !== 'unknown') {
+                    hoursHtml = `
+                        <div class="restaurant-hours">
+                            <div class="restaurant-hours-status">
+                                <span class="hours-status-dot ${openStatus.status}"></span>
+                                <span>${openStatus.status === 'closed' ? 'Closed today' : openStatus.text}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Guide badges for cards - show ALL recognitions (not mutually exclusive)
+                let cardGuideBadges = '';
+                if (r.michelin_stars >= 2) {
+                    cardGuideBadges += `<span class="guide-badge michelin-2">${'⭐'.repeat(r.michelin_stars)} Michelin</span>`;
+                } else if (r.michelin_stars === 1) {
+                    cardGuideBadges += `<span class="guide-badge michelin">⭐ Michelin</span>`;
+                } else if (r.bib_gourmand) {
+                    cardGuideBadges += `<span class="guide-badge bib-gourmand">Bib Gourmand</span>`;
+                }
+                // Gault & Millau is independent - can be shown alongside Michelin/Bib
+                if (r.gault_millau) {
+                    cardGuideBadges += `<span class="guide-badge gault-millau">Gault&Millau</span>`;
+                }
+
+                return `
+                    <div class="restaurant-card" onclick="flyTo(${r.lat}, ${r.lng})">
+                        <div class="restaurant-header">
+                            <div class="restaurant-name">${r.name}</div>
+                            <div class="restaurant-badges">
+                                ${cardGuideBadges}
+                                ${score && parseFloat(score) >= 0.55 ? `<span class="badge badge-score">${score}</span>` : ''}
+                                ${isUnderexplored ? '<span class="badge badge-underexplored">Hidden</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="restaurant-location">${commune}</div>
+                        <div class="restaurant-cuisine">${r.cuisine || 'Restaurant'}</div>
+                        <div class="restaurant-meta">
+                            <span class="restaurant-rating">
+                                <span class="star">★</span>
+                                ${r.rating?.toFixed(1) || 'N/A'}
+                            </span>
+                            <span>${r.review_count || 0} reviews</span>
+                            <span>${'€'.repeat(r.price_numeric || 2)}</span>
+                        </div>
+                        ${hoursHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('total-restaurants').textContent = restaurants.length;
+            document.getElementById('total-gems').textContent =
+                restaurants.filter(r => (r.brussels_score || 0) >= 0.55).length;
+
+            const cuisines = new Set(restaurants.map(r => r.cuisine).filter(Boolean));
+            document.getElementById('total-cuisines').textContent = cuisines.size;
+        }
+
+        function flyTo(lat, lng) {
+            map.flyTo([lat, lng], 16);
+        }
+
+        async function loadHexagons() {
+            try {
+                const response = await fetch('/api/hexagons');
+                const geojson = await response.json();
+
+                hexagonsLayer.clearLayers();
+
+                L.geoJSON(geojson, {
+                    style: feature => ({
+                        fillColor: getHexColor(feature.properties.cluster_label),
+                        color: '#000',
+                        weight: 1,
+                        fillOpacity: 0.5
+                    }),
+                    onEachFeature: (feature, layer) => {
+                        const p = feature.properties;
+                        layer.bindPopup(`
+                            <div class="popup-name">${p.cluster_label} Area</div>
+                            <div class="popup-stats">
+                                <span>Restaurants: ${p.restaurant_count}</span>
+                                <span>Avg: ${p.mean_rating}★</span>
+                            </div>
+                        `);
+                    }
+                }).addTo(hexagonsLayer);
+            } catch (error) {
+                console.error('Error loading hexagons:', error);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('search').addEventListener('input', debounce(loadRestaurants, 300));
+        document.getElementById('commune-filter').addEventListener('change', loadRestaurants);
+        document.getElementById('cuisine-filter').addEventListener('change', loadRestaurants);
+        document.getElementById('venue-filter').addEventListener('change', loadRestaurants);
+        document.getElementById('rating-filter').addEventListener('change', loadRestaurants);
+        document.getElementById('price-filter').addEventListener('change', loadRestaurants);
+        document.getElementById('sort-filter').addEventListener('change', loadRestaurants);
+        document.getElementById('guide-filter').addEventListener('change', loadRestaurants);
+        document.getElementById('day-filter').addEventListener('change', loadRestaurants);
+        document.getElementById('time-filter').addEventListener('change', loadRestaurants);
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`show-${filter === 'all' ? 'all' : filter.replace('_', '-')}`).classList.add('active');
+            loadRestaurants();
+        }
+
+        document.getElementById('show-all').addEventListener('click', () => setFilter('all'));
+        document.getElementById('show-brussels-gems').addEventListener('click', () => setFilter('brussels_gems'));
+        document.getElementById('show-underrated').addEventListener('click', () => setFilter('underrated'));
+
+        document.getElementById('layer-markers').addEventListener('click', () => {
+            document.getElementById('layer-markers').classList.add('active');
+            document.getElementById('layer-hexagons').classList.remove('active');
+            document.getElementById('legend-markers').style.display = 'block';
+            document.getElementById('legend-hexagons').style.display = 'none';
+            map.removeLayer(hexagonsLayer);
+            map.addLayer(markersLayer);
+        });
+
+        document.getElementById('layer-hexagons').addEventListener('click', () => {
+            document.getElementById('layer-hexagons').classList.add('active');
+            document.getElementById('layer-markers').classList.remove('active');
+            document.getElementById('legend-hexagons').style.display = 'block';
+            document.getElementById('legend-markers').style.display = 'none';
+            map.removeLayer(markersLayer);
+            map.addLayer(hexagonsLayer);
+            loadHexagons();
+        });
+
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        loadRestaurants();
+    </script>
+</body>
+</html>
