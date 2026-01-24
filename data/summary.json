@@ -1,19 +1,19 @@
 {
-  "total_restaurants": 4676,
-  "mean_rating": 4.302801539777588,
-  "mean_predicted": 4.302801539747366,
-  "mean_residual": 3.022226970157326e-11,
-  "std_residual": 0.38966477299296726,
-  "num_hexagons": 272,
+  "total_restaurants": 4684,
+  "mean_rating": 4.303181041844578,
+  "mean_predicted": 4.303181041890506,
+  "mean_residual": -4.5929021284554926e-11,
+  "std_residual": 0.39025983398098324,
+  "num_hexagons": 275,
   "cuisines": {
-    "Other": 1803,
+    "Other": 1806,
     "Bar": 466,
     "Cafe": 429,
     "Bakery": 357,
-    "Italian": 342,
+    "Italian": 343,
     "Fast Food": 288,
-    "French": 132,
-    "Japanese": 111,
+    "French": 135,
+    "Japanese": 112,
     "Burger": 72,
     "Brunch": 56,
     "Chinese": 50,
@@ -51,9 +51,9 @@
     "Eastern European": 1
   },
   "cluster_counts": {
-    "Strong": 216,
+    "Elite": 200,
+    "Everyday": 33,
     "Emerging": 27,
-    "Everyday": 15,
-    "Elite": 14
+    "Strong": 15
   }
 }

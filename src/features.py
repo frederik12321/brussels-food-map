@@ -271,7 +271,7 @@ def extract_cuisine(types, primary_type, name=None):
     return "Other"
 
 
-def extract_venue_type(types, primary_type):
+def extract_venue_type(types, primary_type, name=None):
     """Extract venue type (restaurant, cafe, bar, etc.)."""
     # Check for specific sub-types first (before generic "restaurant")
     if primary_type:
@@ -294,6 +294,15 @@ def extract_venue_type(types, primary_type):
         for v in venue_priority:
             if v in types:
                 return v.capitalize()
+
+    # Check name for café/bar indicators (unless it says "restaurant" too)
+    if name and isinstance(name, str):
+        name_lower = name.lower()
+        # If name contains café or bar but NOT restaurant, classify as Bar
+        has_bar_indicator = any(word in name_lower for word in ["café", "cafe", " bar ", " bar,", "bar ", "(bar)", "le bar", "the bar"])
+        has_restaurant = "restaurant" in name_lower or "resto" in name_lower
+        if has_bar_indicator and not has_restaurant:
+            return "Bar"
 
     return "Restaurant"
 
@@ -396,6 +405,11 @@ def parse_days_open(days_open):
 
 def add_h3_features(df, resolution=8):
     """Add H3 hexagonal grid features for spatial analysis."""
+    # Drop existing hex columns if they exist (avoid _x/_y suffixes on re-runs)
+    hex_cols = [c for c in df.columns if c.startswith("hex_")]
+    if hex_cols:
+        df = df.drop(columns=hex_cols)
+
     df["h3_index"] = df.apply(
         lambda row: h3.latlng_to_cell(row["lat"], row["lng"], resolution)
         if pd.notna(row["lat"]) and pd.notna(row["lng"]) else None,
@@ -438,9 +452,9 @@ def engineer_features(df):
         axis=1
     )
 
-    # Venue type
+    # Venue type (now also checks name for café/bar indicators)
     df["venue_type"] = df.apply(
-        lambda row: extract_venue_type(row.get("types", []), row.get("primary_type")),
+        lambda row: extract_venue_type(row.get("types", []), row.get("primary_type"), row.get("name")),
         axis=1
     )
 

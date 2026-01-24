@@ -7,39 +7,39 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root {
-            /* Dark theme colors - avoiding pure black for better readability */
-            --bg-primary: #121212;
-            --bg-secondary: #1e1e1e;
-            --bg-elevated: #252525;
-            --bg-hover: #2d2d2d;
+            /* Apple Maps style - clean, minimal */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f7;
+            --bg-elevated: #ffffff;
+            --bg-hover: #e8e8ed;
 
             /* Border colors */
-            --border-subtle: #333;
-            --border-default: #404040;
-            --border-focus: #10b981;
+            --border-subtle: #d2d2d7;
+            --border-default: #c6c6c8;
+            --border-focus: #007aff;
 
             /* Text colors */
-            --text-primary: #f5f5f5;
-            --text-secondary: #a3a3a3;
-            --text-muted: #737373;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --text-muted: #aeaeb2;
 
-            /* Accent colors */
-            --accent-green: #10b981;
-            --accent-green-light: #34d399;
-            --accent-orange: #f59e0b;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --accent-red: #ef4444;
-            --accent-yellow: #fbbf24;
+            /* Accent colors - Apple style */
+            --accent-green: #34c759;
+            --accent-green-light: #30d158;
+            --accent-orange: #ff9500;
+            --accent-blue: #007aff;
+            --accent-purple: #af52de;
+            --accent-red: #ff3b30;
+            --accent-yellow: #ffcc00;
 
-            /* Shadows */
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
-            --shadow-lg: 0 10px 15px rgba(0,0,0,0.5);
+            /* Shadows - subtle Apple style */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 2px 8px rgba(0,0,0,0.12);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.15);
 
             /* Transitions */
             --transition-fast: 150ms ease;
-            --transition-normal: 200ms ease;
+            --transition-normal: 250ms ease-out;
         }
 
         * {
@@ -49,11 +49,12 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.5;
+            line-height: 1.4;
             -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.01em;
         }
 
         .container {
@@ -62,8 +63,8 @@
         }
 
         .sidebar {
-            width: 420px;
-            background: var(--bg-secondary);
+            width: 380px;
+            background: var(--bg-primary);
             border-right: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
@@ -71,64 +72,62 @@
         }
 
         .header {
-            padding: 24px;
-            background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-secondary) 100%);
+            padding: 20px;
+            background: var(--bg-primary);
             border-bottom: 1px solid var(--border-subtle);
         }
 
         .header h1 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 6px;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
             color: var(--text-primary);
-            letter-spacing: -0.5px;
+            letter-spacing: -0.02em;
         }
 
         .header p {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
         }
 
         .stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            padding: 16px 24px;
+            gap: 8px;
+            padding: 12px 20px;
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border-subtle);
         }
 
         .stat {
             text-align: center;
-            padding: 8px;
-            background: var(--bg-elevated);
-            border-radius: 8px;
+            padding: 6px;
         }
 
         .stat-value {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--accent-green);
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--accent-blue);
         }
 
         .stat-label {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             margin-top: 2px;
         }
 
         .filters {
-            padding: 20px 24px;
+            padding: 12px 20px;
             border-bottom: 1px solid var(--border-subtle);
-            background: var(--bg-secondary);
+            background: var(--bg-primary);
         }
 
         .filter-row {
             display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 10px;
         }
 
         .filter-row:last-child {
@@ -146,64 +145,54 @@
 
         .filter-label {
             display: block;
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: 500;
             color: var(--text-secondary);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
 
         .search-input {
             width: 100%;
             padding: 10px 14px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: none;
+            border-radius: 10px;
             color: var(--text-primary);
-            font-size: 14px;
-            transition: all var(--transition-fast);
+            font-size: 15px;
+            transition: all var(--transition-normal);
         }
 
         .search-input::placeholder {
             color: var(--text-muted);
         }
 
-        .search-input:hover {
-            border-color: var(--border-default);
-        }
-
         .search-input:focus {
             outline: none;
-            border-color: var(--accent-green);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+            background: var(--bg-primary);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
         }
 
         select {
             width: 100%;
             padding: 10px 14px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: none;
+            border-radius: 10px;
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 15px;
             cursor: pointer;
-            transition: all var(--transition-fast);
+            transition: all var(--transition-normal);
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23737373' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23aeaeb2' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 12px center;
-            padding-right: 36px;
-        }
-
-        select:hover {
-            border-color: var(--border-default);
+            padding-right: 32px;
         }
 
         select:focus {
             outline: none;
-            border-color: var(--accent-green);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+            background: var(--bg-primary);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
         }
 
         .toggle-group {
@@ -214,66 +203,66 @@
 
         .toggle-btn {
             flex: 1;
-            min-width: 85px;
-            padding: 10px 12px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
+            min-width: 70px;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: none;
+            border-radius: 20px;
             color: var(--text-secondary);
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
-            transition: all var(--transition-fast);
+            transition: all var(--transition-normal);
         }
 
         .toggle-btn:hover {
             background: var(--bg-hover);
-            border-color: var(--border-default);
-            color: var(--text-primary);
         }
 
         .toggle-btn.active {
-            background: var(--accent-green);
-            border-color: var(--accent-green);
-            color: #000;
+            background: var(--accent-blue);
+            color: white;
             font-weight: 600;
         }
 
         .results {
             flex: 1;
             overflow-y: auto;
-            padding: 16px 24px;
-            background: var(--bg-primary);
+            padding: 12px 16px;
+            background: var(--bg-secondary);
         }
 
         .results-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 10px;
         }
 
         .results-count {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             color: var(--text-secondary);
         }
 
         .restaurant-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-subtle);
+            background: var(--bg-primary);
+            border: none;
             border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
             cursor: pointer;
             transition: all var(--transition-normal);
             box-shadow: var(--shadow-sm);
         }
 
         .restaurant-card:hover {
-            border-color: var(--accent-green);
-            transform: translateY(-2px);
+            transform: scale(1.01);
             box-shadow: var(--shadow-md);
+        }
+
+        .restaurant-card:active {
+            transform: scale(0.99);
         }
 
         .restaurant-header {
@@ -284,8 +273,8 @@
         }
 
         .restaurant-name {
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 500;
             color: var(--text-primary);
             flex: 1;
             line-height: 1.3;
@@ -317,22 +306,22 @@
         }
 
         .restaurant-location {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .restaurant-cuisine {
-            font-size: 13px;
-            color: var(--accent-green);
+            font-size: 12px;
+            color: var(--accent-blue);
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .restaurant-meta {
             display: flex;
-            gap: 16px;
-            font-size: 13px;
+            gap: 12px;
+            font-size: 12px;
             color: var(--text-secondary);
         }
 
@@ -343,7 +332,7 @@
         }
 
         .star {
-            color: var(--accent-yellow);
+            color: #fbbc04;
         }
 
         .restaurant-hours {
@@ -391,32 +380,32 @@
         .map-legend {
             position: absolute;
             bottom: 24px;
-            right: 24px;
-            background: rgba(18, 18, 18, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: none;
+            border-radius: 14px;
+            padding: 14px 16px;
             z-index: 1000;
-            font-size: 13px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
+            font-size: 12px;
+            box-shadow: var(--shadow-md);
         }
 
         .legend-title {
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
+            color: var(--text-primary);
+            margin-bottom: 10px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--text-secondary);
+            font-size: 12px;
         }
 
         .legend-item:last-child {
@@ -623,6 +612,23 @@
             pointer-events: none;
         }
 
+        .pin-marker {
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .pin-marker svg {
+            transition: transform 0.25s ease-out;
+        }
+
+        .pin-dot:hover svg {
+            transform: scale(1.3);
+        }
+
+        .pin-selected svg {
+            transform-origin: bottom center;
+        }
+
         .commune-label div {
             text-align: center;
             letter-spacing: 0.5px;
@@ -630,58 +636,58 @@
 
         .layer-toggle {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(18, 18, 18, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 6px;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: none;
+            border-radius: 22px;
+            padding: 4px;
             z-index: 1000;
             display: flex;
-            gap: 4px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
+            gap: 2px;
+            box-shadow: var(--shadow-md);
         }
 
         .layer-btn {
-            padding: 8px 14px;
+            padding: 8px 16px;
             background: transparent;
             border: none;
-            border-radius: 6px;
+            border-radius: 18px;
             color: var(--text-secondary);
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
-            transition: all var(--transition-fast);
+            transition: all var(--transition-normal);
         }
 
         .layer-btn:hover {
             color: var(--text-primary);
-            background: var(--bg-hover);
         }
 
         .layer-btn.active {
-            background: var(--accent-green);
-            color: #000;
+            background: var(--accent-blue);
+            color: white;
             font-weight: 600;
         }
 
         /* Scrollbar styling */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
+            background: transparent;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--border-default);
-            border-radius: 4px;
+            background: #dadce0;
+            border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
+            background: #bdc1c6;
         }
 
         /* Loading state */
@@ -1002,24 +1008,33 @@
         <div class="map-legend" id="legend-markers">
                 <div class="legend-title">Brussels Food Map</div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #059669;"></div>
-                    <span>Must try - Top 5%</span>
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <circle cx="9" cy="9" r="8.5" fill="#FFD700"/>
+                        <path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/>
+                        <rect x="5" y="12" width="8" height="1.5" rx="0.5" fill="white"/>
+                    </svg>
+                    <span>Must try</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #10b981;"></div>
-                    <span>Recommended - Top 15%</span>
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <circle cx="9" cy="9" r="8.5" fill="#2ECC71"/>
+                        <path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/>
+                    </svg>
+                    <span>Recommended</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #6366f1;"></div>
-                    <span>Above average - Top 35%</span>
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <circle cx="9" cy="9" r="8.5" fill="#3498DB"/>
+                        <path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/>
+                    </svg>
+                    <span>Above average</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #94a3b8;"></div>
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <circle cx="9" cy="9" r="8.5" fill="#95A5A6"/>
+                        <circle cx="9" cy="9" r="2.5" fill="white"/>
+                    </svg>
                     <span>Average</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #64748b;"></div>
-                    <span>Below average</span>
                 </div>
             </div>
             <div class="map-legend" id="legend-hexagons" style="display: none;">
@@ -1053,8 +1068,8 @@
 
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-        // Use CartoDB Dark Matter for an elegant dark aesthetic
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        // Use CartoDB Voyager for clean Google Maps-like appearance
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap &copy; CARTO',
             maxZoom: 19
         }).addTo(map);
@@ -1103,7 +1118,7 @@
 
                 const label = L.divIcon({
                     className: 'commune-label',
-                    html: `<div style="color: #a3a3a3; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.8); font-weight: 600; font-size: 12px; white-space: nowrap; text-transform: uppercase; letter-spacing: 1.5px;">${commune.name}</div>`,
+                    html: `<div style="color: #5f6368; text-shadow: 0 1px 2px rgba(255,255,255,0.9), 0 0 4px rgba(255,255,255,0.8); font-weight: 500; font-size: 11px; white-space: nowrap; text-transform: uppercase; letter-spacing: 1px;">${commune.name}</div>`,
                     iconSize: [140, 24],
                     iconAnchor: [70, 12]
                 });
@@ -1344,22 +1359,102 @@
             return explanations.slice(0, 4); // Limit to top 4 explanations
         }
 
+        // Professional food map icons - 18px with refined color palette
+        // Colors: Gold (must try), Emerald (recommended), Blue (above avg), Gray (average)
+        function createPinIcon(color, isSelected = false, tier = 'average') {
+            const size = 18;
+
+            // Professional tier colors - optimized for map visibility
+            const tierColors = {
+                'must_try': '#FFD700',      // Gold - highest quality
+                'recommended': '#2ECC71',   // Emerald Green - positive action
+                'above_average': '#3498DB', // Bright Blue - above norm
+                'average': '#95A5A6'        // Concrete Gray - minimal noise
+            };
+
+            const iconColor = tierColors[tier] || tierColors['average'];
+
+            // Clean icons with appropriate symbols per tier
+            const tierIcons = {
+                // Crown icon (Must try) - gold with crown symbol
+                'must_try': `
+                    <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
+                    <path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/>
+                    <rect x="5" y="12" width="8" height="1.5" rx="0.5" fill="white"/>
+                `,
+                // Heart icon (Recommended) - green with heart
+                'recommended': `
+                    <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
+                    <path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/>
+                `,
+                // Fork & knife (Above average) - blue with utensils
+                'above_average': `
+                    <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
+                    <path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/>
+                `,
+                // Simple dot (Average) - gray with minimal marker
+                'average': `
+                    <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
+                    <circle cx="9" cy="9" r="2.5" fill="white"/>
+                `
+            };
+
+            if (isSelected) {
+                // Selected: larger (26px) with shadow and bounce effect
+                const pinSize = 26;
+                const scale = pinSize / size;
+                const svg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="${pinSize}" height="${pinSize}" style="filter: drop-shadow(0 3px 4px rgba(0,0,0,0.35));">
+                        ${tierIcons[tier] || tierIcons['average']}
+                    </svg>
+                `;
+                return L.divIcon({
+                    className: 'pin-marker pin-selected',
+                    html: svg,
+                    iconSize: [pinSize, pinSize],
+                    iconAnchor: [pinSize / 2, pinSize / 2],
+                    popupAnchor: [0, -pinSize / 2]
+                });
+            } else {
+                // Default: 18px icon
+                const svg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="${size}" height="${size}" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">
+                        ${tierIcons[tier] || tierIcons['average']}
+                    </svg>
+                `;
+                return L.divIcon({
+                    className: 'pin-marker pin-dot',
+                    html: svg,
+                    iconSize: [size, size],
+                    iconAnchor: [size / 2, size / 2],
+                    popupAnchor: [0, -size / 2]
+                });
+            }
+        }
+
+        // Get tier from brussels_score
+        function getTierFromScore(score) {
+            if (score >= 0.6) return 'must_try';
+            if (score >= 0.45) return 'recommended';
+            if (score >= 0.3) return 'above_average';
+            return 'average';
+        }
+
+        let selectedMarker = null;
+
         function createMarker(restaurant) {
             const color = getMarkerColor(restaurant);
-            const score = restaurant.brussels_score || 0;
-            const residual = restaurant.residual || 0;
+            const tier = getTierFromScore(restaurant.brussels_score || 0);
 
-            // Base size on score, but boost underrated restaurants
-            let size = Math.max(5, Math.min(12, 5 + score * 10));
-            if (residual > 0.25) size += 2; // Underrated gems get bigger markers
-
-            const marker = L.circleMarker([restaurant.lat, restaurant.lng], {
-                radius: size,
-                fillColor: color,
-                color: '#fff',
-                weight: 2,
-                fillOpacity: 0.9
+            // All markers start as small dots with tier-specific icon
+            const marker = L.marker([restaurant.lat, restaurant.lng], {
+                icon: createPinIcon(color, false, tier)
             });
+
+            // Store color, tier and restaurant data for selection
+            marker.restaurantColor = color;
+            marker.restaurantTier = tier;
+            marker.restaurantData = restaurant;
 
             const commune = restaurant.commune || 'Unknown';
             const neighborhood = restaurant.neighborhood ? ` (${restaurant.neighborhood})` : '';
@@ -1391,6 +1486,8 @@
             }
             const badgesHtml = guideBadges ? `<div class="guide-badges">${guideBadges}</div>` : '';
 
+            const score = restaurant.brussels_score || 0;
+
             marker.bindPopup(`
                 <div class="popup-name">${restaurant.name}</div>
                 ${badgesHtml}
@@ -1408,8 +1505,27 @@
                 }
             `);
 
+            // On click, expand this marker to full pin
+            marker.on('click', function() {
+                // Reset previous selected marker
+                if (selectedMarker && selectedMarker !== this) {
+                    selectedMarker.setIcon(createPinIcon(selectedMarker.restaurantColor, false, selectedMarker.restaurantTier));
+                }
+                // Expand this marker
+                this.setIcon(createPinIcon(this.restaurantColor, true, this.restaurantTier));
+                selectedMarker = this;
+            });
+
             return marker;
         }
+
+        // Click on map to deselect marker
+        map.on('click', function(e) {
+            if (selectedMarker && !e.originalEvent.target.closest('.pin-marker')) {
+                selectedMarker.setIcon(createPinIcon(selectedMarker.restaurantColor, false, selectedMarker.restaurantTier));
+                selectedMarker = null;
+            }
+        });
 
         // Helper function to check if restaurant is open on a specific day
         function isOpenOnDay(openingHours, day) {
