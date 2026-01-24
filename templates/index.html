@@ -1006,31 +1006,22 @@
             }
 
             .container.show-list .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 70px;
                 width: 100%;
                 max-width: 100%;
-                height: auto;
-                max-height: none;
-                display: flex;
-                flex-direction: column;
-                overflow: hidden;
-            }
-
-            .container.show-list .header,
-            .container.show-list .stats,
-            .container.show-list .filters {
-                flex-shrink: 0;
+                height: 100vh;
+                height: 100dvh;
+                max-height: 100vh;
+                max-height: 100dvh;
+                border-right: none;
             }
 
             .container.show-list .results {
                 flex: 1;
-                overflow-y: auto;
+                overflow-y: scroll;
                 -webkit-overflow-scrolling: touch;
-                padding-bottom: 20px;
+                overscroll-behavior: contain;
+                padding-bottom: 100px;
+                min-height: 0;
             }
 
             .container.show-list .map-legend,
