@@ -1,92 +1,297 @@
-# Brussels Food Map - Hidden Gems
+# Brussels Food Map 🍴
 
-Discover algorithmically undervalued restaurants in Brussels using machine learning.
+**Discover hidden culinary gems in Brussels using machine learning and local context.**
 
-This project uses Google Maps data and gradient-boosted decision trees to identify restaurants that perform better than expected given their structural characteristics - revealing hidden gems that the algorithm might be undervaluing.
+A web application that combines Google Maps data with a Brussels-specific ranking algorithm to surface underrated restaurants that tourists and generic rating systems tend to overlook.
+
+🔗 **Live Demo**: [brussels-food-map.up.railway.app](https://brussels-food-map.up.railway.app)
+
+---
 
 ## How It Works
 
-1. **Data Collection**: Scrapes 1000+ restaurants from Google Maps Places API covering the Brussels Capital Region
-2. **Feature Engineering**: Extracts features like review counts (log-transformed), cuisine type, chain status, price level, and spatial grid position
-3. **ML Prediction**: Trains a HistGradientBoostingRegressor to predict expected ratings
-4. **Residual Analysis**: Restaurants with actual ratings higher than predicted are "undervalued"
-5. **Spatial Clustering**: Groups neighborhoods using H3 hexagons and K-means clustering
+### The Problem with Google Maps Ratings
 
-## Setup
+Google Maps ratings favor:
+- **Tourist-heavy locations** (more reviews from visitors)
+- **Chain restaurants** (consistent, recognizable)
+- **High-volume places** (more data = higher confidence)
 
-### 1. Get a Google Maps API Key
+This means authentic local spots, diaspora restaurants, and neighborhood gems often get buried.
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the **Places API (New)**
-4. Go to Credentials and create an API key
-5. (Recommended) Restrict the API key to Places API only
+### Our Solution: Brussels-Specific Reranking
 
-### 2. Configure Environment
+We built a two-stage ranking system:
 
-```bash
-cd brussels-food-map
-cp .env.example .env
-# Edit .env and add your API key
+#### Stage 1: ML-Based Undervaluation Detection
+
+A **HistGradientBoostingRegressor** model predicts what rating a restaurant *should* have based on its structural characteristics:
+
+- Review count (log-transformed)
+- Price level
+- Cuisine type
+- Chain status
+- Location (H3 hexagonal grid)
+- Opening hours patterns
+
+**Residual = Actual Rating - Predicted Rating**
+
+Positive residual → Restaurant performs *better* than expected → Undervalued gem
+
+#### Stage 2: Brussels Context Scoring
+
+The final `brussels_score` combines multiple signals:
+
+| Component | Weight | Description |
+|-----------|--------|-------------|
+| **Base Quality** | 30% | Normalized Google rating (0-5 → 0-1) |
+| **ML Residual** | 25% | Undervaluation bonus from Stage 1 |
+| **Scarcity Score** | 15% | Limited hours/days = local favorite |
+| **Independent Bonus** | 10% | Non-chain restaurants |
+| **Tourist Trap Penalty** | -15% | Proximity to Grand Place, Rue des Bouchers |
+| **Guide Recognition** | up to 12% | Michelin stars, Bib Gourmand, Gault&Millau |
+| **Local Street Bonus** | 6% | Known local foodie streets |
+| **Other factors** | ~4% | Commune visibility, cold-start, rarity |
+
+### Scarcity Score (The Secret Sauce)
+
+Restaurants that are *hard to access* are often local favorites:
+
+```
+Scarcity = weighted sum of:
+  - Review scarcity (50-500 reviews = sweet spot)
+  - Hours scarcity (closes early = lunch spots)
+  - Days scarcity (fewer days open = exclusive)
+  - Schedule scarcity (closed weekends = local workers)
+  - Cuisine scarcity (rare cuisines in Brussels)
 ```
 
-### 3. Install Dependencies
+A lunch-only spot open 4 days a week with 150 reviews? Probably a hidden gem that locals know about.
 
-```bash
-pip install -r requirements.txt
+---
+
+## Tier System
+
+Restaurants are categorized into four tiers based on `brussels_score`:
+
+| Tier | Score | Icon | Color | Description |
+|------|-------|------|-------|-------------|
+| **Must Try** | ≥ 0.60 | 👑 Crown | Gold #FFD700 | Top picks, exceptional quality |
+| **Recommended** | ≥ 0.45 | ❤️ Heart | Green #2ECC71 | Solid choices, worth visiting |
+| **Above Average** | ≥ 0.30 | 🍴 Utensils | Blue #3498DB | Better than typical |
+| **Average** | < 0.30 | ● Dot | Gray #95A5A6 | Standard restaurants |
+
+---
+
+## Data Pipeline
+
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐     ┌──────────────┐
+│  scraper.py │ ──▶ │ features.py  │ ──▶ │  model.py   │ ──▶ │ brussels_    │
+│             │     │              │     │             │     │ reranking.py │
+│ Google Maps │     │ Feature      │     │ ML Model    │     │              │
+│ Places API  │     │ Engineering  │     │ Training    │     │ Context      │
+│             │     │              │     │ & Residuals │     │ Scoring      │
+└─────────────┘     └──────────────┘     └─────────────┘     └──────────────┘
+       │                   │                    │                    │
+       ▼                   ▼                    ▼                    ▼
+brussels_restaurants   brussels_restaurants  restaurants_with    restaurants_
+      .json              _processed.csv      _predictions.csv   _brussels_reranked.csv
 ```
 
-### 4. Run the Pipeline
+### 1. Data Collection (`scraper.py`)
 
-```bash
-# Step 1: Scrape restaurant data
-python src/scraper.py
+Scrapes restaurant data from Google Maps Places API:
+- Name, rating, review count, price level
+- Location (lat/lng), address
+- Opening hours
+- Cuisine type
 
-# Step 2: Train model and generate predictions
-cd src && python model.py && cd ..
+### 2. Feature Engineering (`features.py`)
 
-# Step 3: Start the web dashboard
-cd src && python app.py
-```
+Transforms raw data into ML features:
+- Log-transform review counts
+- One-hot encode cuisines
+- Extract opening hours patterns (closes early, weekdays only, etc.)
+- Assign H3 hexagonal grid indices
+- Detect chain restaurants
 
-Then open http://localhost:5000 in your browser.
+### 3. ML Model (`model.py`)
+
+Trains HistGradientBoostingRegressor:
+- Predicts expected rating based on features
+- Calculates residuals (actual - predicted)
+- Clusters neighborhoods using K-means on hex aggregates
+
+### 4. Brussels Reranking (`brussels_reranking.py`)
+
+Applies local context:
+- Tourist trap detection (Grand Place proximity)
+- Diaspora authenticity scoring
+- Scarcity signals (hours, days, reviews)
+- Guide recognition (Michelin, Gault&Millau)
+- Local street bonuses
+
+---
 
 ## Project Structure
 
 ```
 brussels-food-map/
-├── data/                          # Data files (generated)
-│   ├── brussels_restaurants.json  # Raw scraped data
-│   ├── restaurants_with_predictions.csv  # Processed with ML predictions
-│   ├── hex_features.csv           # Neighborhood aggregations
-│   └── summary.json               # Statistics
+├── data/
+│   ├── brussels_restaurants.json          # Raw scraped data
+│   ├── brussels_restaurants_processed.csv # Cleaned & featured
+│   ├── restaurants_with_predictions.csv   # ML predictions added
+│   ├── restaurants_brussels_reranked.csv  # Final ranked data
+│   ├── hex_features.csv                   # Neighborhood aggregates
+│   └── summary.json                       # Statistics
 ├── src/
-│   ├── scraper.py                 # Google Maps Places API scraper
-│   ├── features.py                # Feature engineering
-│   ├── model.py                   # ML model training
-│   └── app.py                     # Flask web application
+│   ├── scraper.py              # Google Maps API scraper
+│   ├── features.py             # Feature engineering
+│   ├── model.py                # ML model training
+│   ├── brussels_reranking.py   # Brussels-specific scoring
+│   ├── brussels_context.py     # Local knowledge (communes, streets)
+│   └── app.py                  # Flask web application
 ├── templates/
-│   └── index.html                 # Dashboard frontend
-├── static/                        # Static assets
-├── requirements.txt               # Python dependencies
-└── .env.example                   # Environment template
+│   └── index.html              # Frontend (Leaflet.js map)
+├── requirements.txt
+├── Procfile                    # Railway deployment
+└── README.md
 ```
 
-## Features
+---
 
-- **Interactive Map**: Visualize restaurants colored by undervaluation score
-- **Search & Filter**: Filter by cuisine, rating, name search
-- **Hidden Gems Mode**: Show only algorithmically undervalued restaurants
-- **Neighborhood View**: See H3 hexagonal clusters (Elite, Strong, Everyday, Emerging)
-- **Restaurant Cards**: Click to fly to location, view details, link to Google Maps
+## Local Development
 
-## API Costs
+### Prerequisites
 
-The scraper stays within Google Maps API free tier ($200/month credit):
-- Places Nearby Search: ~$0.032 per request
-- Approximately 100-200 API calls to cover Brussels
-- Total cost: ~$3-7 one-time scrape
+- Python 3.9+
+- Google Maps API key (Places API enabled)
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/frederik12321/brussels-food-map.git
+cd brussels-food-map
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env and add your GOOGLE_MAPS_API_KEY
+```
+
+### Run the Pipeline
+
+```bash
+# 1. Scrape restaurant data (requires API key)
+python src/scraper.py
+
+# 2. Engineer features
+python src/features.py
+
+# 3. Train ML model
+python src/model.py
+
+# 4. Apply Brussels reranking
+python src/brussels_reranking.py
+
+# 5. Start web server
+python src/app.py
+```
+
+Open http://localhost:5001 in your browser.
+
+### Quick Start (Using Existing Data)
+
+If you just want to run the app with pre-processed data:
+
+```bash
+python src/app.py
+```
+
+---
+
+## Deployment
+
+### Railway (Recommended)
+
+1. Fork this repository
+2. Connect to Railway
+3. Add environment variable: `GOOGLE_MAPS_API_KEY` (optional, only for re-scraping)
+4. Deploy
+
+The `Procfile` and `railway.json` are pre-configured.
+
+### Manual
+
+```bash
+gunicorn src.app:app --bind 0.0.0.0:$PORT
+```
+
+---
+
+## API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /` | Main web interface |
+| `GET /api/restaurants` | JSON array of all restaurants |
+| `GET /api/hexagons` | GeoJSON of neighborhood hexagons |
+
+---
+
+## Technologies
+
+- **Backend**: Flask, Python
+- **ML**: scikit-learn (HistGradientBoostingRegressor)
+- **Spatial**: H3 (Uber's hexagonal grid), K-means clustering
+- **Frontend**: Leaflet.js, CartoDB Voyager tiles
+- **Data**: Google Maps Places API
+- **Deployment**: Railway
+
+---
+
+## Brussels Context Knowledge
+
+The algorithm incorporates local knowledge about Brussels:
+
+### Commune Tiers
+
+- **Tourist Heavy**: Bruxelles-Ville (center)
+- **EU Bubble**: Etterbeek, parts of Ixelles
+- **Diaspora Hubs**: Saint-Gilles, Schaerbeek, Molenbeek, Saint-Josse
+- **Local Foodie**: Uccle, Woluwe-Saint-Lambert, Auderghem
+- **Underexplored**: Anderlecht, Forest, Jette, Evere
+
+### Known Local Streets
+
+- Rue de Flandre (authentic Belgian)
+- Chaussée de Charleroi (diverse)
+- Rue Sainte-Catherine (seafood)
+- Parvis de Saint-Gilles (trendy local)
+- Place Jourdan (frites!)
+
+### Tourist Trap Zones
+
+- Grand Place (exponential penalty within 250m)
+- Rue des Bouchers (heavy penalty)
+- Manneken Pis area
+
+---
 
 ## Credits
 
-Inspired by [Lauren Leek's London Food Dashboard](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates).
+Inspired by [Lauren Leek's London Food Dashboard](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates) and the concept of algorithmic undervaluation in rating systems.
+
+---
+
+## License
+
+MIT License - feel free to adapt for your own city!
