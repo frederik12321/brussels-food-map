@@ -286,6 +286,66 @@ The algorithm incorporates local knowledge about Brussels:
 
 ---
 
+## Data Coverage & Granularity
+
+### What's Analyzed
+
+| Level | Coverage | Detection Method |
+|-------|----------|------------------|
+| **Communes** | All 19 Brussels communes | Nearest center (approximate) |
+| **Neighborhoods** | 13 special areas | 0.5km radius |
+| **Local Streets** | 14 foodie streets | 120-200m radius |
+| **Cuisines** | 11 diaspora types | Commune-based authenticity |
+| **Guides** | ~100 restaurants | Name matching |
+
+### Commune Classifications
+
+| Tier | Communes |
+|------|----------|
+| **Tourist Heavy** (-15%) | Bruxelles |
+| **EU Bubble** (-5%) | Etterbeek |
+| **Diaspora Hub** (+15%) | Saint-Gilles, Schaerbeek, Molenbeek, Saint-Josse |
+| **Local Foodie** (+10%) | Uccle, Woluwe-Saint-Lambert, Woluwe-Saint-Pierre, Auderghem, Watermael-Boitsfort |
+| **Underexplored** (+12%) | Anderlecht, Forest, Jette, Evere, Ganshoren, Koekelberg, Berchem-Sainte-Agathe |
+| **Mixed** (neutral) | Ixelles |
+
+### Special Neighborhoods (0.5km radius)
+
+**Local Foodie**: Matongé, Châtelain, Sainte-Catherine, Marolles, Saint-Boniface, Flagey, Parvis Saint-Gilles, Dansaert
+
+**Mixed**: Sablon, Gare du Nord
+
+**Tourist Trap**: Grand Place, Rue des Bouchers
+
+**EU Bubble**: European Quarter
+
+### Diaspora Authenticity
+
+Restaurants get bonuses when their cuisine matches their commune:
+
+- **Congolese/African** → Ixelles (Matongé), Saint-Gilles
+- **Moroccan** → Molenbeek, Saint-Gilles, Saint-Josse, Schaerbeek
+- **Turkish/Middle Eastern** → Saint-Josse, Schaerbeek
+- **Portuguese** → Saint-Gilles
+- **Ethiopian** → Bruxelles (Sainte-Catherine area)
+
+### Guide Recognition
+
+| Guide | Count | Bonus |
+|-------|-------|-------|
+| Michelin 2-star | 5 | +12% |
+| Michelin 1-star | 11 | +8% |
+| Bib Gourmand | ~30 | +5% |
+| Gault&Millau 15+ | ~50 | +4% |
+
+### Limitations
+
+- Commune detection uses nearest center, not official boundaries
+- Neighborhood radius is fixed at 0.5km
+- Guide lists are manually maintained and may become outdated
+
+---
+
 ## Inspiration & Differences from Original
 
 This project is inspired by **[Lauren Leek's London Food Dashboard](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates)**, which brilliantly exposed how Google Maps ratings systematically undervalue certain restaurants.
@@ -337,7 +397,7 @@ Lauren's dashboard focused on **data visualization and exploration**. We focused
 
 **Original Inspiration**: [Lauren Leek](https://laurenleek.substack.com/) - Her article ["How Google Maps Quietly Allocates Fame"](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates) sparked this entire project. The core insight that ML residuals can identify undervalued restaurants is brilliant.
 
-**Brussels Adaptation**: Frederik Beliën - Local context, scarcity scoring, guide recognition, and the Flemish feast UI.
+**Brussels Adaptation**: Local context, scarcity scoring, guide recognition, and the Flemish feast UI.
 
 **Built with**: Claude (Anthropic) - Pair programming partner for the entire codebase.
 
