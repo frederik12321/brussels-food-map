@@ -14,34 +14,49 @@ from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
 
+# Cache data at startup for faster responses
+_cached_data = None
+_cached_hex = None
+_cached_summary = None
+
 
 def load_data():
-    """Load processed restaurant data (prefer reranked if available)."""
+    """Load processed restaurant data (cached after first load)."""
+    global _cached_data
+    if _cached_data is not None:
+        return _cached_data.copy()
     try:
-        # Try to load Brussels-reranked data first
-        df = pd.read_csv("../data/restaurants_brussels_reranked.csv")
-        return df
+        _cached_data = pd.read_csv("../data/restaurants_brussels_reranked.csv")
+        return _cached_data.copy()
     except FileNotFoundError:
         try:
-            df = pd.read_csv("../data/restaurants_with_predictions.csv")
-            return df
+            _cached_data = pd.read_csv("../data/restaurants_with_predictions.csv")
+            return _cached_data.copy()
         except FileNotFoundError:
             return None
 
 
 def load_hex_features():
-    """Load hexagon neighborhood features."""
+    """Load hexagon neighborhood features (cached)."""
+    global _cached_hex
+    if _cached_hex is not None:
+        return _cached_hex
     try:
-        return pd.read_csv("../data/hex_features.csv")
+        _cached_hex = pd.read_csv("../data/hex_features.csv")
+        return _cached_hex
     except FileNotFoundError:
         return None
 
 
 def load_summary():
-    """Load summary statistics."""
+    """Load summary statistics (cached)."""
+    global _cached_summary
+    if _cached_summary is not None:
+        return _cached_summary
     try:
         with open("../data/summary.json", "r") as f:
-            return json.load(f)
+            _cached_summary = json.load(f)
+            return _cached_summary
     except FileNotFoundError:
         return {}
 
