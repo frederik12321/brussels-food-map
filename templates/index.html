@@ -803,44 +803,6 @@
             letter-spacing: 0.5px;
         }
 
-        .layer-toggle {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: linear-gradient(135deg, #FDF6E3 0%, #F5E6D3 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid #D4C4B0;
-            border-radius: 22px;
-            padding: 4px;
-            z-index: 1000;
-            display: flex;
-            gap: 2px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .layer-btn {
-            padding: 8px 16px;
-            background: transparent;
-            border: none;
-            border-radius: 18px;
-            color: #6B5D4D;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all var(--transition-normal);
-        }
-
-        .layer-btn:hover {
-            color: #5D4E37;
-        }
-
-        .layer-btn.active {
-            background: #8B4513;
-            color: #FFFDF9;
-            font-weight: 600;
-        }
-
         /* Scrollbar styling */
         ::-webkit-scrollbar {
             width: 6px;
@@ -1324,10 +1286,6 @@
         </div>
 
         <div class="map-container">
-            <div class="layer-toggle">
-                <button class="layer-btn active" id="layer-markers">Restaurants</button>
-                <button class="layer-btn" id="layer-hexagons">Neighborhoods</button>
-            </div>
             <div id="map"></div>
         </div>
 
@@ -1381,25 +1339,6 @@
                         <circle cx="9" cy="9" r="2.5" fill="white"/>
                     </svg>
                     <span>Average</span>
-                </div>
-            </div>
-            <div class="map-legend" id="legend-hexagons" style="display: none;">
-                <div class="legend-title">Neighborhood Type</div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #4ade80;"></div>
-                    <span>Elite</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #60a5fa;"></div>
-                    <span>Strong</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #fbbf24;"></div>
-                    <span>Everyday</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #a78bfa;"></div>
-                    <span>Emerging</span>
                 </div>
             </div>
         </div>
@@ -2264,25 +2203,6 @@
         document.getElementById('show-all').addEventListener('click', () => setFilter('all'));
         document.getElementById('show-brussels-gems').addEventListener('click', () => setFilter('brussels_gems'));
         document.getElementById('show-underrated').addEventListener('click', () => setFilter('underrated'));
-
-        document.getElementById('layer-markers').addEventListener('click', () => {
-            document.getElementById('layer-markers').classList.add('active');
-            document.getElementById('layer-hexagons').classList.remove('active');
-            document.getElementById('legend-markers').style.display = 'block';
-            document.getElementById('legend-hexagons').style.display = 'none';
-            map.removeLayer(hexagonsLayer);
-            map.addLayer(markersLayer);
-        });
-
-        document.getElementById('layer-hexagons').addEventListener('click', () => {
-            document.getElementById('layer-hexagons').classList.add('active');
-            document.getElementById('layer-markers').classList.remove('active');
-            document.getElementById('legend-hexagons').style.display = 'block';
-            document.getElementById('legend-markers').style.display = 'none';
-            map.removeLayer(markersLayer);
-            map.addLayer(hexagonsLayer);
-            loadHexagons();
-        });
 
         function debounce(func, wait) {
             let timeout;
