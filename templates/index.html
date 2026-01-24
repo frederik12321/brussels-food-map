@@ -999,7 +999,7 @@
 
         <button class="mobile-toggle" id="mobile-toggle">Show Map</button>
         <div class="map-legend" id="legend-markers">
-                <div class="legend-title">Brussels Score</div>
+                <div class="legend-title">Brussels Food Map</div>
                 <div class="legend-item">
                     <div class="legend-color" style="background: #059669;"></div>
                     <span>Must try - Top 5%</span>
@@ -1052,8 +1052,8 @@
 
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-        // Use CartoDB Positron for a clean, readable map that works with dark UI
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        // Use CartoDB Dark Matter for an elegant dark aesthetic
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap &copy; CARTO',
             maxZoom: 19
         }).addTo(map);
@@ -1102,7 +1102,7 @@
 
                 const label = L.divIcon({
                     className: 'commune-label',
-                    html: `<div style="color: #374151; text-shadow: 0 1px 3px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.8); font-weight: 600; font-size: 12px; white-space: nowrap; text-transform: uppercase; letter-spacing: 1.5px;">${commune.name}</div>`,
+                    html: `<div style="color: #a3a3a3; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.8); font-weight: 600; font-size: 12px; white-space: nowrap; text-transform: uppercase; letter-spacing: 1.5px;">${commune.name}</div>`,
                     iconSize: [140, 24],
                     iconAnchor: [70, 12]
                 });
@@ -1724,9 +1724,13 @@
             setTimeout(() => map.invalidateSize(), 100);
         });
 
-        // Start with list view on mobile
+        // Start with map view on mobile
         if (window.innerWidth <= 768) {
-            container.classList.add('show-list');
+            container.classList.add('show-map');
+            showingMap = true;
+            mobileToggle.textContent = 'Show List';
+            // Trigger map resize after visibility change
+            setTimeout(() => map.invalidateSize(), 100);
         }
     </script>
 </body>
