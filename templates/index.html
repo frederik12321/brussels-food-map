@@ -69,6 +69,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            max-height: 100vh;
         }
 
         .header {
@@ -1038,20 +1039,25 @@
 
             /* Tab: Search */
             .container.tab-search .map-container {
-                display: none;
+                display: none !important;
             }
 
             .container.tab-search .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 70px;
-                width: 100%;
-                height: auto;
-                overflow-y: auto;
+                display: block !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 70px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow-y: scroll !important;
+                overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch;
-                background: linear-gradient(180deg, #FDF6E3 0%, #F8F1E4 100%);
+                background: #FDF6E3 !important;
+                border: none !important;
             }
 
             .container.tab-search .header {
@@ -1064,12 +1070,16 @@
             }
 
             .container.tab-search .stats {
-                display: none;
+                display: none !important;
             }
 
             .container.tab-search .filters {
+                display: block !important;
                 padding: 12px 16px;
                 padding-bottom: 40px;
+                overflow: visible !important;
+                max-height: none !important;
+                border: none !important;
             }
 
             .container.tab-search .filters .filter-row {
@@ -1078,44 +1088,45 @@
             }
 
             .container.tab-search .results {
-                display: none;
+                display: none !important;
             }
 
             /* Tab: Results */
             .container.tab-results .map-container {
-                display: none;
+                display: none !important;
             }
 
             .container.tab-results .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 70px;
-                width: 100%;
-                height: auto;
-                overflow-y: auto;
+                display: block !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 70px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow-y: scroll !important;
+                overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch;
-                background: linear-gradient(180deg, #EDE0D4 0%, #E6D5C3 100%);
+                background: #EDE0D4 !important;
+                border: none !important;
             }
 
-            .container.tab-results .header {
-                display: none;
-            }
-
-            .container.tab-results .stats {
-                display: none;
-            }
-
+            .container.tab-results .header,
+            .container.tab-results .stats,
             .container.tab-results .filters {
-                display: none;
+                display: none !important;
             }
 
             .container.tab-results .results {
+                display: block !important;
                 padding: 12px 16px;
                 padding-bottom: 40px;
-                overflow: visible;
-                max-height: none;
+                overflow: visible !important;
+                max-height: none !important;
+                background: transparent !important;
             }
 
             /* Hide legend/info in non-map tabs */
