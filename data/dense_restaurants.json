@@ -27818,26 +27818,6 @@
     "google_maps_url": "https://maps.google.com/?cid=10910131448877400905&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA"
   },
   {
-    "id": "ChIJ23acF7HDw0cRQmwlgacBmU4",
-    "name": "Leonidas outlet",
-    "address": "Leonidas outlet, 1000 Bruxelles, Belgium",
-    "lat": 50.8503396,
-    "lng": 4.3517103,
-    "rating": 5,
-    "review_count": 2,
-    "price_level": null,
-    "types": [
-      "restaurant",
-      "food",
-      "point_of_interest",
-      "establishment"
-    ],
-    "primary_type": "restaurant",
-    "primary_type_display": "Restaurant",
-    "website": "https://www.leonidas.com/",
-    "google_maps_url": "https://maps.google.com/?cid=5663559825332988994&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA"
-  },
-  {
     "id": "ChIJ32R4bi_Dw0cRAQ1eXvZrZhI",
     "name": "Bxl grill",
     "address": "Rue de l'Ev\u00eaque 9, 1000 Bruxelles, Belgium",
