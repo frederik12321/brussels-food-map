@@ -1020,10 +1020,42 @@
                 overflow: hidden;
             }
 
-            .container.show-list .header,
-            .container.show-list .stats,
+            .container.show-list .header {
+                display: none;
+            }
+
+            .container.show-list .stats {
+                display: none;
+            }
+
             .container.show-list .filters {
                 flex-shrink: 0;
+                padding: 12px 16px;
+                transition: all 0.2s ease;
+            }
+
+            .container.show-list .filters.collapsed {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1200;
+                padding: 8px 16px;
+                background: linear-gradient(135deg, #FDF6E3 0%, #F5E6D3 100%);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            }
+
+            .container.show-list .filters.collapsed .filter-row,
+            .container.show-list .filters.collapsed .filter-group:not(.full-width) {
+                display: none !important;
+            }
+
+            .container.show-list .filters.collapsed .filter-group.full-width {
+                margin-bottom: 0;
+            }
+
+            .container.show-list .filters.collapsed .filter-label {
+                display: none;
             }
 
             .container.show-list .results {
@@ -1034,6 +1066,10 @@
                 padding-bottom: 100px;
                 min-height: 0;
                 max-height: none;
+            }
+
+            .container.show-list .results.with-collapsed-header {
+                padding-top: 60px;
             }
 
             .container.show-list .map-legend,
@@ -2162,6 +2198,27 @@
             mobileToggle.textContent = 'Search resto';
             // Trigger map resize after visibility change
             setTimeout(() => map.invalidateSize(), 100);
+        }
+
+        // Mobile scroll behavior - collapse filters when scrolling
+        if (window.innerWidth <= 768) {
+            const resultsEl = document.querySelector('.results');
+            const filtersEl = document.querySelector('.filters');
+            let lastScrollTop = 0;
+
+            resultsEl.addEventListener('scroll', () => {
+                const scrollTop = resultsEl.scrollTop;
+
+                if (scrollTop > 50) {
+                    filtersEl.classList.add('collapsed');
+                    resultsEl.classList.add('with-collapsed-header');
+                } else {
+                    filtersEl.classList.remove('collapsed');
+                    resultsEl.classList.remove('with-collapsed-header');
+                }
+
+                lastScrollTop = scrollTop;
+            }, { passive: true });
         }
 
         // Info popup functionality
