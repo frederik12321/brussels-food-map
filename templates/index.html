@@ -1008,7 +1008,15 @@
             .container.show-list .sidebar {
                 max-height: calc(100vh - 70px);
                 height: calc(100vh - 70px);
-                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            .container.show-list .header,
+            .container.show-list .stats,
+            .container.show-list .filters {
+                flex-shrink: 0;
             }
 
             .container.show-list .results {
@@ -1018,8 +1026,9 @@
                 padding-bottom: 80px;
             }
 
-            .container.show-list .map-legend {
-                display: none;
+            .container.show-list .map-legend,
+            .container.show-list .info-btn {
+                display: none !important;
             }
         }
     </style>
