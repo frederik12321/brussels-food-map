@@ -1006,8 +1006,15 @@
             }
 
             .container.show-list .sidebar {
-                max-height: calc(100vh - 70px);
-                height: calc(100vh - 70px);
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 70px;
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                max-height: none;
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
@@ -1020,10 +1027,10 @@
             }
 
             .container.show-list .results {
-                max-height: none;
                 flex: 1;
                 overflow-y: auto;
-                padding-bottom: 80px;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 20px;
             }
 
             .container.show-list .map-legend,
