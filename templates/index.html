@@ -1035,6 +1035,23 @@
             }
 
             .container.show-list .filters {
+                flex-shrink: 0;
+                padding: 8px 16px;
+            }
+
+            .container.show-list .filters .filter-row {
+                display: none;
+            }
+
+            .container.show-list .filters .filter-group:not(.full-width) {
+                display: none;
+            }
+
+            .container.show-list .filters .filter-label {
+                display: none;
+            }
+
+            .container.show-list .filters .filter-group.full-width:last-of-type {
                 display: none;
             }
 
