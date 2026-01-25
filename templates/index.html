@@ -2055,22 +2055,26 @@
 
             // On click, expand this marker to full pin
             marker.on('click', function() {
+                const self = this;
+
                 // Bind popup lazily on first click
                 if (!popupBound) {
-                    this.bindPopup(generatePopupContent(restaurant));
+                    self.bindPopup(generatePopupContent(restaurant));
                     popupBound = true;
                 }
 
                 // Reset previous selected marker
-                if (selectedMarker && selectedMarker !== this) {
+                if (selectedMarker && selectedMarker !== self) {
                     selectedMarker.setIcon(createPinIcon(selectedMarker.restaurantColor, false, selectedMarker.restaurantTier));
                 }
                 // Expand this marker
-                this.setIcon(createPinIcon(this.restaurantColor, true, this.restaurantTier));
-                selectedMarker = this;
+                self.setIcon(createPinIcon(self.restaurantColor, true, self.restaurantTier));
+                selectedMarker = self;
 
-                // Open popup after binding
-                this.openPopup();
+                // Open popup with slight delay on mobile to ensure binding is complete
+                setTimeout(function() {
+                    self.openPopup();
+                }, isMobile ? 50 : 0);
             });
 
             return marker;
