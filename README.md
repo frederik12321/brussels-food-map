@@ -52,6 +52,7 @@ The final `brussels_score` combines multiple signals:
 | **Guide Recognition** | up to 12% | Michelin stars, Bib Gourmand, Gault&Millau |
 | **Reddit Community** | up to 8% | Mentioned positively on r/brussels |
 | **Local Street Bonus** | 6% | Known local foodie streets |
+| **Perfection Penalty** | up to -4% | Statistically unlikely 5.0★ ratings with few reviews |
 | **Other factors** | ~4% | Commune visibility, cold-start, rarity |
 
 ### Scarcity Score (The Secret Sauce)
@@ -154,7 +155,9 @@ brussels-food-map/
 │   ├── brussels_context.py     # Local knowledge (communes, streets)
 │   └── app.py                  # Flask web application
 ├── templates/
-│   └── index.html              # Frontend (Leaflet.js map)
+│   ├── index.html              # Frontend (Leaflet.js map)
+│   ├── privacy.html            # Privacy policy
+│   └── terms.html              # Terms of service
 ├── requirements.txt
 ├── Procfile                    # Railway deployment
 └── README.md
@@ -243,7 +246,13 @@ gunicorn src.app:app --bind 0.0.0.0:$PORT
 | Endpoint | Description |
 |----------|-------------|
 | `GET /` | Main web interface |
+| `GET /privacy` | Privacy policy |
+| `GET /terms` | Terms of service |
 | `GET /api/restaurants` | JSON array of all restaurants |
+| `GET /api/restaurants?cuisine=Japanese` | Filter by cuisine |
+| `GET /api/restaurants?min_rating=4.5` | Filter by minimum rating |
+| `GET /api/restaurants?brussels_gems=true` | Top 100 restaurants only |
+| `GET /api/restaurants?search=kamo` | Search by name |
 | `GET /api/hexagons` | GeoJSON of neighborhood hexagons |
 
 ---
@@ -351,6 +360,19 @@ Restaurants mentioned positively on r/brussels get a boost based on mention freq
 
 Hidden gems (< 200 reviews) get an additional 20% multiplier on their Reddit bonus.
 
+### Perfection Penalty
+
+Perfect 5.0★ ratings are statistically unlikely with many reviews (0% of 500+ review restaurants have 5.0★). We apply a mild penalty to account for this:
+
+| Rating | Reviews | Penalty | Reason |
+|--------|---------|---------|--------|
+| 5.0★ | <50 | -4% | 29% of restaurants in this bucket have 5.0★ |
+| 5.0★ | 50-100 | -2.5% | Still limited data |
+| 5.0★ | 100-200 | -1% | Unusual but possible |
+| 4.9★ | <30 | -2% | Very few data points |
+
+This penalty is mild enough to allow promising new restaurants to rank well, while preventing statistically suspicious perfect ratings from dominating the top rankings.
+
 ### Limitations
 
 - Commune detection uses nearest center, not official boundaries
@@ -403,7 +425,7 @@ Lauren's dashboard focused on **data visualization and exploration**. We focused
 1. **Actionable Rankings** - Clear tier system (Must Try → Average)
 2. **Mobile-First UX** - Optimized for on-the-go restaurant discovery
 3. **Local Context** - Deep Brussels-specific knowledge baked into scoring
-4. **Visual Identity** - Flemish feast painting aesthetic matching Brussels' rich culinary heritage
+4. **Modern UI** - Clean, minimal design inspired by contemporary food apps
 
 ---
 
