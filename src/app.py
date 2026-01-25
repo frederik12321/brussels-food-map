@@ -254,6 +254,8 @@ def api_restaurants():
             df = df[df["gault_millau"] == True]
         elif guide_filter == "reddit":
             df = df[df["reddit_mentions"] >= 2]
+        elif guide_filter == "afsca":
+            df = df[df["has_afsca_smiley"] == True]
         elif guide_filter == "any_guide":
             df = df[(df["michelin_stars"] > 0) | (df["bib_gourmand"] == True) | (df["gault_millau"] == True)]
 
@@ -293,7 +295,7 @@ def api_restaurants():
         "closes_early", "typical_close_hour", "weekdays_only", "closed_sunday",
         "days_open_count", "is_rare_cuisine", "opening_hours",
         # Guide recognition
-        "michelin_stars", "bib_gourmand", "gault_millau", "reddit_mentions",
+        "michelin_stars", "bib_gourmand", "gault_millau", "reddit_mentions", "has_afsca_smiley",
         # Scarcity sub-components for transparency
         "scarcity_review_scarcity", "scarcity_hours_scarcity", "scarcity_days_scarcity",
         "scarcity_schedule_scarcity", "scarcity_cuisine_scarcity"

@@ -781,6 +781,11 @@
             color: white;
         }
 
+        .guide-badge.afsca {
+            background: #16a34a;
+            color: white;
+        }
+
         .guide-badges {
             display: flex;
             gap: 6px;
@@ -1305,6 +1310,7 @@
                             <option value="bib">Bib Gourmand</option>
                             <option value="gaultmillau">Gault & Millau</option>
                             <option value="reddit">r/brussels Approved</option>
+                            <option value="afsca">AFSCA Certified</option>
                         </select>
                     </div>
                 </div>
@@ -1414,6 +1420,10 @@
             <div class="info-item">
                 <span class="info-icon">🏆</span>
                 <span class="info-text"><strong>Recognized</strong> — Bonus for Michelin, Bib Gourmand, Gault&Millau, or r/brussels mentions</span>
+            </div>
+            <div class="info-item">
+                <span class="info-icon">✓</span>
+                <span class="info-text"><strong>AFSCA Certified</strong> — Belgian food safety "Smiley" certification</span>
             </div>
             <hr>
             <div class="info-icons">
@@ -1912,6 +1922,10 @@
             if (restaurant.reddit_mentions && restaurant.reddit_mentions >= 2) {
                 guideBadges += `<span class="guide-badge reddit">r/brussels</span>`;
             }
+            // AFSCA hygiene certification (Smiley)
+            if (restaurant.has_afsca_smiley) {
+                guideBadges += `<span class="guide-badge afsca">AFSCA ✓</span>`;
+            }
             const badgesHtml = guideBadges ? `<div class="guide-badges">${guideBadges}</div>` : '';
 
             const score = restaurant.brussels_score || 0;
@@ -2152,6 +2166,10 @@
                 // Reddit community endorsement
                 if (r.reddit_mentions && r.reddit_mentions >= 2) {
                     cardGuideBadges += `<span class="guide-badge reddit">r/brussels</span>`;
+                }
+                // AFSCA hygiene certification (Smiley)
+                if (r.has_afsca_smiley) {
+                    cardGuideBadges += `<span class="guide-badge afsca">AFSCA ✓</span>`;
                 }
 
                 const isMobileView = window.innerWidth <= 768;

@@ -25,6 +25,7 @@ from brussels_context import (
     haversine_distance, is_on_local_street,
     has_michelin_recognition, has_gault_millau, has_bib_gourmand
 )
+from afsca_hygiene import get_afsca_score, match_restaurant
 
 
 # Reddit mentions cache (loaded once)
@@ -684,6 +685,15 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         if review_count < 30:
             perfection_penalty = -0.02  # Light penalty for 4.9 with very few reviews
 
+    # 18. AFSCA Hygiene certification bonus
+    # Restaurants with AFSCA "Smiley" certification have certified self-checking
+    # hygiene systems - the highest food safety rating in Belgium.
+    # Data source: https://favv-afsca.be/nl/open-data
+    address = restaurant.get("address", "")
+    afsca_score = get_afsca_score(name, address)
+    has_afsca_smiley = afsca_score > 0
+    afsca_bonus = 0.06 * afsca_score  # Up to 0.06 bonus for hygiene certification
+
     # Total score
     total = (
         review_penalty +
@@ -703,7 +713,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         guide_bonus +
         reputation_penalty +
         reddit_bonus +
-        perfection_penalty
+        perfection_penalty +
+        afsca_bonus
     )
 
     # Determine restaurant quality tier based on score
@@ -734,6 +745,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         "bib_gourmand": is_bib_gourmand,
         "gault_millau": is_gault_millau,
         "reddit_mentions": reddit_mentions,  # Number of Reddit mentions
+        "has_afsca_smiley": has_afsca_smiley,  # AFSCA hygiene certification
         "reputation_flags": uncertainty_flags,  # Reasons for rating uncertainty
         "scarcity_components": scarcity_components,  # Detailed breakdown
         "components": {
@@ -755,6 +767,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "reputation_penalty": reputation_penalty,
             "reddit_bonus": reddit_bonus,  # Reddit community endorsement
             "perfection_penalty": perfection_penalty,  # Penalty for statistically unlikely perfect ratings
+            "afsca_bonus": afsca_bonus,  # AFSCA hygiene certification bonus
         }
     }
 
@@ -803,9 +816,10 @@ def rerank_restaurants(df):
     df["bib_gourmand"] = [r["bib_gourmand"] for r in results]
     df["gault_millau"] = [r["gault_millau"] for r in results]
     df["reddit_mentions"] = [r["reddit_mentions"] for r in results]
+    df["has_afsca_smiley"] = [r["has_afsca_smiley"] for r in results]
 
     # Add component columns for debugging/transparency
-    for component in ["tourist_penalty", "scarcity_bonus", "local_street_bonus", "perfection_penalty"]:
+    for component in ["tourist_penalty", "scarcity_bonus", "local_street_bonus", "perfection_penalty", "afsca_bonus"]:
         df[f"score_{component}"] = [r["components"][component] for r in results]
 
     # Add scarcity sub-components for detailed analysis
