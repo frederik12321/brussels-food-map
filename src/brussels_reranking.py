@@ -646,8 +646,13 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         # Fritkot exception: high-turnover by design, can be authentic with 3000+ reviews
         # (e.g., Maison Antoine, Frit Flagey)
         review_penalty = 0
+    elif tier in ["local_foodie", "diaspora_hub", "underexplored"]:
+        # High-volume in LOCAL areas = probably a genuine institution, not a tourist trap
+        # (e.g., Barracuda in Flagey with 7000 reviews - just been around a long time)
+        # Only apply mild penalty
+        review_penalty = -0.03
     else:
-        # "Disneyfication" zone (1500+ reviews, non-fritkot)
+        # "Disneyfication" zone (1500+ reviews in tourist/mixed areas)
         # Processing customers like cattle, likely pre-cooking food
         # The "Chez Léon" / Rue des Bouchers effect
         penalty_factor = min(1.0, (review_count - 1500) / 5000)  # Scales up to -0.20
