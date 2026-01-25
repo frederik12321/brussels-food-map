@@ -156,9 +156,44 @@ def similarity_score(name1, name2):
     return SequenceMatcher(None, name1, name2).ratio()
 
 
+def extract_postcode(address):
+    """Extract Belgian postcode from address string."""
+    if not address:
+        return None
+    import re
+    match = re.search(r'\b(1\d{3})\b', address)
+    return match.group(1) if match else None
+
+
+def extract_street_name(address):
+    """
+    Extract just the street name from an address string.
+    Examples:
+        "Chau. de Waterloo 515, 1050 Bruxelles" → "Chau. de Waterloo"
+        "Rue des Sablons 11, 1000 Bruxelles" → "Rue des Sablons"
+    """
+    if not address:
+        return ""
+
+    import re
+
+    # Remove everything after the postcode
+    address = re.sub(r'\b1\d{3}\b.*$', '', address)
+
+    # Remove house number (digits at end, possibly with letters like 11A)
+    address = re.sub(r'\s+\d+[A-Za-z]?\s*,?\s*$', '', address)
+    address = re.sub(r',\s*$', '', address)
+
+    return address.strip()
+
+
 def match_restaurant(restaurant_name, restaurant_address=None, restaurant_postcode=None):
     """
     Try to match a restaurant with AFSCA Smiley data.
+
+    IMPORTANT: AFSCA Smiley certification is per ESTABLISHMENT, not per company.
+    Each location of a chain must be individually certified.
+    We require address/postcode verification to avoid false positives for chains.
 
     Returns: (has_smiley: bool, confidence: float, match_info: dict or None)
     """
@@ -169,11 +204,54 @@ def match_restaurant(restaurant_name, restaurant_address=None, restaurant_postco
 
     normalized = normalize_name(restaurant_name)
 
-    # Try exact name match first
-    if normalized in data['by_name']:
-        return True, 1.0, data['by_name'][normalized]
+    # Extract postcode from address if not provided
+    if not restaurant_postcode and restaurant_address:
+        restaurant_postcode = extract_postcode(restaurant_address)
 
-    # Try fuzzy name matching
+    # Check how many AFSCA entries exist with this name (fuzzy match)
+    # If multiple exist, it's likely a chain and we need address verification
+    # Use fuzzy matching because AFSCA may use variations like "Pain Quotidien Ixelles"
+    matching_entries = [
+        entry for entry in data.get('all_entries', [])
+        if similarity_score(normalize_name(entry['name']), normalized) >= 0.7
+        or normalized in normalize_name(entry['name'])
+        or normalize_name(entry['name']) in normalized
+    ]
+
+    is_chain = len(matching_entries) > 1
+
+    if is_chain:
+        # For chains: require BOTH postcode AND street match to identify specific location
+        # Multiple locations can exist in the same postcode (e.g., Le Pain Quotidien has
+        # multiple locations in 1000 Bruxelles and 1050 Ixelles)
+        if restaurant_postcode and restaurant_address:
+            # Extract just the street name (without house number and city)
+            restaurant_street = normalize_street(extract_street_name(restaurant_address))
+
+            # First: try exact postcode + street match
+            for entry in matching_entries:
+                if entry['postcode'] == restaurant_postcode:
+                    afsca_street = normalize_street(entry['street'])
+                    # Check if streets match (fuzzy to handle abbreviations)
+                    street_score = similarity_score(restaurant_street, afsca_street)
+                    if street_score >= 0.6:
+                        return True, 1.0, entry
+
+            # No match found - this specific location is not certified
+            return False, 0, None
+        else:
+            # No postcode/address available - can't verify which location
+            # Don't assume all locations are certified
+            return False, 0, None
+
+    # For non-chains: exact name match is sufficient
+    if normalized in data['by_name']:
+        entry = data['by_name'][normalized]
+        # Still boost confidence if postcode also matches
+        confidence = 1.0 if (not restaurant_postcode or entry['postcode'] == restaurant_postcode) else 0.9
+        return True, confidence, entry
+
+    # Try fuzzy name matching (for typos, slight variations)
     best_match = None
     best_score = 0
 
@@ -189,7 +267,7 @@ def match_restaurant(restaurant_name, restaurant_address=None, restaurant_postco
             best_match = smiley_info
 
     # Require high confidence for fuzzy matches
-    if best_score >= 0.80:
+    if best_score >= 0.85:  # Increased threshold for safety
         return True, best_score, best_match
 
     # Try address-based matching if we have address info

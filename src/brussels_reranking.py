@@ -689,10 +689,20 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     # Restaurants with AFSCA "Smiley" certification have certified self-checking
     # hygiene systems - the highest food safety rating in Belgium.
     # Data source: https://favv-afsca.be/nl/open-data
+    #
+    # NOTE: Chains get a smaller bonus because AFSCA certification for chains
+    # reflects corporate compliance, not individual restaurant quality.
+    # Independent restaurants with Smiley certification deserve more credit.
     address = restaurant.get("address", "")
     afsca_score = get_afsca_score(name, address)
     has_afsca_smiley = afsca_score > 0
-    afsca_bonus = 0.06 * afsca_score  # Up to 0.06 bonus for hygiene certification
+    if has_afsca_smiley:
+        if is_chain:
+            afsca_bonus = 0.01  # Minimal bonus for chains (corporate hygiene standard)
+        else:
+            afsca_bonus = 0.05  # Meaningful bonus for independent restaurants
+    else:
+        afsca_bonus = 0
 
     # Total score
     total = (
