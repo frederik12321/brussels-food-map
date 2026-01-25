@@ -735,24 +735,15 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         if review_count < 30:
             perfection_penalty = -0.02  # Light penalty for 4.9 with very few reviews
 
-    # 18. AFSCA Hygiene certification bonus
-    # Restaurants with AFSCA "Smiley" certification have certified self-checking
-    # hygiene systems - the highest food safety rating in Belgium.
-    # Data source: https://favv-afsca.be/nl/open-data
-    #
-    # NOTE: Chains get a smaller bonus because AFSCA certification for chains
-    # reflects corporate compliance, not individual restaurant quality.
-    # Independent restaurants with Smiley certification deserve more credit.
+    # 18. AFSCA Hygiene certification (informational only - no scoring bonus)
+    # Data shows AFSCA certification correlates with LOWER quality restaurants
+    # (avg rating 3.95 vs 4.31 for non-certified). Certification reflects
+    # bureaucratic compliance, not food quality. We keep the data for display
+    # but removed from scoring.
     address = restaurant.get("address", "")
     afsca_score = get_afsca_score(name, address)
     has_afsca_smiley = afsca_score > 0
-    if has_afsca_smiley:
-        if is_chain:
-            afsca_bonus = 0.01  # Minimal bonus for chains (corporate hygiene standard)
-        else:
-            afsca_bonus = 0.05  # Meaningful bonus for independent restaurants
-    else:
-        afsca_bonus = 0
+    afsca_bonus = 0  # No bonus - AFSCA doesn't correlate with quality
 
     # 19. Family restaurant bonus (Bourdain: "Chez X" = family-run authenticity)
     # These naming patterns indicate personal, family-run establishments
