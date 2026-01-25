@@ -603,22 +603,55 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
 
     # === SCORING COMPONENTS ===
 
-    # 0. Review count penalty (too few reviews = unreliable rating)
-    # High review counts are NOT penalized - could be a long-established local favorite
-    # We only penalize tourist traps separately (via tourist_trap_score with location + rating signals)
+    # 0. Review count - Brussels "Saturation Curve"
+    # In a mid-sized European capital (1.2M people), review count is a proxy for commercialization
+    # Unlike NYC/London, Brussels locals don't generate 2000+ reviews for authentic spots
+    #
+    # Exception: Friteries (fritkots) are high-turnover by design and can be authentic with 3000+ reviews
+    # Known famous fritkots that don't have "frit" in name
+    KNOWN_FRITKOTS = ["maison antoine", "chez clementine", "la baraque à frites"]
+    name_lower = name.lower() if name else ""
+    is_fritkot = cuisine in ["Fast Food", "Belgian"] and (
+        any(term in name_lower for term in ["frit", "fritkot", "frituur", "friterie", "friture"]) or
+        any(known in name_lower for known in KNOWN_FRITKOTS)
+    )
+
     if review_count < 10:
-        # Extremely few reviews = FLAT devastating penalty
-        # A 5.0 rating with 3 reviews (or even 9) is statistically meaningless
-        # These restaurants should NEVER appear in top rankings
+        # Extremely few reviews = statistically meaningless rating
         review_penalty = -0.60
     elif review_count < 20:
-        # Still very few reviews = strong penalty (scales from -0.40 to -0.15)
+        # Still very few reviews = strong penalty
         review_penalty = -0.40 + 0.25 * ((review_count - 10) / 10)
     elif review_count < 35:
-        # Getting there but still limited data (scales from -0.15 to 0)
+        # Getting there but still limited data
         review_penalty = -0.15 * (1 - (review_count - 20) / 15)
+    elif review_count <= 100:
+        # "Discovery" zone - slight bonus for emerging spots
+        review_penalty = 0.05
+    elif review_count <= 500:
+        # "Sweet Spot" - the Goldilocks zone
+        # Enough social proof, but clientele is likely locals/EU expats
+        review_penalty = 0.08
+    elif review_count <= 800:
+        # "Famous Local" zone - institutions like Fin de Siècle
+        # Crowded but often still good
+        review_penalty = 0.03
+    elif review_count <= 1200:
+        # Transition zone - getting popular
+        review_penalty = 0
+    elif review_count <= 1500:
+        # Warning zone
+        review_penalty = -0.05
+    elif is_fritkot:
+        # Fritkot exception: high-turnover by design, can be authentic with 3000+ reviews
+        # (e.g., Maison Antoine, Frit Flagey)
+        review_penalty = 0
     else:
-        review_penalty = 0  # 35+ reviews = enough data to trust the rating
+        # "Disneyfication" zone (1500+ reviews, non-fritkot)
+        # Processing customers like cattle, likely pre-cooking food
+        # The "Chez Léon" / Rue des Bouchers effect
+        penalty_factor = min(1.0, (review_count - 1500) / 5000)  # Scales up to -0.20
+        review_penalty = -0.10 - (0.10 * penalty_factor)  # -0.10 to -0.20
 
     # 1. Base quality (normalized rating 0-1) - primary driver
     base_quality = 0.30 * (rating / 5.0) if rating else 0
