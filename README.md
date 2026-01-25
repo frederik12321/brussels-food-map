@@ -333,4 +333,4 @@ MIT License - feel free to adapt for your own city!
 
 ---
 
-**Built with**: Claude (Anthropic) as pair programming partner.
+**Built with**: [Claude Code](https://claude.ai/code) as pair programming partner.
