@@ -521,6 +521,8 @@ CHAIN_PATTERNS = [
     r"nando", r"five guys", r"pitaya", r"sushi shop", r"planet sushi",
     r"bavet", r"balls & glory", r"ellis gourmet", r"manhattn",
     r"delitraiteur", r"o'tacos", r"frituur", r"fritland",
+    # Açaí/smoothie bowl chains
+    r"oakberry",
 ]
 
 # Non-restaurant retail shops that shouldn't rank as restaurants
@@ -543,6 +545,23 @@ def is_non_restaurant_shop(name):
         return False
     name_lower = name.lower()
     for pattern in NON_RESTAURANT_SHOPS:
+        if re.search(pattern, name_lower):
+            return True
+    return False
+
+
+def is_chain_restaurant(name):
+    """
+    Check if a restaurant is a chain based on CHAIN_PATTERNS.
+
+    This is used during reranking to override the is_chain field from
+    the original data, allowing us to add new chain patterns without
+    re-running the full feature engineering pipeline.
+    """
+    if not name:
+        return False
+    name_lower = name.lower()
+    for pattern in CHAIN_PATTERNS:
         if re.search(pattern, name_lower):
             return True
     return False

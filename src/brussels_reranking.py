@@ -24,7 +24,8 @@ from brussels_context import (
     distance_to_grand_place, distance_to_eu_quarter,
     haversine_distance, is_on_local_street,
     has_michelin_recognition, has_gault_millau, has_bib_gourmand,
-    get_cuisine_specificity_bonus, is_non_restaurant_shop
+    get_cuisine_specificity_bonus, is_non_restaurant_shop,
+    is_chain_restaurant
 )
 from afsca_hygiene import get_afsca_score, match_restaurant
 
@@ -873,6 +874,17 @@ def rerank_restaurants(df):
         lambda r: get_commune(r["lat"], r["lng"]) if pd.notna(r["lat"]) and pd.notna(r["lng"]) else "Bruxelles",
         axis=1
     )
+
+    # Re-check chains against CHAIN_PATTERNS (overrides features.py chain detection)
+    # This allows adding new chain patterns without re-running full pipeline
+    original_chains = df["is_chain"].sum() if "is_chain" in df.columns else 0
+    df["is_chain"] = df["name"].apply(is_chain_restaurant)
+    new_chains = df["is_chain"].sum()
+    if new_chains > original_chains:
+        newly_flagged = df[df["is_chain"]]["name"].unique().tolist()
+        print(f"\nFlagged {new_chains} chains (was {original_chains}):")
+        for chain in newly_flagged[:10]:
+            print(f"  - {chain}")
 
     commune_review_totals = df.groupby("commune")["review_count"].sum().to_dict()
 
