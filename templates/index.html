@@ -601,6 +601,31 @@
             background: #27272a;
         }
 
+        .info-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 12px;
+        }
+
+        .info-footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        .info-footer a:hover {
+            color: var(--text-primary);
+        }
+
+        .info-footer span {
+            color: var(--text-muted);
+        }
+
         .leaflet-popup-content-wrapper {
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -1429,6 +1454,11 @@
                 </span>
             </div>
             <button class="info-close" id="info-close">Got it</button>
+            <div class="info-footer">
+                <a href="/privacy" target="_blank">Privacy Policy</a>
+                <span>·</span>
+                <a href="/terms" target="_blank">Terms of Service</a>
+            </div>
         </div>
     </div>
 

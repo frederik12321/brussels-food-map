@@ -87,6 +87,18 @@ def index():
     )
 
 
+@app.route("/privacy")
+def privacy():
+    """Privacy policy page."""
+    return render_template("privacy.html")
+
+
+@app.route("/terms")
+def terms():
+    """Terms of service page."""
+    return render_template("terms.html")
+
+
 @app.route("/api/restaurants")
 def api_restaurants():
     """API endpoint for restaurant data with filtering."""
