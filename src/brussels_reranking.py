@@ -786,6 +786,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     days_open_count = restaurant.get("days_open_count")
 
     # 11. Guide recognition bonus (up to 8%)
+    # NOTE: Uses highest applicable bonus only - NO double-counting
+    # A restaurant with both Michelin 1★ and Gault&Millau gets only the Michelin bonus
     guide_bonus = 0
     michelin_stars = has_michelin_recognition(name)
     is_bib_gourmand = has_bib_gourmand(name)
@@ -794,11 +796,11 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     if michelin_stars >= 2:
         guide_bonus = 0.08  # 2+ stars: full bonus
     elif michelin_stars == 1:
-        guide_bonus = 0.06  # 1 star
+        guide_bonus = 0.06  # 1 star (even if also has G&M)
     elif is_bib_gourmand:
-        guide_bonus = 0.04  # Bib Gourmand
+        guide_bonus = 0.04  # Bib Gourmand (even if also has G&M)
     elif is_gault_millau:
-        guide_bonus = 0.03  # Gault Millau only
+        guide_bonus = 0.03  # Gault&Millau only (no Michelin recognition)
 
     # 12. Reddit community endorsement (5% weight)
     reddit_score, reddit_mentions = reddit_community_score(name, review_count)
