@@ -620,25 +620,52 @@ def is_chain_restaurant(name):
     return False
 
 # Michelin starred restaurants (Brussels Capital Region)
-# Updated for 2024/2025 official Michelin Guide
+# Updated for 2025 official Michelin Guide - Complete list
 MICHELIN_STARS = {
-    # 2 stars - Exceptional cooking, worth a detour
+    # === 2 STARS - Exceptional cooking, worth a detour ===
+    "bon bon": 2,
+    "comme chez soi": 2,
+    "l'air du temps": 2,
+    "air du temps": 2,
     "bozar restaurant": 2,
     "karen torosyan": 2,  # Chef at Bozar
-    "comme chez soi": 2,
     # Note: "la paix" pattern needs exact match - handled specially below
-    "villa in the sky": 2,
-    "chalet de la forêt": 2,
-    # 1 star - High-quality cooking, worth a stop
+
+    # === 1 STAR - High-quality cooking, worth a stop ===
+    "sanzaru": 1,
+    "san ": 1,  # Note: space to avoid matching "sandwich"
+    "la villa emily": 1,
+    "villa emily": 1,
+    "kwint": 1,
+    "toshiro": 1,
+    "la villa in the sky": 1,
+    "villa in the sky": 1,
+    "rouge tomate": 1,
+    "kamo": 1,
+    "nuance by nutri": 1,
+    "nuance nutri": 1,
+    "sea grill": 1,
+    "l'écrin": 1,
+    "ecrin": 1,
+    "aux armes de bruxelles": 1,  # Starred location
+    "orphyse chaussette": 1,
+    "humphrey": 1,
+    "alexandre": 1,
+    "la canne en ville": 1,
+    "canne en ville": 1,
+    "le chalet de la forêt": 1,
+    "chalet de la forêt": 1,
+    "roberto": 1,
+    "lola": 1,
+    "san degeimbre": 1,
+    "l'atelier de bossimé": 1,
+    "atelier de bossime": 1,
+    # Additional confirmed starred
     "barge": 1,
     "da mimmo": 1,
     "eliane": 1,
     "humus x hortense": 1,  # Also Green Star
     "humus hortense": 1,
-    "kamo": 1,
-    "la canne en ville": 1,
-    "canne en ville": 1,
-    "villa lorraine": 1,
     "le pigeon noir": 1,
     "pigeon noir": 1,
     "menssa": 1,
@@ -646,26 +673,58 @@ MICHELIN_STARS = {
 }
 
 # Bib Gourmand (Michelin - good quality, good value)
-# Updated for 2024/2025 official Michelin Guide
+# Updated for 2025 official Michelin Guide - Complete list (31 restaurants)
 BIB_GOURMAND = [
-    # New additions 2025
-    "au repos de la montagne",
-    "repos de la montagne",
-    "babam",
-    "lune siamoise",
-    # Confirmed 2024/2025
-    "anju",
-    "appel thaï",
-    "appel thai",
-    "car bon",
-    "de maurice à olivier",
-    "maurice à olivier",
-    "french kiss",
+    # === BRUSSELS PROPER ===
     "jb",
     "jb sushi",
+    "selecto",
+    "le selecto",
+    "strofilia",
     "kline",
+    "les filles",
+    "tero",
+    "rouge tomate",
+    "humphrey",
+    "wine bar des marolles",
+    "le wine bar des marolles",
+    "barge",
+    "crab club",
+    "humus x hortense",
+    "humus hortense",
+    "la bonne chère",
+    "bonne chere",
+    "faubourg saint-antoine",
+    "faubourg saint antoine",
+    "le rabassier",
+    "rabassier",
+
+    # === GREATER BRUSSELS ===
+    "yoka tomo",
+    "yokatomo",
+    "lune siamoise",
+    "car bon",
+    "french kiss",
+    "villa singha",
+    "de maurice à olivier",
+    "maurice à olivier",
+    "babam",
+    "au repos de la montagne",
+    "repos de la montagne",
+    "maza'j",
+    "mazaj",
     "la branche d'olivier",
     "branche d'olivier",
+    "appel thaï",
+    "appel thai",
+    "faraya",
+    "station 3",
+    "monsieur v",
+    "ferment",
+    "furbetto",
+
+    # === LEGACY (may still be valid) ===
+    "anju",
     "la charcuterie",
     "l'épicerie nomad",
     "epicerie nomad",
@@ -675,20 +734,12 @@ BIB_GOURMAND = [
     "variétés",
     "les potes en toque",
     "potes en toque",
-    "maza'j",
-    "mazaj",
     "nénu",
     "nenu",
     "osteria bolognese",
     "saint boniface",
-    "selecto",
-    "le selecto",
     "st. kilda",
     "st kilda",
-    "strofilia",
-    "villa singha",
-    "yokatomo",
-    "yoka tomo",
 ]
 
 # Gault & Millau recognized restaurants (15+ points)
