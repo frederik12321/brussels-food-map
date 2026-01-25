@@ -668,6 +668,22 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     reddit_score, reddit_mentions = reddit_community_score(name, review_count)
     reddit_bonus = 0.08 * reddit_score  # Up to 0.08 bonus (8% of total score)
 
+    # 17. Perfection penalty - statistically unlikely perfect ratings
+    # 5.0★ with 500+ reviews: 0% of restaurants achieve this
+    # 5.0★ with <50 reviews: 29% achieve this (unreliable small sample)
+    # Mild penalty to allow promising startups while demoting suspicious ratings
+    perfection_penalty = 0
+    if rating >= 5.0:
+        if review_count < 50:
+            perfection_penalty = -0.04  # Stronger: very few data points
+        elif review_count < 100:
+            perfection_penalty = -0.025  # Moderate: still limited data
+        elif review_count < 200:
+            perfection_penalty = -0.01  # Light: unusual but possible
+    elif rating >= 4.9:
+        if review_count < 30:
+            perfection_penalty = -0.02  # Light penalty for 4.9 with very few reviews
+
     # Total score
     total = (
         review_penalty +
@@ -686,7 +702,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         tier_adjustment +
         guide_bonus +
         reputation_penalty +
-        reddit_bonus
+        reddit_bonus +
+        perfection_penalty
     )
 
     # Determine restaurant quality tier based on score
@@ -737,6 +754,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "guide_bonus": guide_bonus,
             "reputation_penalty": reputation_penalty,
             "reddit_bonus": reddit_bonus,  # Reddit community endorsement
+            "perfection_penalty": perfection_penalty,  # Penalty for statistically unlikely perfect ratings
         }
     }
 
