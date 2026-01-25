@@ -298,79 +298,82 @@ def unified_scarcity_score(restaurant):
     return total, components
 
 
-def manipulation_penalty(name, rating, review_count):
+def reputation_uncertainty_score(name, rating, review_count):
     """
-    Detect potential Google Maps manipulation signals.
+    Calculate reputation uncertainty - how much we should discount the rating.
 
-    Red flags:
-    1. Keyword stuffing in name (long names, | separators, SEO keywords)
-    2. Suspiciously perfect ratings (5.0 with many reviews)
-    3. Extreme review counts (>10k = likely tourist trap or manipulated)
-    4. Rating/review anomalies
+    This is NOT about detecting fraud, but about statistical confidence:
+    1. Perfect 5.0 ratings are unstable (one bad review changes everything)
+    2. Extreme review counts suggest tourist-heavy, not necessarily local quality
+    3. SEO-heavy names suggest marketing focus over food focus
 
-    Returns: penalty score (0-1, higher = more suspicious)
+    Returns: uncertainty score (0-1, higher = less confident in rating)
     """
-    penalty = 0
+    uncertainty = 0
     flags = []
 
-    # 1. Keyword stuffing in name
+    # 1. Name signals (SEO focus = marketing over quality)
     name_len = len(name) if name else 0
 
-    # Very long names (> 60 chars) are suspicious
+    # Very long names suggest marketing focus
     if name_len > 80:
-        penalty += 0.4
-        flags.append("very_long_name")
+        uncertainty += 0.3
+        flags.append("marketing_heavy_name")
     elif name_len > 60:
-        penalty += 0.2
+        uncertainty += 0.15
         flags.append("long_name")
 
-    # Pipe separators are SEO spam
+    # Pipe separators are SEO patterns
     if name and '|' in name:
-        penalty += 0.15
-        flags.append("pipe_separator")
+        uncertainty += 0.1
+        flags.append("seo_formatting")
 
     # Multiple dashes often indicate keyword stuffing
     if name and name.count(' - ') >= 2:
-        penalty += 0.1
-        flags.append("multiple_dashes")
+        uncertainty += 0.08
+        flags.append("keyword_rich_name")
 
     # SEO keywords in name
-    seo_keywords = ['best', 'top', '#1', 'near', 'authentic', 'real', 'original', 'famous']
+    seo_keywords = ['best', 'top', '#1', 'near', 'famous']
     if name:
         name_lower = name.lower()
         for keyword in seo_keywords:
             if keyword in name_lower:
-                penalty += 0.1
-                flags.append(f"seo_keyword_{keyword}")
+                uncertainty += 0.08
+                flags.append(f"promotional_name")
                 break  # Only penalize once
 
-    # 2. Suspiciously perfect ratings
+    # 2. Perfect ratings - statistically unstable
+    # New places often start with 5.0 (friends/family, nobody wants to be first bad review)
+    # This is natural, not fraud - but we should be cautious
     if rating == 5.0 and review_count:
-        if review_count > 100:
-            # 5.0 with >100 reviews is statistically very unlikely without manipulation
-            penalty += 0.3
-            flags.append("perfect_rating_many_reviews")
-        elif review_count > 50:
-            penalty += 0.15
-            flags.append("perfect_rating_suspicious")
+        if review_count > 200:
+            # 5.0 with >200 reviews is statistically very rare
+            uncertainty += 0.25
+            flags.append("statistically_unlikely_perfect")
+        elif review_count > 100:
+            # Still unusual but could be legitimate niche place
+            uncertainty += 0.15
+            flags.append("unusually_perfect")
+        # < 100 reviews with 5.0 is normal for new places, no penalty
 
-    # 3. Extreme review counts (tourist traps or manipulation)
+    # 3. Extreme review counts (tourist magnet effect)
+    # High volume often means tourist-optimized, not local quality
     if review_count:
         if review_count > 15000:
-            # Very extreme - likely tourist trap
-            penalty += 0.25
-            flags.append("extreme_reviews")
+            uncertainty += 0.20
+            flags.append("tourist_volume")
         elif review_count > 10000:
-            penalty += 0.15
-            flags.append("very_high_reviews")
+            uncertainty += 0.10
+            flags.append("high_volume")
 
-    # 4. High rating + extreme reviews combo (worst case)
-    if rating and rating >= 4.8 and review_count and review_count > 5000:
-        penalty += 0.2
-        flags.append("high_rating_extreme_reviews")
+    # 4. High rating + extreme reviews = tourist trap pattern
+    if rating and rating >= 4.8 and review_count and review_count > 8000:
+        uncertainty += 0.15
+        flags.append("tourist_trap_pattern")
 
     # Cap at 1.0
-    return min(1.0, penalty), flags
+    return min(1.0, uncertainty), flags
 
 
 def eu_bubble_penalty(lat, lng, price_level, review_languages=None):
@@ -543,10 +546,13 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     elif is_gault_millau:
         guide_bonus = 0.05  # Gault Millau only: small boost
 
-    # 15. Manipulation detection penalty
-    # Detects: keyword stuffing, suspicious perfect ratings, extreme reviews
-    manip_score, manip_flags = manipulation_penalty(name, rating, review_count)
-    manipulation_pen = -0.20 * manip_score  # Up to -0.20 penalty for manipulation
+    # 15. Reputation uncertainty penalty
+    # Discounts ratings we're less confident about:
+    # - Perfect 5.0 with many reviews (statistically unlikely)
+    # - Extreme review counts (tourist-heavy)
+    # - SEO-heavy names (marketing focus)
+    uncertainty_score, uncertainty_flags = reputation_uncertainty_score(name, rating, review_count)
+    reputation_penalty = -0.15 * uncertainty_score  # Up to -0.15 penalty for uncertainty
 
     # Total score
     total = (
@@ -565,7 +571,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         scarcity_bonus +
         tier_adjustment +
         guide_bonus +
-        manipulation_pen
+        reputation_penalty
     )
 
     # Return score and component breakdown
@@ -584,7 +590,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         "michelin_stars": michelin_stars,
         "bib_gourmand": is_bib_gourmand,
         "gault_millau": is_gault_millau,
-        "manipulation_flags": manip_flags,  # List of detected manipulation signals
+        "reputation_flags": uncertainty_flags,  # Reasons for rating uncertainty
         "scarcity_components": scarcity_components,  # Detailed breakdown
         "components": {
             "review_penalty": review_penalty,
@@ -602,7 +608,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "scarcity_bonus": scarcity_bonus,  # Unified scarcity (includes hours, days, cuisine)
             "tier_adjustment": tier_adjustment,
             "guide_bonus": guide_bonus,
-            "manipulation_penalty": manipulation_pen,
+            "reputation_penalty": reputation_penalty,
         }
     }
 
