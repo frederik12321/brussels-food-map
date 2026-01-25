@@ -204,7 +204,7 @@ def api_restaurants():
         "cuisine", "venue_type", "price_numeric", "is_chain",
         "predicted_rating", "residual", "google_maps_url",
         "commune", "neighborhood", "local_street", "tier", "commune_tier", "brussels_score",
-        "score_tourist_penalty", "score_scarcity_bonus", "score_local_street_bonus",
+        "score_tourist_penalty", "score_scarcity_bonus", "score_local_street_bonus", "score_perfection_penalty",
         "closes_early", "typical_close_hour", "weekdays_only", "closed_sunday",
         "days_open_count", "is_rare_cuisine", "opening_hours",
         # Guide recognition

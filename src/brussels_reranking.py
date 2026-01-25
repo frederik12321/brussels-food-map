@@ -805,7 +805,7 @@ def rerank_restaurants(df):
     df["reddit_mentions"] = [r["reddit_mentions"] for r in results]
 
     # Add component columns for debugging/transparency
-    for component in ["tourist_penalty", "scarcity_bonus", "local_street_bonus"]:
+    for component in ["tourist_penalty", "scarcity_bonus", "local_street_bonus", "perfection_penalty"]:
         df[f"score_{component}"] = [r["components"][component] for r in results]
 
     # Add scarcity sub-components for detailed analysis
