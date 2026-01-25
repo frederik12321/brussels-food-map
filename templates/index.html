@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brussels Food Map - Hidden Gems</title>
+    <!-- Preconnect for faster resource loading -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://cartodb-basemaps-a.global.ssl.fastly.net" crossorigin>
+    <link rel="dns-prefetch" href="https://unpkg.com">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root {
@@ -1967,20 +1971,8 @@
             return html;
         }
 
-        function createMarker(restaurant) {
-            const color = getMarkerColor(restaurant);
-            const tier = getTierFromScore(restaurant.brussels_score || 0);
-
-            // All markers start as small dots with tier-specific icon
-            const marker = L.marker([restaurant.lat, restaurant.lng], {
-                icon: createPinIcon(color, false, tier)
-            });
-
-            // Store color, tier and restaurant data for selection
-            marker.restaurantColor = color;
-            marker.restaurantTier = tier;
-            marker.restaurantData = restaurant;
-
+        // Generate popup HTML lazily (only when clicked)
+        function generatePopupContent(restaurant) {
             const commune = restaurant.commune || 'Unknown';
             const neighborhood = restaurant.neighborhood ? ` (${restaurant.neighborhood})` : '';
 
@@ -2025,7 +2017,7 @@
             const cuisineDisplay = restaurant.cuisine || 'Restaurant';
             const regionalTag = isRegional ? ' <span style="background:#f0fdf4;color:#166534;padding:1px 6px;border-radius:4px;font-size:10px;margin-left:4px;">Regional</span>' : '';
 
-            marker.bindPopup(`
+            return `
                 <div class="popup-name">${escapeHtml(restaurant.name)}</div>
                 ${badgesHtml}
                 <div class="popup-commune">${escapeHtml(commune)}${escapeHtml(neighborhood)}</div>
@@ -2041,10 +2033,34 @@
                 ${restaurant.google_maps_url ?
                     `<a href="${restaurant.google_maps_url}" target="_blank" class="popup-link">View on Google Maps →</a>` : ''
                 }
-            `);
+            `;
+        }
+
+        function createMarker(restaurant) {
+            const color = getMarkerColor(restaurant);
+            const tier = getTierFromScore(restaurant.brussels_score || 0);
+
+            // All markers start as small dots with tier-specific icon
+            const marker = L.marker([restaurant.lat, restaurant.lng], {
+                icon: createPinIcon(color, false, tier)
+            });
+
+            // Store color, tier and restaurant data for selection
+            marker.restaurantColor = color;
+            marker.restaurantTier = tier;
+            marker.restaurantData = restaurant;
+
+            // Lazy popup binding - only generate HTML when first clicked
+            let popupBound = false;
 
             // On click, expand this marker to full pin
             marker.on('click', function() {
+                // Bind popup lazily on first click
+                if (!popupBound) {
+                    this.bindPopup(generatePopupContent(restaurant));
+                    popupBound = true;
+                }
+
                 // Reset previous selected marker
                 if (selectedMarker && selectedMarker !== this) {
                     selectedMarker.setIcon(createPinIcon(selectedMarker.restaurantColor, false, selectedMarker.restaurantTier));
@@ -2052,6 +2068,9 @@
                 // Expand this marker
                 this.setIcon(createPinIcon(this.restaurantColor, true, this.restaurantTier));
                 selectedMarker = this;
+
+                // Open popup after binding
+                this.openPopup();
             });
 
             return marker;
@@ -2187,9 +2206,9 @@
             );
 
             // On mobile, batch marker creation for better performance
-            if (isMobile && sorted.length > 100) {
-                // Add markers in chunks to avoid blocking UI
-                const chunkSize = 50;
+            if (isMobile && sorted.length > 50) {
+                // Add markers in smaller chunks to keep UI responsive
+                const chunkSize = 25;
                 let index = 0;
 
                 function addChunk() {
@@ -2227,7 +2246,9 @@
                 return;
             }
 
-            listEl.innerHTML = restaurants.slice(0, 50).map(r => {
+            // Show fewer items on mobile for faster rendering
+            const listLimit = isMobile ? 30 : 50;
+            listEl.innerHTML = restaurants.slice(0, listLimit).map(r => {
                 const score = r.brussels_score?.toFixed(2) || '';
                 const isUnderexplored = r.commune_tier === 'underexplored';
                 const commune = r.commune || '';
