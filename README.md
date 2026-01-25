@@ -283,6 +283,8 @@ Brussels is 75% foreign-origin population. Street-level diaspora hubs:
 
 **Original Inspiration**: [Lauren Leek's London Food Dashboard](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates) - The insight that ML residuals can identify undervalued restaurants.
 
+🔗 **Lauren's GitHub**: [github.com/laurenleek/london-food-dashboard](https://github.com/laurenleek/london-food-dashboard)
+
 ### What We Kept ✅
 
 - ML Residual Analysis
