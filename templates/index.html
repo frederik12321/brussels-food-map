@@ -1806,7 +1806,9 @@
             }
 
             // Low confidence warning for few reviews
-            if (restaurant.review_count && restaurant.review_count < 20) {
+            if (restaurant.review_count && restaurant.review_count < 10) {
+                explanations.push(`<span class="explain-negative">⚠️ Very low confidence (only ${restaurant.review_count} reviews)</span>`);
+            } else if (restaurant.review_count && restaurant.review_count < 20) {
                 explanations.push(`<span class="explain-neutral">⚠️ Low confidence (only ${restaurant.review_count} reviews)</span>`);
             }
 
@@ -2291,6 +2293,21 @@
 
         function flyTo(lat, lng) {
             map.flyTo([lat, lng], 16);
+            // Find and open the marker popup at this location
+            setTimeout(() => {
+                markersLayer.eachLayer(marker => {
+                    const markerLatLng = marker.getLatLng();
+                    if (Math.abs(markerLatLng.lat - lat) < 0.0001 && Math.abs(markerLatLng.lng - lng) < 0.0001) {
+                        marker.openPopup();
+                        // Also select the marker visually
+                        if (selectedMarker && selectedMarker !== marker) {
+                            selectedMarker.setIcon(createPinIcon(selectedMarker.restaurantColor, false, selectedMarker.restaurantTier));
+                        }
+                        marker.setIcon(createPinIcon(marker.restaurantColor, true, marker.restaurantTier));
+                        selectedMarker = marker;
+                    }
+                });
+            }, 500);
         }
 
         function flyToMobile(lat, lng) {

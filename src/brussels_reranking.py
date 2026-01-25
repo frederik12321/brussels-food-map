@@ -603,10 +603,14 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     # === SCORING COMPONENTS ===
 
     # 0. Review count penalty (both too few AND too many reviews are problematic)
-    # Too few reviews = unreliable rating
+    # Too few reviews = unreliable rating (strong "lack of confidence" penalty)
     # Too many reviews = likely tourist trap or overhyped
-    if review_count < 15:
-        review_penalty = -0.30 * (1 - review_count / 15)  # Up to -0.30 penalty
+    if review_count < 10:
+        # Very few reviews = strong lack of confidence penalty
+        # A 5.0 rating with 3 reviews tells us almost nothing
+        review_penalty = -0.50 * (1 - review_count / 10)  # Up to -0.50 penalty for 0 reviews
+    elif review_count < 15:
+        review_penalty = -0.30 * (1 - (review_count - 10) / 5)  # -0.30 to 0 penalty
     elif review_count < 35:
         review_penalty = -0.12 * (1 - (review_count - 15) / 20)  # Up to -0.12 penalty
     elif review_count > 3000:
