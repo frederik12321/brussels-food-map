@@ -523,6 +523,28 @@ CHAIN_PATTERNS = [
     r"delitraiteur", r"o'tacos", r"frituur", r"fritland",
 ]
 
+# Non-restaurant retail shops that shouldn't rank as restaurants
+# These are shops that sell food products but are not places to eat
+NON_RESTAURANT_SHOPS = [
+    # Belgian chocolate shops/brands
+    r"corné", r"corne dynastie", r"neuhaus", r"godiva", r"leonidas",
+    r"pierre marcolini", r"marcolini", r"galler", r"wittamer",
+    r"mary chocolatier", r"planète chocolat", r"frederic blondeel",
+    # Generic shop indicators
+    r"chocolatier", r"chocolate shop", r"pralines",
+]
+
+
+def is_non_restaurant_shop(name):
+    """Check if a place is a retail shop rather than a restaurant."""
+    if not name:
+        return False
+    name_lower = name.lower()
+    for pattern in NON_RESTAURANT_SHOPS:
+        if re.search(pattern, name_lower):
+            return True
+    return False
+
 # Michelin starred restaurants (Brussels Capital Region)
 # Updated for 2024/2025 official Michelin Guide
 MICHELIN_STARS = {

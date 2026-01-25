@@ -24,7 +24,7 @@ from brussels_context import (
     distance_to_grand_place, distance_to_eu_quarter,
     haversine_distance, is_on_local_street,
     has_michelin_recognition, has_gault_millau, has_bib_gourmand,
-    get_cuisine_specificity_bonus
+    get_cuisine_specificity_bonus, is_non_restaurant_shop
 )
 from afsca_hygiene import get_afsca_score, match_restaurant
 
@@ -768,7 +768,13 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     cuisine_specificity = get_cuisine_specificity_bonus(cuisine)
     specificity_bonus = 0.03 * cuisine_specificity  # Up to 3% boost for highly specific cuisines
 
-    # 21. Get diaspora context (informational - for UI display, not scoring)
+    # 21. Non-restaurant shop penalty
+    # Chocolate shops, praline stores, etc. are retail shops, not restaurants
+    # They shouldn't rank alongside actual restaurants
+    is_shop = is_non_restaurant_shop(name)
+    shop_penalty = -0.80 if is_shop else 0  # Devastating penalty for non-restaurants
+
+    # 22. Get diaspora context (informational - for UI display, not scoring)
     diaspora_context = get_diaspora_context(cuisine, commune, lat, lng)
 
     # Total score
@@ -793,7 +799,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         perfection_penalty +
         afsca_bonus +
         family_bonus +
-        specificity_bonus
+        specificity_bonus +
+        shop_penalty
     )
 
     # Determine restaurant quality tier based on score
@@ -852,6 +859,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "afsca_bonus": afsca_bonus,  # AFSCA hygiene certification bonus
             "family_bonus": family_bonus,  # Family restaurant naming pattern bonus
             "specificity_bonus": specificity_bonus,  # Proust Factor: regional cuisine specificity
+            "shop_penalty": shop_penalty,  # Penalty for non-restaurant retail (chocolate shops, etc.)
         }
     }
 
@@ -910,6 +918,19 @@ def rerank_restaurants(df):
     # Add scarcity sub-components for detailed analysis
     for sub in ["review_scarcity", "hours_scarcity", "days_scarcity", "schedule_scarcity", "cuisine_scarcity"]:
         df[f"scarcity_{sub}"] = [r["scarcity_components"][sub] for r in results]
+
+    # Filter out non-restaurant shops (chocolate shops, etc.)
+    # These should not appear in the database at all
+    original_count = len(df)
+    df["is_shop"] = df["name"].apply(is_non_restaurant_shop)
+    shops_removed = df[df["is_shop"]]["name"].tolist()
+    df = df[~df["is_shop"]].drop(columns=["is_shop"])
+    if shops_removed:
+        print(f"\nRemoved {len(shops_removed)} non-restaurant shops:")
+        for shop in shops_removed[:10]:  # Show first 10
+            print(f"  - {shop}")
+        if len(shops_removed) > 10:
+            print(f"  ... and {len(shops_removed) - 10} more")
 
     # Sort by Brussels score
     df = df.sort_values("brussels_score", ascending=False)
