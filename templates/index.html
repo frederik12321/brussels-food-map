@@ -1907,6 +1907,36 @@
 
         let selectedMarker = null;
 
+        // Proust Factor: Cuisine specificity - regional cuisines are more specific than generic
+        // Used to show "Regional cuisine" tag in popup for specific cuisines
+        const SPECIFIC_CUISINES = new Set([
+            // Asian
+            "Sichuan", "Szechuan", "Cantonese", "Hunan", "Taiwanese", "Shanghainese",
+            "Dim Sum", "Pekinese", "Hakka",
+            // Japanese
+            "Ramen", "Izakaya", "Kaiseki", "Omakase", "Yakitori", "Tonkatsu", "Okonomiyaki",
+            // Korean
+            "Korean BBQ", "Hansik",
+            // Indian
+            "South Indian", "Punjabi", "Gujarati", "Bengali", "Kerala", "Chettinad", "Hyderabadi",
+            // Italian
+            "Neapolitan", "Sicilian", "Tuscan", "Roman", "Venetian", "Sardinian", "Piedmontese", "Emilian",
+            // Spanish
+            "Basque", "Catalan", "Galician", "Andalusian",
+            // French
+            "Lyonnaise", "Provençal", "Alsatian", "Breton", "Burgundian", "Savoyard",
+            // Mexican
+            "Oaxacan", "Yucatecan", "Jalisciense",
+            // Middle Eastern
+            "Levantine", "Palestinian", "Yemeni", "Kurdish",
+            // African
+            "Ethiopian", "Eritrean", "Senegalese", "Ivorian", "Cameroonian", "Ghanaian", "Nigerian"
+        ]);
+
+        function isSpecificCuisine(cuisine) {
+            return cuisine && SPECIFIC_CUISINES.has(cuisine);
+        }
+
         // Generate diaspora context HTML (informational - cultural geography)
         function generateDiasporaHtml(restaurant) {
             const context = restaurant.diaspora_context;
@@ -1990,11 +2020,16 @@
             // Generate diaspora cultural context (informational)
             const diasporaHtml = generateDiasporaHtml(restaurant);
 
+            // Check if this is a specific regional cuisine (Proust Factor)
+            const isRegional = isSpecificCuisine(restaurant.cuisine);
+            const cuisineDisplay = restaurant.cuisine || 'Restaurant';
+            const regionalTag = isRegional ? ' <span style="background:#f0fdf4;color:#166534;padding:1px 6px;border-radius:4px;font-size:10px;margin-left:4px;">Regional</span>' : '';
+
             marker.bindPopup(`
                 <div class="popup-name">${restaurant.name}</div>
                 ${badgesHtml}
                 <div class="popup-commune">${commune}${neighborhood}</div>
-                <div class="popup-cuisine">${restaurant.cuisine || 'Restaurant'}</div>
+                <div class="popup-cuisine">${cuisineDisplay}${regionalTag}</div>
                 <div class="popup-stats">
                     <span>★ ${restaurant.rating?.toFixed(1) || 'N/A'}</span>
                     <span>${restaurant.review_count || 0} reviews</span>
