@@ -1910,10 +1910,11 @@
         }
 
         // Get tier from brussels_score
+        // Thresholds must match backend (brussels_reranking.py)
         function getTierFromScore(score) {
-            if (score >= 0.6) return 'must_try';
-            if (score >= 0.45) return 'recommended';
-            if (score >= 0.3) return 'above_average';
+            if (score >= 0.70) return 'must_try';
+            if (score >= 0.55) return 'recommended';
+            if (score >= 0.40) return 'above_average';
             return 'average';
         }
 
