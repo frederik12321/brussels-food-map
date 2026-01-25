@@ -1397,28 +1397,28 @@
                         <path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/>
                         <rect x="5" y="12" width="8" height="1.5" rx="0.5" fill="white"/>
                     </svg>
-                    <span>Must try</span>
+                    <span>Chef's Kiss</span>
                 </div>
                 <div class="legend-item">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#2ECC71"/>
                         <path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/>
                     </svg>
-                    <span>Recommended</span>
+                    <span>Kitchen Approved</span>
                 </div>
                 <div class="legend-item">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#3498DB"/>
                         <path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/>
                     </svg>
-                    <span>Above average</span>
+                    <span>Workable</span>
                 </div>
                 <div class="legend-item">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#95A5A6"/>
                         <circle cx="9" cy="9" r="2.5" fill="white"/>
                     </svg>
-                    <span>Average</span>
+                    <span>Line Cook Shrug</span>
                 </div>
             </div>
         </div>
@@ -1464,28 +1464,28 @@
                         <path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/>
                         <rect x="5" y="12" width="8" height="1.5" rx="0.5" fill="white"/>
                     </svg>
-                    Must try
+                    Chef's Kiss
                 </span>
                 <span>
                     <svg width="16" height="16" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#2ECC71"/>
                         <path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/>
                     </svg>
-                    Recommended
+                    Kitchen Approved
                 </span>
                 <span>
                     <svg width="16" height="16" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#3498DB"/>
                         <path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/>
                     </svg>
-                    Above average
+                    Workable
                 </span>
                 <span>
                     <svg width="16" height="16" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#95A5A6"/>
                         <circle cx="9" cy="9" r="2.5" fill="white"/>
                     </svg>
-                    Average
+                    Line Cook Shrug
                 </span>
             </div>
             <button class="info-close" id="info-close">Got it</button>
@@ -1839,25 +1839,25 @@
 
             const iconColor = tierColors[tier] || tierColors['average'];
 
-            // Clean icons with appropriate symbols per tier
+            // Clean icons with appropriate symbols per tier (Kitchen Confidential theme)
             const tierIcons = {
-                // Crown icon (Must try) - gold with crown symbol
+                // Crown icon (Chef's Kiss) - gold with crown symbol
                 'must_try': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
                     <path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/>
                     <rect x="5" y="12" width="8" height="1.5" rx="0.5" fill="white"/>
                 `,
-                // Heart icon (Recommended) - green with heart
+                // Heart icon (Kitchen Approved) - green with heart
                 'recommended': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
                     <path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/>
                 `,
-                // Fork & knife (Above average) - blue with utensils
+                // Fork & knife (Workable) - blue with utensils
                 'above_average': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
                     <path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/>
                 `,
-                // Simple dot (Average) - gray with minimal marker
+                // Simple dot (Line Cook Shrug) - gray with minimal marker
                 'average': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
                     <circle cx="9" cy="9" r="2.5" fill="white"/>

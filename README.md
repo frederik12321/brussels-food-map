@@ -74,14 +74,14 @@ A lunch-only spot open 4 days a week with 150 reviews? Probably a hidden gem tha
 
 ## Tier System
 
-Restaurants are categorized into four tiers based on `brussels_score`:
+Restaurants are categorized into four tiers based on `brussels_score` (Kitchen Confidential theme):
 
 | Tier | Score | Icon | Color | Description |
 |------|-------|------|-------|-------------|
-| **Must Try** | ≥ 0.60 | 👑 Crown | Gold #FFD700 | Top picks, exceptional quality |
-| **Recommended** | ≥ 0.45 | ❤️ Heart | Green #2ECC71 | Solid choices, worth visiting |
-| **Above Average** | ≥ 0.30 | 🍴 Utensils | Blue #3498DB | Better than typical |
-| **Average** | < 0.30 | ● Dot | Gray #95A5A6 | Standard restaurants |
+| **Chef's Kiss** | ≥ 0.60 | 👑 Crown | Gold #FFD700 | Exceptional craft, the real deal |
+| **Kitchen Approved** | ≥ 0.45 | ❤️ Heart | Green #2ECC71 | Would eat here off-shift |
+| **Workable** | ≥ 0.30 | 🍴 Utensils | Blue #3498DB | Feeds you right |
+| **Line Cook Shrug** | < 0.30 | ● Dot | Gray #95A5A6 | Uninspired |
 
 ---
 

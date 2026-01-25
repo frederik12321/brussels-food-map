@@ -37,9 +37,11 @@ COMMUNES = {
 }
 
 # Special neighborhoods within communes
+# Note: Default radius is 0.5km (set in get_neighborhood function)
+# Matongé uses a tighter 0.3km radius to avoid overlapping with Châtelain
 NEIGHBORHOODS = {
-    "Matongé": {"commune": "Ixelles", "lat": 50.8280, "lng": 4.3680, "tier": "local_foodie", "cuisine_affinity": ["Congolese", "African"]},
-    "Châtelain": {"commune": "Ixelles", "lat": 50.8245, "lng": 4.3625, "tier": "local_foodie", "cuisine_affinity": ["French", "Belgian", "Brunch"]},
+    "Matongé": {"commune": "Ixelles", "lat": 50.8295, "lng": 4.3680, "tier": "local_foodie", "cuisine_affinity": ["Congolese", "African"], "radius": 0.3},
+    "Châtelain": {"commune": "Ixelles", "lat": 50.8235, "lng": 4.3600, "tier": "local_foodie", "cuisine_affinity": ["French", "Belgian", "Brunch"]},
     "Sainte-Catherine": {"commune": "Bruxelles", "lat": 50.8511, "lng": 4.3461, "tier": "local_foodie", "cuisine_affinity": ["Seafood", "Belgian"]},
     "Marolles": {"commune": "Bruxelles", "lat": 50.8389, "lng": 4.3444, "tier": "local_foodie", "cuisine_affinity": ["Belgian"]},
     "Saint-Boniface": {"commune": "Ixelles", "lat": 50.8308, "lng": 4.3672, "tier": "local_foodie", "cuisine_affinity": ["Belgian", "French"]},
@@ -76,12 +78,13 @@ LOCAL_FOOD_STREETS = [
     {"name": "Fatih Mosque Area", "lat": 50.8590, "lng": 4.3650, "radius": 0.15},
 
     # === MATONGÉ (Congolese/African hub in Ixelles) ===
-    # Triangle: Chaussée de Wavre, Galerie d'Ixelles, Rue de la Longue Vie
-    {"name": "Chaussée de Wavre (Matongé)", "lat": 50.8285, "lng": 4.3685, "radius": 0.20},
-    {"name": "Galerie d'Ixelles", "lat": 50.8280, "lng": 4.3680, "radius": 0.10},
-    {"name": "Rue Longue Vie", "lat": 50.8275, "lng": 4.3695, "radius": 0.12},
-    # Porte de Namur extension
-    {"name": "Porte de Namur", "lat": 50.8335, "lng": 4.3655, "radius": 0.15},
+    # Tight triangle: Chaussée de Wavre, Galerie d'Ixelles, Rue de la Longue Vie
+    # Centered north of Châtelain, around Porte de Namur metro
+    {"name": "Chaussée de Wavre (Matongé)", "lat": 50.8300, "lng": 4.3690, "radius": 0.15},
+    {"name": "Galerie d'Ixelles", "lat": 50.8295, "lng": 4.3680, "radius": 0.08},
+    {"name": "Rue Longue Vie", "lat": 50.8290, "lng": 4.3700, "radius": 0.10},
+    # Porte de Namur extension (tight radius)
+    {"name": "Porte de Namur", "lat": 50.8335, "lng": 4.3670, "radius": 0.12},
 
     # === POLISH/EASTERN EUROPEAN (Saint-Gilles/Forest) ===
     # Barrière de Saint-Gilles - Polish grocery stores (Sklep Polski)
@@ -673,8 +676,9 @@ def get_neighborhood(lat, lng):
     """Check if location is in a special neighborhood."""
     for name, data in NEIGHBORHOODS.items():
         dist = haversine_distance(lat, lng, data["lat"], data["lng"])
-        # Neighborhoods are small, use 0.5km radius
-        if dist < 0.5:
+        # Use custom radius if specified, otherwise default 0.5km
+        radius = data.get("radius", 0.5)
+        if dist < radius:
             return name, data
     return None, None
 
