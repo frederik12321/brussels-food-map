@@ -8,6 +8,9 @@ Now with Brussels-specific reranking!
 import ast
 import json
 import math
+import os
+from datetime import datetime, date
+from threading import Lock
 import pandas as pd
 import h3
 from flask import Flask, render_template, jsonify, request
@@ -18,6 +21,51 @@ app = Flask(__name__, template_folder="../templates", static_folder="../static")
 _cached_data = None
 _cached_hex = None
 _cached_summary = None
+
+# Simple privacy-friendly page view counter
+# Stores only daily totals, no user data, no cookies
+_stats_file = "../data/stats.json"
+_stats_lock = Lock()
+_stats_cache = None
+
+
+def load_stats():
+    """Load page view statistics."""
+    global _stats_cache
+    if _stats_cache is not None:
+        return _stats_cache
+    try:
+        with open(_stats_file, "r") as f:
+            _stats_cache = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        _stats_cache = {"daily": {}, "total": 0}
+    return _stats_cache
+
+
+def save_stats(stats):
+    """Save page view statistics."""
+    global _stats_cache
+    _stats_cache = stats
+    try:
+        with open(_stats_file, "w") as f:
+            json.dump(stats, f)
+    except Exception:
+        pass  # Fail silently - stats are not critical
+
+
+def increment_page_view():
+    """Increment daily and total page view counters."""
+    with _stats_lock:
+        stats = load_stats()
+        today = date.today().isoformat()
+        stats["daily"][today] = stats["daily"].get(today, 0) + 1
+        stats["total"] = stats.get("total", 0) + 1
+        # Keep only last 90 days of daily stats
+        if len(stats["daily"]) > 90:
+            sorted_days = sorted(stats["daily"].keys())
+            for old_day in sorted_days[:-90]:
+                del stats["daily"][old_day]
+        save_stats(stats)
 
 
 def load_data():
@@ -64,6 +112,9 @@ def load_summary():
 @app.route("/")
 def index():
     """Main dashboard page."""
+    # Count page view (privacy-friendly: no user data, just daily totals)
+    increment_page_view()
+
     summary = load_summary()
     df = load_data()
 
@@ -97,6 +148,40 @@ def privacy():
 def terms():
     """Terms of service page."""
     return render_template("terms.html")
+
+
+@app.route("/api/stats")
+def api_stats():
+    """
+    Simple page view statistics (privacy-friendly).
+    No user data, just daily totals.
+    """
+    stats = load_stats()
+    daily = stats.get("daily", {})
+
+    # Calculate some useful aggregates
+    today = date.today().isoformat()
+    today_views = daily.get(today, 0)
+
+    # Last 7 days
+    last_7_days = 0
+    for i in range(7):
+        d = (date.today() - pd.Timedelta(days=i)).isoformat()
+        last_7_days += daily.get(d, 0)
+
+    # Last 30 days
+    last_30_days = 0
+    for i in range(30):
+        d = (date.today() - pd.Timedelta(days=i)).isoformat()
+        last_30_days += daily.get(d, 0)
+
+    return jsonify({
+        "total": stats.get("total", 0),
+        "today": today_views,
+        "last_7_days": last_7_days,
+        "last_30_days": last_30_days,
+        "daily": daily
+    })
 
 
 @app.route("/api/restaurants")
