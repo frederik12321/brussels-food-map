@@ -742,6 +742,37 @@
             color: var(--accent-red);
         }
 
+        /* Diaspora context info */
+        .popup-diaspora {
+            margin-top: 10px;
+            padding: 8px 10px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            color: #92400e;
+        }
+
+        .popup-diaspora-header {
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .popup-diaspora-streets {
+            font-size: 10px;
+            color: #a16207;
+            margin-top: 4px;
+        }
+
+        .popup-diaspora-desc {
+            font-size: 10px;
+            color: #a16207;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
         /* Guide recognition badges */
         .guide-badge {
             display: inline-flex;
@@ -1876,6 +1907,32 @@
 
         let selectedMarker = null;
 
+        // Generate diaspora context HTML (informational - cultural geography)
+        function generateDiasporaHtml(restaurant) {
+            const context = restaurant.diaspora_context;
+            if (!context || (!context.is_in_diaspora_area && !context.diaspora_streets?.length && !context.community_description)) {
+                return '';
+            }
+
+            let html = '<div class="popup-diaspora">';
+            html += '<div class="popup-diaspora-header">🌍 Cultural Context</div>';
+
+            if (context.is_in_diaspora_area) {
+                html += `<div>This ${restaurant.cuisine} restaurant is in a traditional ${restaurant.cuisine} neighborhood</div>`;
+            }
+
+            if (context.diaspora_streets && context.diaspora_streets.length > 0) {
+                html += `<div class="popup-diaspora-streets">Nearby ${restaurant.cuisine} food streets: ${context.diaspora_streets.join(', ')}</div>`;
+            }
+
+            if (context.community_description) {
+                html += `<div class="popup-diaspora-desc">${context.community_description}</div>`;
+            }
+
+            html += '</div>';
+            return html;
+        }
+
         function createMarker(restaurant) {
             const color = getMarkerColor(restaurant);
             const tier = getTierFromScore(restaurant.brussels_score || 0);
@@ -1930,6 +1987,9 @@
 
             const score = restaurant.brussels_score || 0;
 
+            // Generate diaspora cultural context (informational)
+            const diasporaHtml = generateDiasporaHtml(restaurant);
+
             marker.bindPopup(`
                 <div class="popup-name">${restaurant.name}</div>
                 ${badgesHtml}
@@ -1941,6 +2001,7 @@
                     ${score ? `<span>Score: ${score.toFixed(2)}</span>` : ''}
                 </div>
                 ${hoursHtml}
+                ${diasporaHtml}
                 ${explanationHtml}
                 ${restaurant.google_maps_url ?
                     `<a href="${restaurant.google_maps_url}" target="_blank" class="popup-link">View on Google Maps →</a>` : ''

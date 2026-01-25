@@ -55,34 +55,92 @@ NEIGHBORHOODS = {
 
 # Local streets known for good food (not on tourist maps)
 # These are streets where locals go - bonus for restaurants on these streets
+# Updated with 2026 diaspora commercial hub data (street-level precision)
 LOCAL_FOOD_STREETS = [
-    # Saint-Gilles hidden gems
+    # === MAGHREB COMMERCIAL HUBS ===
+    # Chaussée de Gand (Molenbeek) - major Maghreb commercial axis from Place Sainctelette
+    {"name": "Chaussée de Gand", "lat": 50.8570, "lng": 4.3320, "radius": 0.30},
+    # Rue de Brabant (Schaerbeek/Gare du Nord) - massive Maghreb commercial hub
+    {"name": "Rue de Brabant", "lat": 50.8555, "lng": 4.3595, "radius": 0.25},
+    # Clemenceau/Abattoirs area (Anderlecht) - Foodmet market + surrounding streets
+    {"name": "Foodmet/Clemenceau", "lat": 50.8400, "lng": 4.3180, "radius": 0.25},
+    # Cureghem (Anderlecht) - Maghreb residential hub
+    {"name": "Cureghem", "lat": 50.8380, "lng": 4.3180, "radius": 0.25},
+
+    # === TURKISH "LITTLE ANATOLIA" (Saint-Josse → Schaerbeek) ===
+    # Chaussée de Haecht from metro Saint-Josse to Place de la Reine
+    {"name": "Chaussée de Haecht", "lat": 50.8570, "lng": 4.3680, "radius": 0.30},
+    # Rue de la Poste / Place Madou area
+    {"name": "Place Madou Turkish Quarter", "lat": 50.8520, "lng": 4.3700, "radius": 0.15},
+    # Fatih Mosque surroundings (Rue des Palais/Koningstraat)
+    {"name": "Fatih Mosque Area", "lat": 50.8590, "lng": 4.3650, "radius": 0.15},
+
+    # === MATONGÉ (Congolese/African hub in Ixelles) ===
+    # Triangle: Chaussée de Wavre, Galerie d'Ixelles, Rue de la Longue Vie
+    {"name": "Chaussée de Wavre (Matongé)", "lat": 50.8285, "lng": 4.3685, "radius": 0.20},
+    {"name": "Galerie d'Ixelles", "lat": 50.8280, "lng": 4.3680, "radius": 0.10},
+    {"name": "Rue Longue Vie", "lat": 50.8275, "lng": 4.3695, "radius": 0.12},
+    # Porte de Namur extension
+    {"name": "Porte de Namur", "lat": 50.8335, "lng": 4.3655, "radius": 0.15},
+
+    # === POLISH/EASTERN EUROPEAN (Saint-Gilles/Forest) ===
+    # Barrière de Saint-Gilles - Polish grocery stores (Sklep Polski)
+    {"name": "Barrière de Saint-Gilles", "lat": 50.8225, "lng": 4.3445, "radius": 0.18},
+    # Rue de Bosnie area
+    {"name": "Rue de Bosnie", "lat": 50.8235, "lng": 4.3420, "radius": 0.12},
+    # Forest - Romanian/Polish residential
+    {"name": "Rue du Dries", "lat": 50.8130, "lng": 4.3220, "radius": 0.15},
+
+    # === ROMANIAN (Anderlecht/Koekelberg) ===
+    # Scattered residential - main commercial near Simonis/Osseghem
+    {"name": "Osseghem Romanian Quarter", "lat": 50.8650, "lng": 4.3300, "radius": 0.20},
+
+    # === EURO-EXPAT HUBS ===
+    # Place du Châtelain (Wednesday market, wine bars, French brasseries)
+    {"name": "Place du Châtelain", "lat": 50.8245, "lng": 4.3625, "radius": 0.15},
+    # Schuman/EU Quarter
+    {"name": "Place Schuman", "lat": 50.8427, "lng": 4.3827, "radius": 0.20},
+    # Place du Luxembourg (young EU staffers)
+    {"name": "Place du Luxembourg", "lat": 50.8380, "lng": 4.3715, "radius": 0.15},
+
+    # === SYRIAN/IRAQI (post-2015 arrivals) ===
+    # Chaussée de Louvain near Place Madou
+    {"name": "Chaussée de Louvain", "lat": 50.8545, "lng": 4.3750, "radius": 0.20},
+
+    # === SOUTH ASIAN (Indian/Pakistani/Bangladeshi) ===
+    # Rue de l'Argonne (near Porte de Namur)
+    {"name": "Rue de l'Argonne", "lat": 50.8340, "lng": 4.3640, "radius": 0.12},
+    # Boulevard Jamar (Gare du Midi area)
+    {"name": "Boulevard Jamar", "lat": 50.8360, "lng": 4.3350, "radius": 0.15},
+
+    # === PORTUGUESE/BRAZILIAN ===
+    # Porte de Hal area (Portuguese)
+    {"name": "Porte de Hal", "lat": 50.8365, "lng": 4.3480, "radius": 0.15},
+    # Place Flagey (Brazilian/Portuguese young professionals)
+    {"name": "Place Flagey", "lat": 50.8275, "lng": 4.3720, "radius": 0.18},
+
+    # === SAINT-GILLES LOCAL SPOTS ===
     {"name": "Rue de Moscou", "lat": 50.8265, "lng": 4.3445, "radius": 0.15},
     {"name": "Rue Vanderschrick", "lat": 50.8245, "lng": 4.3435, "radius": 0.15},
     {"name": "Rue du Fort", "lat": 50.8255, "lng": 4.3490, "radius": 0.15},
     {"name": "Chaussée de Charleroi", "lat": 50.8300, "lng": 4.3520, "radius": 0.20},
+    {"name": "Parvis de Saint-Gilles", "lat": 50.8270, "lng": 4.3465, "radius": 0.15},
 
-    # Ixelles local spots
+    # === IXELLES LOCAL SPOTS ===
     {"name": "Rue Lesbroussart", "lat": 50.8265, "lng": 4.3755, "radius": 0.15},
     {"name": "Rue du Page", "lat": 50.8235, "lng": 4.3580, "radius": 0.15},
     {"name": "Rue Américaine", "lat": 50.8231, "lng": 4.3591, "radius": 0.12},
     {"name": "Rue de la Paix", "lat": 50.8295, "lng": 4.3665, "radius": 0.12},
 
-    # Schaerbeek local
+    # === SCHAERBEEK LOCAL ===
     {"name": "Rue Josaphat", "lat": 50.8580, "lng": 4.3780, "radius": 0.20},
     {"name": "Place Colignon", "lat": 50.8625, "lng": 4.3720, "radius": 0.15},
 
-    # Forest hidden
-    {"name": "Rue du Dries", "lat": 50.8130, "lng": 4.3220, "radius": 0.15},
-
-    # Anderlecht local
+    # === ANDERLECHT LOCAL ===
     {"name": "Rue Wayez", "lat": 50.8395, "lng": 4.3095, "radius": 0.15},
 
-    # Jette local
+    # === JETTE LOCAL ===
     {"name": "Rue Léon Théodor", "lat": 50.8780, "lng": 4.3280, "radius": 0.15},
-
-    # Saint-Josse authentic
-    {"name": "Chaussée de Haecht", "lat": 50.8570, "lng": 4.3680, "radius": 0.20},
 ]
 
 # Commune tier weights for scoring
@@ -96,20 +154,168 @@ TIER_WEIGHTS = {
     "mixed": 0.0,                # Neutral
 }
 
-# Diaspora cuisine-commune authenticity matrix
-# Higher score = stronger authenticity signal
+# Diaspora cuisine-commune authenticity matrix (2026 data)
+# Based on demographic research: Brussels is 75% foreign origin, no majority group.
+#
+# KEY ZONES:
+# - "Poor Crescent" (Croissant Pauvre): Molenbeek, Saint-Josse, Anderlecht (Cureghem),
+#   Lower Schaerbeek - Maghreb, Turkish, Romanian, West African
+# - "Rich Southeast": Uccle, Woluwe-St-Pierre, Woluwe-St-Lambert, Auderghem -
+#   French, Eurocrats, wealthy Belgians
+# - "Mix/Transition": Ixelles, Saint-Gilles, Forest - French young pros, Portuguese,
+#   Polish, Brazilian, gentrifying
+#
+# Higher score = stronger authenticity signal for that cuisine in that commune
 DIASPORA_AUTHENTICITY = {
-    "Congolese": {"Ixelles": 0.9, "Saint-Gilles": 0.6, "Schaerbeek": 0.4},
-    "African": {"Ixelles": 0.8, "Saint-Gilles": 0.6, "Schaerbeek": 0.5, "Molenbeek-Saint-Jean": 0.4},
-    "Moroccan": {"Molenbeek-Saint-Jean": 0.9, "Saint-Gilles": 0.8, "Saint-Josse-ten-Noode": 0.7, "Schaerbeek": 0.7},
-    "Turkish": {"Saint-Josse-ten-Noode": 0.9, "Schaerbeek": 0.8, "Molenbeek-Saint-Jean": 0.6},
-    "Middle Eastern": {"Saint-Josse-ten-Noode": 0.8, "Schaerbeek": 0.7, "Molenbeek-Saint-Jean": 0.6},
-    "Lebanese": {"Saint-Josse-ten-Noode": 0.7, "Ixelles": 0.6, "Saint-Gilles": 0.5},
-    "Ethiopian": {"Bruxelles": 0.7, "Ixelles": 0.6},  # Near Sainte-Catherine
-    "Portuguese": {"Saint-Gilles": 0.8, "Ixelles": 0.6},
-    "Vietnamese": {"Bruxelles": 0.6, "Ixelles": 0.5},
-    "Chinese": {"Bruxelles": 0.5, "Ixelles": 0.4},
-    "Indian": {"Ixelles": 0.5, "Saint-Gilles": 0.4},
+    # === MAGHREB COMMUNITY (Morocco & Tunisia) ===
+    # 3rd/4th generation, from 1964 labor agreements
+    # Commercial hubs: Rue de Brabant (Schaerbeek), Chaussée de Gand (Molenbeek)
+    "Moroccan": {
+        "Molenbeek-Saint-Jean": 1.0,  # Heart of Maghreb community
+        "Anderlecht": 0.9,            # Cureghem is a major hub
+        "Saint-Gilles": 0.85,         # Strong presence
+        "Schaerbeek": 0.85,           # Rue de Brabant area
+        "Saint-Josse-ten-Noode": 0.8,
+    },
+    "Tunisian": {
+        "Molenbeek-Saint-Jean": 0.9,
+        "Anderlecht": 0.85,
+        "Saint-Gilles": 0.8,
+        "Schaerbeek": 0.75,
+    },
+    "North African": {
+        "Molenbeek-Saint-Jean": 0.95,
+        "Anderlecht": 0.9,
+        "Saint-Gilles": 0.8,
+        "Schaerbeek": 0.8,
+        "Saint-Josse-ten-Noode": 0.75,
+    },
+
+    # === TURKISH COMMUNITY ===
+    # 1964 labor agreements, strong internal cohesion
+    # Saint-Josse = "Little Anatolia", Chaussée de Haecht (Schaerbeek)
+    "Turkish": {
+        "Saint-Josse-ten-Noode": 1.0,  # "Little Anatolia" - highest density
+        "Schaerbeek": 0.9,             # Chaussée de Haecht area
+        "Molenbeek-Saint-Jean": 0.7,
+    },
+
+    # === SUB-SAHARAN AFRICAN COMMUNITY (DR Congo) ===
+    # Colonial history link, Matongé is cultural heart (but gentrifying)
+    # Residents pushed to Molenbeek and Anderlecht
+    "Congolese": {
+        "Ixelles": 1.0,               # Matongé = historic heart
+        "Molenbeek-Saint-Jean": 0.7,  # Growing due to gentrification push
+        "Anderlecht": 0.7,            # Growing community
+        "Saint-Gilles": 0.6,
+        "Schaerbeek": 0.5,
+    },
+    "African": {
+        "Ixelles": 0.9,               # Matongé
+        "Molenbeek-Saint-Jean": 0.75,
+        "Anderlecht": 0.7,
+        "Saint-Gilles": 0.65,
+        "Schaerbeek": 0.6,
+    },
+    "West African": {
+        "Ixelles": 0.85,
+        "Molenbeek-Saint-Jean": 0.8,
+        "Anderlecht": 0.75,
+        "Saint-Gilles": 0.65,
+    },
+
+    # === EASTERN EUROPEAN WAVE (Romania, Poland, Bulgaria) ===
+    # Romanians = 2nd largest foreign nationality since 2007
+    # Poles in Saint-Gilles and Forest (specialized grocery stores)
+    "Romanian": {
+        "Saint-Gilles": 0.8,
+        "Forest": 0.75,
+        "Anderlecht": 0.7,
+        "Schaerbeek": 0.65,
+    },
+    "Polish": {
+        "Saint-Gilles": 0.85,         # Sklep Polski grocery stores
+        "Forest": 0.8,
+        "Anderlecht": 0.65,
+    },
+    "Eastern European": {
+        "Saint-Gilles": 0.8,
+        "Forest": 0.75,
+        "Anderlecht": 0.7,
+    },
+
+    # === EMERGING COMMUNITIES (2015-2026) ===
+    # Syrians & Iraqis: post-2015 refugee crisis, entrepreneurial
+    "Syrian": {
+        "Saint-Josse-ten-Noode": 0.9,
+        "Saint-Gilles": 0.85,
+        "Schaerbeek": 0.75,
+    },
+    "Iraqi": {
+        "Saint-Josse-ten-Noode": 0.85,
+        "Schaerbeek": 0.75,
+    },
+    # Brazilians: growing community around Barrière (Saint-Gilles)
+    "Brazilian": {
+        "Saint-Gilles": 0.9,          # Barrière area
+        "Ixelles": 0.65,
+        "Forest": 0.6,
+    },
+
+    # === OTHER ESTABLISHED COMMUNITIES ===
+    "Middle Eastern": {
+        "Saint-Josse-ten-Noode": 0.9,
+        "Schaerbeek": 0.8,
+        "Molenbeek-Saint-Jean": 0.7,
+    },
+    "Lebanese": {
+        "Saint-Josse-ten-Noode": 0.8,
+        "Ixelles": 0.65,
+        "Saint-Gilles": 0.6,
+    },
+    "Ethiopian": {
+        "Bruxelles": 0.75,            # Near Sainte-Catherine
+        "Ixelles": 0.7,
+        "Saint-Gilles": 0.5,
+    },
+    "Portuguese": {
+        "Saint-Gilles": 0.9,          # Historic community
+        "Ixelles": 0.7,
+        "Forest": 0.65,
+    },
+    "Vietnamese": {
+        "Bruxelles": 0.7,
+        "Ixelles": 0.6,
+    },
+    "Chinese": {
+        "Bruxelles": 0.6,
+        "Ixelles": 0.5,
+    },
+    "Indian": {
+        "Ixelles": 0.6,
+        "Saint-Gilles": 0.5,
+        "Etterbeek": 0.45,            # Some near EU quarter
+    },
+    "Pakistani": {
+        "Saint-Josse-ten-Noode": 0.7,
+        "Schaerbeek": 0.6,
+    },
+    "Greek": {
+        "Ixelles": 0.7,
+        "Saint-Gilles": 0.6,
+    },
+    "Italian": {
+        # Historic post-war labor migrants + modern EU functionaries
+        "Ixelles": 0.7,
+        "Saint-Gilles": 0.65,
+        "Etterbeek": 0.6,             # EU workers
+    },
+    "Spanish": {
+        # Growing since 2008 financial crisis
+        "Ixelles": 0.7,
+        "Saint-Gilles": 0.65,
+        "Etterbeek": 0.55,
+    },
 }
 
 # Belgian traditional cuisine authenticity
@@ -117,6 +323,91 @@ BELGIAN_AUTHENTICITY = {
     "Belgian": {"Anderlecht": 0.9, "Schaerbeek": 0.8, "Forest": 0.8, "Bruxelles": 0.5},
     "Seafood": {"Bruxelles": 0.8},  # Sainte-Catherine area
     "French": {"Ixelles": 0.7, "Uccle": 0.7, "Saint-Gilles": 0.6},
+}
+
+# Street-level diaspora mapping (2026 detailed data)
+# Maps cuisines to specific commercial streets/areas where authentic restaurants cluster
+# This is informational - shows cultural geography without scoring impact
+DIASPORA_STREETS = {
+    "Moroccan": [
+        {"name": "Chaussée de Gand", "commune": "Molenbeek-Saint-Jean", "lat": 50.8570, "lng": 4.3320},
+        {"name": "Rue de Brabant", "commune": "Schaerbeek", "lat": 50.8555, "lng": 4.3595},
+        {"name": "Foodmet/Clemenceau", "commune": "Anderlecht", "lat": 50.8400, "lng": 4.3180},
+        {"name": "Cureghem", "commune": "Anderlecht", "lat": 50.8380, "lng": 4.3180},
+    ],
+    "Tunisian": [
+        {"name": "Chaussée de Gand", "commune": "Molenbeek-Saint-Jean", "lat": 50.8570, "lng": 4.3320},
+        {"name": "Rue de Brabant", "commune": "Schaerbeek", "lat": 50.8555, "lng": 4.3595},
+    ],
+    "North African": [
+        {"name": "Chaussée de Gand", "commune": "Molenbeek-Saint-Jean", "lat": 50.8570, "lng": 4.3320},
+        {"name": "Rue de Brabant", "commune": "Schaerbeek", "lat": 50.8555, "lng": 4.3595},
+        {"name": "Cureghem", "commune": "Anderlecht", "lat": 50.8380, "lng": 4.3180},
+    ],
+    "Turkish": [
+        {"name": "Chaussée de Haecht", "commune": "Saint-Josse-ten-Noode", "lat": 50.8570, "lng": 4.3680},
+        {"name": "Place Madou area", "commune": "Saint-Josse-ten-Noode", "lat": 50.8520, "lng": 4.3700},
+        {"name": "Fatih Mosque area", "commune": "Schaerbeek", "lat": 50.8590, "lng": 4.3650},
+    ],
+    "Congolese": [
+        {"name": "Matongé (Chaussée de Wavre)", "commune": "Ixelles", "lat": 50.8285, "lng": 4.3685},
+        {"name": "Galerie d'Ixelles", "commune": "Ixelles", "lat": 50.8280, "lng": 4.3680},
+        {"name": "Rue Longue Vie", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3695},
+    ],
+    "African": [
+        {"name": "Matongé", "commune": "Ixelles", "lat": 50.8285, "lng": 4.3685},
+        {"name": "Porte de Namur", "commune": "Ixelles", "lat": 50.8335, "lng": 4.3655},
+    ],
+    "Polish": [
+        {"name": "Barrière de Saint-Gilles", "commune": "Saint-Gilles", "lat": 50.8225, "lng": 4.3445},
+        {"name": "Rue de Bosnie", "commune": "Saint-Gilles", "lat": 50.8235, "lng": 4.3420},
+    ],
+    "Romanian": [
+        {"name": "Osseghem area", "commune": "Koekelberg", "lat": 50.8650, "lng": 4.3300},
+        {"name": "Anderlecht", "commune": "Anderlecht", "lat": 50.8333, "lng": 4.3072},
+    ],
+    "Syrian": [
+        {"name": "Chaussée de Louvain", "commune": "Saint-Josse-ten-Noode", "lat": 50.8545, "lng": 4.3750},
+        {"name": "Place Madou area", "commune": "Saint-Josse-ten-Noode", "lat": 50.8520, "lng": 4.3700},
+    ],
+    "Iraqi": [
+        {"name": "Chaussée de Louvain", "commune": "Saint-Josse-ten-Noode", "lat": 50.8545, "lng": 4.3750},
+    ],
+    "Brazilian": [
+        {"name": "Barrière de Saint-Gilles", "commune": "Saint-Gilles", "lat": 50.8225, "lng": 4.3445},
+        {"name": "Place Flagey", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3720},
+    ],
+    "Portuguese": [
+        {"name": "Porte de Hal", "commune": "Saint-Gilles", "lat": 50.8365, "lng": 4.3480},
+        {"name": "Place Flagey", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3720},
+    ],
+    "Indian": [
+        {"name": "Rue de l'Argonne", "commune": "Ixelles", "lat": 50.8340, "lng": 4.3640},
+        {"name": "Boulevard Jamar (Gare du Midi)", "commune": "Anderlecht", "lat": 50.8360, "lng": 4.3350},
+    ],
+    "Pakistani": [
+        {"name": "Rue de l'Argonne", "commune": "Ixelles", "lat": 50.8340, "lng": 4.3640},
+        {"name": "Boulevard Jamar (Gare du Midi)", "commune": "Anderlecht", "lat": 50.8360, "lng": 4.3350},
+    ],
+    "Lebanese": [
+        {"name": "Ixelles (various)", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3697},
+        {"name": "Saint-Gilles", "commune": "Saint-Gilles", "lat": 50.8261, "lng": 4.3456},
+    ],
+    "Ethiopian": [
+        {"name": "Sainte-Catherine", "commune": "Bruxelles", "lat": 50.8511, "lng": 4.3461},
+        {"name": "Matongé area", "commune": "Ixelles", "lat": 50.8285, "lng": 4.3685},
+    ],
+    "Greek": [
+        {"name": "Ixelles", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3697},
+    ],
+    "Italian": [
+        {"name": "Ixelles", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3697},
+        {"name": "EU Quarter", "commune": "Etterbeek", "lat": 50.8427, "lng": 4.3827},
+    ],
+    "Spanish": [
+        {"name": "Ixelles", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3697},
+        {"name": "Saint-Gilles", "commune": "Saint-Gilles", "lat": 50.8261, "lng": 4.3456},
+    ],
 }
 
 # Known chain restaurants in Belgium
@@ -332,14 +623,20 @@ TOURIST_KEYWORDS = [
     "avoid", "éviter", "vermijd",
 ]
 
-# Authenticity indicators
+# Authenticity indicators (updated 2026)
 AUTHENTICITY_KEYWORDS = {
-    "general": ["authentic", "authentique", "echt", "local", "traditionnel", "traditional"],
-    "belgian": ["stoofvlees", "waterzooi", "moules", "mosselen", "frites", "carbonade", "vol-au-vent"],
-    "congolese": ["moambe", "saka saka", "fufu", "madesu", "pondu", "chikwanga", "liboke"],
-    "moroccan": ["tajine", "couscous", "pastilla", "harira", "mechoui", "kefta"],
-    "turkish": ["pide", "lahmacun", "iskender", "döner", "kebab", "köfte", "mantı"],
-    "ethiopian": ["injera", "doro wat", "tibs", "kitfo"],
+    "general": ["authentic", "authentique", "echt", "local", "traditionnel", "traditional", "homemade", "fait maison"],
+    "belgian": ["stoofvlees", "waterzooi", "moules", "mosselen", "frites", "carbonade", "vol-au-vent", "stoemp"],
+    "congolese": ["moambe", "saka saka", "fufu", "madesu", "pondu", "chikwanga", "liboke", "mikate", "makemba"],
+    "moroccan": ["tajine", "couscous", "pastilla", "harira", "mechoui", "kefta", "msemen", "rfissa"],
+    "turkish": ["pide", "lahmacun", "iskender", "döner", "kebab", "köfte", "mantı", "tantuni", "gözleme", "simit"],
+    "ethiopian": ["injera", "doro wat", "tibs", "kitfo", "shiro", "beyainatu"],
+    "syrian": ["shawarma", "fattoush", "kibbeh", "muhammara", "mujaddara", "maqluba"],
+    "lebanese": ["mezze", "tabbouleh", "hummus", "falafel", "manakish", "fatayer"],
+    "brazilian": ["feijoada", "picanha", "coxinha", "pão de queijo", "açaí", "churrasco"],
+    "polish": ["pierogi", "bigos", "żurek", "kotlet schabowy", "barszcz"],
+    "romanian": ["mămăligă", "sarmale", "mici", "ciorbă", "papanași"],
+    "portuguese": ["bacalhau", "francesinha", "pastel de nata", "cozido", "bifana"],
 }
 
 
@@ -399,6 +696,64 @@ def is_on_local_street(lat, lng):
         if dist <= street["radius"]:
             return True, street["name"]
     return False, None
+
+
+def get_diaspora_context(cuisine, commune, lat=None, lng=None):
+    """
+    Get informational context about diaspora geography for a restaurant.
+
+    This is for display purposes - helps users understand the cultural
+    geography of Brussels without affecting the score.
+
+    Returns dict with:
+    - is_in_diaspora_area: bool - is this cuisine typical for this commune?
+    - diaspora_streets: list - nearby streets known for this cuisine
+    - community_description: str - brief description of the diaspora presence
+    """
+    context = {
+        "is_in_diaspora_area": False,
+        "diaspora_streets": [],
+        "community_description": None,
+    }
+
+    # Check if cuisine has diaspora data
+    if cuisine in DIASPORA_AUTHENTICITY:
+        commune_scores = DIASPORA_AUTHENTICITY[cuisine]
+        if commune in commune_scores and commune_scores[commune] >= 0.7:
+            context["is_in_diaspora_area"] = True
+
+    # Get known streets for this cuisine
+    if cuisine in DIASPORA_STREETS:
+        streets = DIASPORA_STREETS[cuisine]
+        # Filter to streets in this commune or nearby
+        relevant_streets = []
+        for street in streets:
+            if street["commune"] == commune:
+                relevant_streets.append(street["name"])
+            elif lat and lng:
+                # Check if within 1km
+                dist = haversine_distance(lat, lng, street["lat"], street["lng"])
+                if dist < 1.0:
+                    relevant_streets.append(f"{street['name']} ({street['commune']})")
+        context["diaspora_streets"] = relevant_streets[:3]  # Max 3 streets
+
+    # Community descriptions (informational)
+    COMMUNITY_DESCRIPTIONS = {
+        "Moroccan": "Brussels has a large Moroccan community (3rd/4th generation) centered in Molenbeek, Anderlecht, and Schaerbeek",
+        "Turkish": "Saint-Josse is known as 'Little Anatolia' - home to Brussels' Turkish community since the 1960s",
+        "Congolese": "Matongé (Ixelles) is the cultural heart of the Congolese diaspora, named after a district in Kinshasa",
+        "African": "Matongé hosts Brussels' vibrant African community with shops, restaurants, and cultural centers",
+        "Polish": "A growing Polish community has established shops and eateries around Barrière de Saint-Gilles",
+        "Romanian": "Romania's largest Brussels community is in Anderlecht and Koekelberg since 2007",
+        "Syrian": "Post-2015 Syrian entrepreneurs have opened restaurants around Chaussée de Louvain",
+        "Brazilian": "A young Brazilian community gathers around Saint-Gilles' Barrière and Place Flagey",
+        "Portuguese": "Historic Portuguese community (post-WWII) in Saint-Gilles, around Porte de Hal",
+    }
+
+    if cuisine in COMMUNITY_DESCRIPTIONS:
+        context["community_description"] = COMMUNITY_DESCRIPTIONS[cuisine]
+
+    return context
 
 
 def scarcity_quality_score(rating, review_count):

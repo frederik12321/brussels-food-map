@@ -20,7 +20,7 @@ from collections import Counter
 from brussels_context import (
     COMMUNES, NEIGHBORHOODS, TIER_WEIGHTS,
     DIASPORA_AUTHENTICITY, BELGIAN_AUTHENTICITY,
-    get_commune, get_neighborhood,
+    get_commune, get_neighborhood, get_diaspora_context,
     distance_to_grand_place, distance_to_eu_quarter,
     haversine_distance, is_on_local_street,
     has_michelin_recognition, has_gault_millau, has_bib_gourmand
@@ -486,6 +486,51 @@ def reputation_uncertainty_score(name, rating, review_count):
     return min(1.0, uncertainty), flags
 
 
+def is_family_restaurant_name(name):
+    """
+    Detect family restaurant naming patterns.
+
+    Bourdain philosophy: "Chez [Name]" restaurants are typically family-run
+    establishments with authentic, personal cooking. Same for patterns like
+    "La Maison de [Name]", "[Name]'s Kitchen", etc.
+
+    Returns: (is_family: bool, pattern_matched: str or None)
+    """
+    if not name:
+        return False, None
+
+    import re
+    name_lower = name.lower().strip()
+
+    # French patterns (common in Brussels)
+    # "Chez Marie", "Chez Papa", etc.
+    if re.match(r"^chez\s+\w+", name_lower):
+        return True, "chez"
+
+    # "La Maison de X", "Maison X"
+    if re.match(r"^(la\s+)?maison\s+(de\s+)?\w+", name_lower):
+        return True, "maison"
+
+    # "Au Bon X", "Au Vieux X" - traditional Belgian/French naming
+    if re.match(r"^au\s+(bon|vieux|petit)\s+", name_lower):
+        return True, "au_tradition"
+
+    # Dutch/Flemish patterns
+    # "Bij X", "'t Huisje van X"
+    if re.match(r"^bij\s+\w+", name_lower):
+        return True, "bij"
+
+    if re.match(r"^'?t\s+\w+", name_lower):
+        return True, "t_diminutive"
+
+    # English patterns (less common but exist)
+    # "X's Kitchen", "Mama X's"
+    if re.search(r"\b(mama|papa|nonna|oma|opa)\b", name_lower):
+        return True, "family_title"
+
+    return False, None
+
+
 def eu_bubble_penalty(lat, lng, price_level, review_languages=None):
     """
     Penalty for EU bubble restaurants.
@@ -581,14 +626,18 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     # 3. Tourist trap penalty (only for mediocre high-volume places near GP)
     tourist_penalty = -0.15 * tourist_trap_score(lat, lng, rating, review_count, review_languages) if lat and lng else 0
 
-    # 4. Diaspora authenticity bonus - DISABLED (Brussels is too international for this to be meaningful)
-    diaspora_bonus = 0
+    # 4. Diaspora authenticity bonus (minimal - just a tiebreaker)
+    # Note: We show diaspora context info in the UI but keep scoring impact minimal
+    # to avoid algorithmic bias that rewards restaurants based on ethnic geography.
+    # A good Turkish restaurant in Uccle should score similarly to one in Saint-Josse.
+    diaspora_bonus = 0.01 * diaspora_authenticity_score(cuisine, commune, review_languages)
 
     # 5. Commune visibility boost (small - just a tiebreaker)
     commune_boost = 0.03 * commune_visibility_boost(commune, commune_review_totals)
 
     # 6. Independent restaurant bonus
-    independent_bonus = 0.10 * (0 if is_chain else 1)
+    # Bourdain: independents offer authentic experiences chains can't replicate
+    independent_bonus = 0.12 * (0 if is_chain else 1)
 
     # 7. Cold-start correction (minimal - don't boost unproven places)
     cold_start = 0.02 * cold_start_correction(review_count, rating, commune)
@@ -704,6 +753,18 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     else:
         afsca_bonus = 0
 
+    # 19. Family restaurant bonus (Bourdain: "Chez X" = family-run authenticity)
+    # These naming patterns indicate personal, family-run establishments
+    # Only applies to non-chains (chains can't be family restaurants)
+    is_family_name, family_pattern = is_family_restaurant_name(name)
+    if is_family_name and not is_chain:
+        family_bonus = 0.04  # Meaningful bonus for family naming patterns
+    else:
+        family_bonus = 0
+
+    # 20. Get diaspora context (informational - for UI display, not scoring)
+    diaspora_context = get_diaspora_context(cuisine, commune, lat, lng)
+
     # Total score
     total = (
         review_penalty +
@@ -724,7 +785,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         reputation_penalty +
         reddit_bonus +
         perfection_penalty +
-        afsca_bonus
+        afsca_bonus +
+        family_bonus
     )
 
     # Determine restaurant quality tier based on score
@@ -756,8 +818,11 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         "gault_millau": is_gault_millau,
         "reddit_mentions": reddit_mentions,  # Number of Reddit mentions
         "has_afsca_smiley": has_afsca_smiley,  # AFSCA hygiene certification
+        "is_family_restaurant": is_family_name,  # "Chez X" family naming pattern
+        "family_pattern": family_pattern,  # Type of pattern matched
         "reputation_flags": uncertainty_flags,  # Reasons for rating uncertainty
         "scarcity_components": scarcity_components,  # Detailed breakdown
+        "diaspora_context": diaspora_context,  # Diaspora geography info (for UI display)
         "components": {
             "review_penalty": review_penalty,
             "base_quality": base_quality,
@@ -778,6 +843,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "reddit_bonus": reddit_bonus,  # Reddit community endorsement
             "perfection_penalty": perfection_penalty,  # Penalty for statistically unlikely perfect ratings
             "afsca_bonus": afsca_bonus,  # AFSCA hygiene certification bonus
+            "family_bonus": family_bonus,  # Family restaurant naming pattern bonus
         }
     }
 
@@ -827,6 +893,7 @@ def rerank_restaurants(df):
     df["gault_millau"] = [r["gault_millau"] for r in results]
     df["reddit_mentions"] = [r["reddit_mentions"] for r in results]
     df["has_afsca_smiley"] = [r["has_afsca_smiley"] for r in results]
+    df["diaspora_context"] = [r["diaspora_context"] for r in results]
 
     # Add component columns for debugging/transparency
     for component in ["tourist_penalty", "scarcity_bonus", "local_street_bonus", "perfection_penalty", "afsca_bonus"]:

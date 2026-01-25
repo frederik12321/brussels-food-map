@@ -305,7 +305,7 @@ The algorithm incorporates local knowledge about Brussels:
 | **Communes** | All 19 Brussels communes | Nearest center (approximate) |
 | **Neighborhoods** | 13 special areas | 0.5km radius |
 | **Local Streets** | 14 foodie streets | 120-200m radius |
-| **Cuisines** | 11 diaspora types | Commune-based authenticity |
+| **Cuisines** | 11 diaspora types | Street-level context (informational) |
 | **Guides** | ~100 restaurants | Name matching |
 
 ### Commune Classifications
@@ -329,15 +329,24 @@ The algorithm incorporates local knowledge about Brussels:
 
 **EU Bubble**: European Quarter
 
-### Diaspora Authenticity
+### Diaspora Cultural Context
 
-Restaurants get bonuses when their cuisine matches their commune:
+Brussels is a city where 75% of the population has foreign origins. The algorithm recognizes this diversity:
 
-- **Congolese/African** → Ixelles (Matongé), Saint-Gilles
-- **Moroccan** → Molenbeek, Saint-Gilles, Saint-Josse, Schaerbeek
-- **Turkish/Middle Eastern** → Saint-Josse, Schaerbeek
-- **Portuguese** → Saint-Gilles
-- **Ethiopian** → Bruxelles (Sainte-Catherine area)
+**Street-Level Diaspora Hubs**:
+- **Matongé (Chaussée d'Ixelles/Porte de Namur)** → Congolese, Central African
+- **Chaussée de Haecht** → Turkish, Moroccan, Pakistani
+- **Rue de Brabant** → North African, Middle Eastern
+- **Rue de Laeken** → Greek, Turkish
+- **Chaussée de Gand** → Moroccan, North African
+- **Chaussée de Wavre** → Sub-Saharan African, Congolese
+
+**Approach**: We display diaspora context as *informational only* in the restaurant popup (when a restaurant is in a historically significant diaspora area). The scoring impact is minimal (1% tiebreaker) to avoid algorithmic bias that would reward restaurants simply for being in certain ethnic neighborhoods rather than for quality.
+
+This design choice reflects that:
+1. Restaurant quality should be judged on food, not geography
+2. Gentrification and economic factors affect where diaspora businesses can afford rent
+3. Great authentic food exists both inside and outside traditional diaspora zones
 
 ### Guide Recognition
 
