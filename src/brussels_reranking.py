@@ -601,14 +601,31 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     else:
         tier = COMMUNES.get(commune, {}).get("tier", "mixed")
 
-    # === SCORING COMPONENTS ===
+    # === NORMALIZED SCORING SYSTEM (0-1 scale) ===
+    #
+    # Design: All components sum to ~1.0 for a "perfect" restaurant.
+    # Penalties can push below 0, bonuses rarely exceed 1.0.
+    # Final score is clamped to [0, 1] for display.
+    #
+    # Weight budget (positive components sum to ~1.0):
+    #   Base quality:     0.35 (35%) - Google rating is primary signal
+    #   ML residual:      0.20 (20%) - Undervaluation detection
+    #   Scarcity:         0.12 (12%) - Limited hours/days = local gem
+    #   Independent:      0.10 (10%) - Non-chain bonus
+    #   Guide recognition: 0.08 (8%) - Michelin/GaultMillau
+    #   Reddit:           0.05 (5%) - Community endorsement
+    #   Local street:     0.04 (4%) - Known foodie streets
+    #   Diaspora:         0.03 (3%) - Authenticity signal
+    #   Family name:      0.02 (2%) - "Chez X" pattern
+    #   Cuisine rarity:   0.01 (1%) - Rare cuisines
+    #   ─────────────────────────────
+    #   Total positive:   1.00 (100%)
 
     # 0. Review count - Brussels "Saturation Curve"
     # In a mid-sized European capital (1.2M people), review count is a proxy for commercialization
     # Unlike NYC/London, Brussels locals don't generate 2000+ reviews for authentic spots
     #
     # Exception: Friteries (fritkots) are high-turnover by design and can be authentic with 3000+ reviews
-    # Known famous fritkots that don't have "frit" in name
     KNOWN_FRITKOTS = ["maison antoine", "chez clementine", "la baraque à frites"]
     name_lower = name.lower() if name else ""
     is_fritkot = cuisine in ["Fast Food", "Belgian"] and (
@@ -618,107 +635,92 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
 
     if review_count < 10:
         # Extremely few reviews = statistically meaningless rating
-        review_penalty = -0.60
+        # Harsh but not overwhelming (-0.35 instead of -0.60)
+        review_adjustment = -0.35
     elif review_count < 20:
-        # Still very few reviews = strong penalty
-        review_penalty = -0.40 + 0.25 * ((review_count - 10) / 10)
+        # Still very few reviews = strong penalty (scales -0.35 to -0.15)
+        review_adjustment = -0.35 + 0.20 * ((review_count - 10) / 10)
     elif review_count < 35:
-        # Getting there but still limited data
-        review_penalty = -0.15 * (1 - (review_count - 20) / 15)
+        # Getting there but still limited data (scales -0.15 to 0)
+        review_adjustment = -0.15 * (1 - (review_count - 20) / 15)
     elif review_count <= 100:
         # "Discovery" zone - slight bonus for emerging spots
-        review_penalty = 0.05
+        review_adjustment = 0.03
     elif review_count <= 500:
         # "Sweet Spot" - the Goldilocks zone
         # Enough social proof, but clientele is likely locals/EU expats
-        review_penalty = 0.08
+        review_adjustment = 0.05
     elif review_count <= 800:
         # "Famous Local" zone - institutions like Fin de Siècle
-        # Crowded but often still good
-        review_penalty = 0.03
+        review_adjustment = 0.02
     elif review_count <= 1200:
         # Transition zone - getting popular
-        review_penalty = 0
+        review_adjustment = 0
     elif review_count <= 1500:
         # Warning zone
-        review_penalty = -0.05
+        review_adjustment = -0.03
     elif is_fritkot:
-        # Fritkot exception: high-turnover by design, can be authentic with 3000+ reviews
-        # (e.g., Maison Antoine, Frit Flagey)
-        review_penalty = 0
+        # Fritkot exception: high-turnover by design
+        review_adjustment = 0
     elif tier in ["local_foodie", "diaspora_hub", "underexplored"]:
         # High-volume in LOCAL areas - could be old institution OR new delivery-optimized
-        # We can't tell without review velocity data, so apply moderate penalty
-        # (e.g., Barracuda in Flagey: 7000 reviews in 1 year = factory, not institution)
-        penalty_factor = min(1.0, (review_count - 1500) / 8000)  # Scales slower
-        review_penalty = -0.05 - (0.07 * penalty_factor)  # -0.05 to -0.12
+        penalty_factor = min(1.0, (review_count - 1500) / 8000)
+        review_adjustment = -0.03 - (0.07 * penalty_factor)  # -0.03 to -0.10
     else:
         # "Disneyfication" zone (1500+ reviews in tourist/mixed areas)
-        # Processing customers like cattle, likely pre-cooking food
-        # The "Chez Léon" / Rue des Bouchers effect
-        penalty_factor = min(1.0, (review_count - 1500) / 5000)  # Scales up to -0.20
-        review_penalty = -0.10 - (0.10 * penalty_factor)  # -0.10 to -0.20
+        penalty_factor = min(1.0, (review_count - 1500) / 5000)
+        review_adjustment = -0.08 - (0.12 * penalty_factor)  # -0.08 to -0.20
 
-    # 1. Base quality (normalized rating 0-1) - primary driver
-    base_quality = 0.30 * (rating / 5.0) if rating else 0
+    # 1. Base quality (35% weight) - primary driver
+    # A 5.0★ restaurant gets full 0.35, a 4.0★ gets 0.28, a 3.0★ gets 0.21
+    base_quality = 0.35 * (rating / 5.0) if rating else 0
 
-    # 2. ML residual (undervalued bonus) - secondary driver
-    residual_score = 0.25 * min(1.0, max(-1.0, residual * 2))
+    # 2. ML residual (20% weight) - undervaluation detection
+    # Residual typically ranges -0.5 to +0.5, we scale and clamp
+    residual_score = 0.20 * min(1.0, max(-1.0, residual * 2))
 
-    # 3. Tourist trap penalty (only for mediocre high-volume places near GP)
+    # 3. Tourist trap penalty (up to -15%)
     tourist_penalty = -0.15 * tourist_trap_score(lat, lng, rating, review_count, review_languages) if lat and lng else 0
 
-    # 4. Diaspora authenticity bonus (minimal - just a tiebreaker)
-    # Note: We show diaspora context info in the UI but keep scoring impact minimal
-    # to avoid algorithmic bias that rewards restaurants based on ethnic geography.
-    # A good Turkish restaurant in Uccle should score similarly to one in Saint-Josse.
-    diaspora_bonus = 0.01 * diaspora_authenticity_score(cuisine, commune, review_languages)
+    # 4. Diaspora authenticity bonus (3% weight)
+    # Meaningful but not dominant - rewards authentic diaspora spots
+    diaspora_bonus = 0.03 * diaspora_authenticity_score(cuisine, commune, review_languages)
 
-    # 5. Commune visibility boost (small - just a tiebreaker)
-    commune_boost = 0.03 * commune_visibility_boost(commune, commune_review_totals)
+    # 5. Independent restaurant bonus (10% weight)
+    independent_bonus = 0.10 * (0 if is_chain else 1)
 
-    # 6. Independent restaurant bonus
-    # Bourdain: independents offer authentic experiences chains can't replicate
-    independent_bonus = 0.12 * (0 if is_chain else 1)
+    # 6. Cuisine rarity bonus (1% weight)
+    # Small but noticeable - rewards rare cuisines in Brussels
+    rarity_bonus = 0.01 * cuisine_rarity_score(cuisine, commune, cuisine_counts_by_commune)
 
-    # 7. Cold-start correction (minimal - don't boost unproven places)
-    cold_start = 0.02 * cold_start_correction(review_count, rating, commune)
-
-    # 8. Cuisine rarity reward (minimal - rare cuisine doesn't mean good food)
-    rarity_bonus = 0.005 * cuisine_rarity_score(cuisine, commune, cuisine_counts_by_commune)
-
-    # 9. EU bubble penalty
+    # 7. EU bubble penalty (up to -3%)
     eu_penalty = -0.03 * eu_bubble_penalty(lat, lng, price_level, review_languages) if lat and lng else 0
 
-    # 10. Price/quality mismatch penalty
-    # Expensive restaurants should have higher ratings to justify the price
-    # €€€ (price_level=3) should have rating >= 4.3
-    # €€€€ (price_level=4) should have rating >= 4.5
+    # 8. Price/quality mismatch penalty
     price_quality_penalty = 0
     if price_level and rating:
         if price_level == 4:  # Very expensive
             expected_rating = 4.5
             if rating < expected_rating:
-                price_quality_penalty = -0.12 * (expected_rating - rating)
+                price_quality_penalty = -0.10 * (expected_rating - rating)
         elif price_level == 3:  # Expensive
             expected_rating = 4.3
             if rating < expected_rating:
-                price_quality_penalty = -0.08 * (expected_rating - rating)
+                price_quality_penalty = -0.06 * (expected_rating - rating)
 
-    # 11. Local street bonus (known locally, not on tourist maps)
+    # 9. Local street bonus (4% weight)
     local_street_bonus = 0
     local_street_name = None
     if lat and lng:
         is_local, street_name = is_on_local_street(lat, lng)
         if is_local:
-            local_street_bonus = 0.06
+            local_street_bonus = 0.04
             local_street_name = street_name
 
-    # 12. UNIFIED SCARCITY SCORE
-    # Combines: review count scarcity, hours, days, schedule, rare cuisine
-    # Scarcity = hard to access = likely a local gem
+    # 10. Scarcity score (12% weight)
+    # Combines: hours, days, schedule, rare cuisine
     scarcity_total, scarcity_components = unified_scarcity_score(restaurant)
-    scarcity_bonus = 0.15 * scarcity_total  # Up to 0.15 total from all scarcity signals
+    scarcity_bonus = 0.12 * scarcity_total
 
     # Extract individual values for transparency/debugging
     closes_early = restaurant.get("closes_early", False)
@@ -726,115 +728,84 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     weekdays_only = restaurant.get("weekdays_only", False)
     closed_weekends = restaurant.get("closed_weekends", False)
     closed_sunday = restaurant.get("closed_sunday", False)
-
     days_open_count = restaurant.get("days_open_count")
 
-    # 13. Tier-based adjustment (minimal - just a hint)
-    tier_adjustment = TIER_WEIGHTS.get(tier, 0) * 0.02
-
-    # 14. Guide recognition bonus (Michelin, Bib Gourmand & Gault Millau)
+    # 11. Guide recognition bonus (up to 8%)
     guide_bonus = 0
     michelin_stars = has_michelin_recognition(name)
     is_bib_gourmand = has_bib_gourmand(name)
     is_gault_millau = has_gault_millau(name)
 
     if michelin_stars >= 2:
-        guide_bonus = 0.12  # 2+ stars: strong boost
+        guide_bonus = 0.08  # 2+ stars: full bonus
     elif michelin_stars == 1:
-        guide_bonus = 0.08  # 1 star: moderate boost
+        guide_bonus = 0.06  # 1 star
     elif is_bib_gourmand:
-        guide_bonus = 0.06  # Bib Gourmand: good value recognition
+        guide_bonus = 0.04  # Bib Gourmand
     elif is_gault_millau:
-        guide_bonus = 0.05  # Gault Millau only: small boost
+        guide_bonus = 0.03  # Gault Millau only
 
-    # 15. Reputation uncertainty penalty
-    # Discounts ratings we're less confident about:
-    # - Perfect 5.0 with many reviews (statistically unlikely)
-    # - Extreme review counts (tourist-heavy)
-    # - SEO-heavy names (marketing focus)
-    uncertainty_score, uncertainty_flags = reputation_uncertainty_score(name, rating, review_count)
-    reputation_penalty = -0.15 * uncertainty_score  # Up to -0.15 penalty for uncertainty
-
-    # 16. Reddit community endorsement bonus
-    # Restaurants mentioned positively on r/brussels by locals get a boost
+    # 12. Reddit community endorsement (5% weight)
     reddit_score, reddit_mentions = reddit_community_score(name, review_count)
-    reddit_bonus = 0.08 * reddit_score  # Up to 0.08 bonus (8% of total score)
+    reddit_bonus = 0.05 * reddit_score
 
-    # 17. Perfection penalty - statistically unlikely perfect ratings
-    # 5.0★ with 500+ reviews: 0% of restaurants achieve this
-    # 5.0★ with <50 reviews: 29% achieve this (unreliable small sample)
-    # Mild penalty to allow promising startups while demoting suspicious ratings
+    # 13. Perfection penalty (up to -4%)
+    # 5.0★ with few reviews is statistically suspicious
     perfection_penalty = 0
     if rating >= 5.0:
         if review_count < 50:
-            perfection_penalty = -0.04  # Stronger: very few data points
+            perfection_penalty = -0.04
         elif review_count < 100:
-            perfection_penalty = -0.025  # Moderate: still limited data
+            perfection_penalty = -0.02
         elif review_count < 200:
-            perfection_penalty = -0.01  # Light: unusual but possible
+            perfection_penalty = -0.01
     elif rating >= 4.9:
         if review_count < 30:
-            perfection_penalty = -0.02  # Light penalty for 4.9 with very few reviews
+            perfection_penalty = -0.02
 
-    # 18. AFSCA Hygiene certification (informational only - no scoring bonus)
-    # Data shows AFSCA certification correlates with LOWER quality restaurants
-    # (avg rating 3.95 vs 4.31 for non-certified). Certification reflects
-    # bureaucratic compliance, not food quality. We keep the data for display
-    # but removed from scoring.
+    # 14. AFSCA Hygiene certification (informational only)
     address = restaurant.get("address", "")
     afsca_score = get_afsca_score(name, address)
     has_afsca_smiley = afsca_score > 0
-    afsca_bonus = 0  # No bonus - AFSCA doesn't correlate with quality
 
-    # 19. Family restaurant bonus (Bourdain: "Chez X" = family-run authenticity)
-    # These naming patterns indicate personal, family-run establishments
-    # Only applies to non-chains (chains can't be family restaurants)
+    # 15. Family restaurant bonus (2% weight)
     is_family_name, family_pattern = is_family_restaurant_name(name)
-    if is_family_name and not is_chain:
-        family_bonus = 0.04  # Meaningful bonus for family naming patterns
-    else:
-        family_bonus = 0
+    family_bonus = 0.02 if (is_family_name and not is_chain) else 0
 
-    # 20. Proust Factor: Cuisine specificity bonus
-    # Regional cuisines ("Sichuan", "Neapolitan") get a small boost over generic ("Chinese", "Italian")
-    # Reflects intentionality and authenticity - a "Sicilian" restaurant knows exactly what it is
+    # 16. Cuisine specificity bonus (up to 2%)
     cuisine_specificity = get_cuisine_specificity_bonus(cuisine)
-    specificity_bonus = 0.03 * cuisine_specificity  # Up to 3% boost for highly specific cuisines
+    specificity_bonus = 0.02 * cuisine_specificity
 
-    # 21. Non-restaurant shop penalty
-    # Chocolate shops, praline stores, etc. are retail shops, not restaurants
-    # They shouldn't rank alongside actual restaurants
+    # 17. Non-restaurant shop penalty
     is_shop = is_non_restaurant_shop(name)
-    shop_penalty = -0.80 if is_shop else 0  # Devastating penalty for non-restaurants
+    shop_penalty = -0.80 if is_shop else 0
 
-    # 22. Get diaspora context (informational - for UI display, not scoring)
+    # 18. Diaspora context (informational - for UI display only)
     diaspora_context = get_diaspora_context(cuisine, commune, lat, lng)
 
-    # Total score
+    # Total score (sum of all components)
     total = (
-        review_penalty +
+        review_adjustment +
         base_quality +
         residual_score +
         tourist_penalty +
         diaspora_bonus +
-        commune_boost +
         independent_bonus +
-        cold_start +
         rarity_bonus +
         eu_penalty +
         price_quality_penalty +
         local_street_bonus +
         scarcity_bonus +
-        tier_adjustment +
         guide_bonus +
-        reputation_penalty +
         reddit_bonus +
         perfection_penalty +
-        afsca_bonus +
         family_bonus +
         specificity_bonus +
         shop_penalty
     )
+
+    # Clamp to [0, 1] for normalized output
+    total = max(0.0, min(1.0, total))
 
     # Determine restaurant quality tier based on score
     if total >= 0.60:
@@ -867,32 +838,26 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         "has_afsca_smiley": has_afsca_smiley,  # AFSCA hygiene certification
         "is_family_restaurant": is_family_name,  # "Chez X" family naming pattern
         "family_pattern": family_pattern,  # Type of pattern matched
-        "reputation_flags": uncertainty_flags,  # Reasons for rating uncertainty
         "scarcity_components": scarcity_components,  # Detailed breakdown
         "diaspora_context": diaspora_context,  # Diaspora geography info (for UI display)
         "components": {
-            "review_penalty": review_penalty,
-            "base_quality": base_quality,
-            "residual_score": residual_score,
+            "review_adjustment": review_adjustment,  # Saturation curve
+            "base_quality": base_quality,  # 35% weight
+            "residual_score": residual_score,  # 20% weight
             "tourist_penalty": tourist_penalty,
-            "diaspora_bonus": diaspora_bonus,
-            "commune_boost": commune_boost,
-            "independent_bonus": independent_bonus,
-            "cold_start": cold_start,
-            "rarity_bonus": rarity_bonus,
+            "diaspora_bonus": diaspora_bonus,  # 3% weight
+            "independent_bonus": independent_bonus,  # 10% weight
+            "rarity_bonus": rarity_bonus,  # 1% weight
             "eu_penalty": eu_penalty,
             "price_quality_penalty": price_quality_penalty,
-            "local_street_bonus": local_street_bonus,
-            "scarcity_bonus": scarcity_bonus,  # Unified scarcity (includes hours, days, cuisine)
-            "tier_adjustment": tier_adjustment,
-            "guide_bonus": guide_bonus,
-            "reputation_penalty": reputation_penalty,
-            "reddit_bonus": reddit_bonus,  # Reddit community endorsement
-            "perfection_penalty": perfection_penalty,  # Penalty for statistically unlikely perfect ratings
-            "afsca_bonus": afsca_bonus,  # AFSCA hygiene certification bonus
-            "family_bonus": family_bonus,  # Family restaurant naming pattern bonus
-            "specificity_bonus": specificity_bonus,  # Proust Factor: regional cuisine specificity
-            "shop_penalty": shop_penalty,  # Penalty for non-restaurant retail (chocolate shops, etc.)
+            "local_street_bonus": local_street_bonus,  # 4% weight
+            "scarcity_bonus": scarcity_bonus,  # 12% weight
+            "guide_bonus": guide_bonus,  # Up to 8%
+            "reddit_bonus": reddit_bonus,  # 5% weight
+            "perfection_penalty": perfection_penalty,
+            "family_bonus": family_bonus,  # 2% weight
+            "specificity_bonus": specificity_bonus,  # Up to 2%
+            "shop_penalty": shop_penalty,
         }
     }
 
@@ -956,7 +921,7 @@ def rerank_restaurants(df):
     df["diaspora_context"] = [r["diaspora_context"] for r in results]
 
     # Add component columns for debugging/transparency
-    for component in ["tourist_penalty", "scarcity_bonus", "local_street_bonus", "perfection_penalty", "afsca_bonus"]:
+    for component in ["review_adjustment", "tourist_penalty", "scarcity_bonus", "local_street_bonus", "perfection_penalty"]:
         df[f"score_{component}"] = [r["components"][component] for r in results]
 
     # Add scarcity sub-components for detailed analysis
