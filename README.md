@@ -48,8 +48,9 @@ The final `brussels_score` combines multiple signals:
 | **ML Residual** | 25% | Undervaluation bonus from Stage 1 |
 | **Scarcity Score** | 15% | Limited hours/days = local favorite |
 | **Independent Bonus** | 10% | Non-chain restaurants |
-| **Tourist Trap Penalty** | -15% | Proximity to Grand Place, Rue des Bouchers |
+| **Tourist Trap Penalty** | -15% | High-volume mediocre places near Grand Place |
 | **Guide Recognition** | up to 12% | Michelin stars, Bib Gourmand, Gault&Millau |
+| **Reddit Community** | up to 8% | Mentioned positively on r/brussels |
 | **Local Street Bonus** | 6% | Known local foodie streets |
 | **Other factors** | ~4% | Commune visibility, cold-start, rarity |
 
@@ -338,6 +339,18 @@ Restaurants get bonuses when their cuisine matches their commune:
 | Bib Gourmand | ~30 | +5% |
 | Gault&Millau 15+ | ~50 | +4% |
 
+### Reddit Community Boost
+
+Restaurants mentioned positively on r/brussels get a boost based on mention frequency:
+
+| Mentions | Bonus | Label |
+|----------|-------|-------|
+| 10+ | +8% | r/brussels favorite |
+| 5-9 | +6% | r/brussels favorite |
+| 2-4 | +3% | r/brussels approved |
+
+Hidden gems (< 200 reviews) get an additional 20% multiplier on their Reddit bonus.
+
 ### Limitations
 
 - Commune detection uses nearest center, not official boundaries
@@ -366,12 +379,13 @@ This project is inspired by **[Lauren Leek's London Food Dashboard](https://laur
 |---------|-------------|
 | **Scarcity Score** | Limited hours/days = local favorite (lunch-only spots, weekday-only places) |
 | **Guide Recognition** | Michelin stars, Bib Gourmand, Gault&Millau bonuses |
+| **Reddit Community Boost** | Restaurants mentioned on r/brussels by locals get a boost |
 | **Local Street Bonus** | Known foodie streets (Rue de Flandre, Parvis Saint-Gilles, etc.) |
 | **EU Bubble Penalty** | Schuman area expat-targeted restaurant detection |
-| **Diaspora Authenticity Matrix** | Congolese in Matongé, Moroccan in Molenbeek, Turkish in Saint-Josse |
 | **19 Commune Classification** | Each Brussels commune tagged by food scene type |
 | **Café/Bar Detection** | Name-based classification to separate from restaurants |
 | **Opening Hours Analysis** | Closes early, weekdays only, closed Sunday signals |
+| **Restaurant Quality Tiers** | Must Try, Recommended, Above Average, Average based on score |
 
 ### What We Didn't Implement ❌
 
