@@ -526,12 +526,12 @@ CHAIN_PATTERNS = [
 # Non-restaurant retail shops that shouldn't rank as restaurants
 # These are shops that sell food products but are not places to eat
 NON_RESTAURANT_SHOPS = [
-    # Belgian chocolate shops/brands
-    r"corné", r"corne dynastie", r"neuhaus", r"godiva", r"leonidas",
-    r"pierre marcolini", r"marcolini", r"galler", r"wittamer",
-    r"mary chocolatier", r"planète chocolat", r"frederic blondeel",
+    # Belgian chocolate shops/brands (use word boundaries to avoid false positives)
+    r"\bcorné\b", r"\bcorne dynastie\b", r"\bneuhaus\b", r"\bgodiva\b", r"\bleonidas\b",
+    r"\bpierre marcolini\b", r"\bmarcolini\b", r"\bgaller\b", r"\bwittamer\b",
+    r"\bmary chocolatier\b", r"\bplanète chocolat\b", r"\bfrederic blondeel\b",
     # Generic shop indicators
-    r"chocolatier", r"chocolate shop", r"pralines",
+    r"\bchocolatier\b", r"\bchocolate shop\b", r"\bpralines\b",
 ]
 
 
