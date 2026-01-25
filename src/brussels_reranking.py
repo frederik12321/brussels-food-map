@@ -603,14 +603,13 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
 
     # === SCORING COMPONENTS ===
 
-    # 0. Review count penalty (both too few AND too many reviews are problematic)
-    # Too few reviews = unreliable rating (DEVASTATING penalty - these should never rank high)
-    # Too many reviews = likely tourist trap, delivery-optimized, or Uber Eats volume play
+    # 0. Review count penalty (too few reviews = unreliable rating)
+    # High review counts are NOT penalized - could be a long-established local favorite
+    # We only penalize tourist traps separately (via tourist_trap_score with location + rating signals)
     if review_count < 10:
         # Extremely few reviews = FLAT devastating penalty
         # A 5.0 rating with 3 reviews (or even 9) is statistically meaningless
         # These restaurants should NEVER appear in top rankings
-        # Flat -0.60 penalty means even a "perfect" 5.0 rated place maxes out around 0.0 score
         review_penalty = -0.60
     elif review_count < 20:
         # Still very few reviews = strong penalty (scales from -0.40 to -0.15)
@@ -618,18 +617,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     elif review_count < 35:
         # Getting there but still limited data (scales from -0.15 to 0)
         review_penalty = -0.15 * (1 - (review_count - 20) / 15)
-    elif review_count > 5000:
-        # Extreme volume = almost certainly tourist trap or delivery-focused
-        # (e.g., Delirium with 25k reviews, Uber Eats favorites)
-        review_penalty = -0.25 * min(1.0, (review_count - 5000) / 15000)
-    elif review_count > 2000:
-        # Very high volume = strong penalty (likely optimized for volume/delivery)
-        review_penalty = -0.15 * ((review_count - 2000) / 3000)
-    elif review_count > 1000:
-        # High volume = moderate penalty
-        review_penalty = -0.08 * ((review_count - 1000) / 1000)
     else:
-        review_penalty = 0  # Sweet spot: 35-1000 reviews
+        review_penalty = 0  # 35+ reviews = enough data to trust the rating
 
     # 1. Base quality (normalized rating 0-1) - primary driver
     base_quality = 0.30 * (rating / 5.0) if rating else 0
