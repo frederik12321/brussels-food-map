@@ -127,10 +127,10 @@ Restaurants are categorized into four tiers (Kitchen Confidential theme):
 
 | Tier | Score | Icon | Description |
 |------|-------|------|-------------|
-| **Chef's Kiss** | ≥ 0.60 | 👑 | Exceptional craft, the real deal |
-| **Kitchen Approved** | ≥ 0.45 | ❤️ | Would eat here off-shift |
-| **Workable** | ≥ 0.30 | 🍴 | Feeds you right |
-| **Line Cook Shrug** | < 0.30 | ● | Uninspired |
+| **Chef's Kiss** | ≥ 0.70 | 👑 | Exceptional craft, the real deal |
+| **Kitchen Approved** | ≥ 0.55 | ❤️ | Would eat here off-shift |
+| **Workable** | ≥ 0.40 | 🍴 | Feeds you right |
+| **Line Cook Shrug** | < 0.40 | ● | Uninspired |
 
 ---
 

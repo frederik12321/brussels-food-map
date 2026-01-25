@@ -807,16 +807,16 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     # Clamp to [0, 1] for normalized output
     total = max(0.0, min(1.0, total))
 
-    # Determine restaurant quality tier based on score
-    # Thresholds calibrated for ~5-8% Must Try, ~15-20% Recommended
+    # Determine restaurant quality tier based on score (Kitchen Confidential theme)
+    # Thresholds calibrated for ~3-5% Chef's Kiss, ~20% Kitchen Approved
     if total >= 0.70:
-        restaurant_tier = "Must Try"
+        restaurant_tier = "Chef's Kiss"
     elif total >= 0.55:
-        restaurant_tier = "Recommended"
+        restaurant_tier = "Kitchen Approved"
     elif total >= 0.40:
-        restaurant_tier = "Above Average"
+        restaurant_tier = "Workable"
     else:
-        restaurant_tier = "Average"
+        restaurant_tier = "Line Cook Shrug"
 
     # Return score and component breakdown
     return {
@@ -906,7 +906,7 @@ def rerank_restaurants(df):
     df["brussels_score"] = [r["brussels_score"] for r in results]
     df["neighborhood"] = [r["neighborhood"] for r in results]
     df["local_street"] = [r["local_street"] for r in results]
-    df["tier"] = [r["tier"] for r in results]  # Restaurant quality tier (Must Try, etc.)
+    df["tier"] = [r["tier"] for r in results]  # Restaurant quality tier (Chef's Kiss, etc.)
     df["commune_tier"] = [r["commune_tier"] for r in results]  # Commune/neighborhood type
     df["closes_early"] = [r["closes_early"] for r in results]
     df["typical_close_hour"] = [r["typical_close_hour"] for r in results]
