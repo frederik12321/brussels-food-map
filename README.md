@@ -53,6 +53,7 @@ The final `brussels_score` combines multiple signals:
 | **Reddit Community** | up to 8% | Mentioned positively on r/brussels |
 | **Local Street Bonus** | 6% | Known local foodie streets |
 | **Perfection Penalty** | up to -4% | Statistically unlikely 5.0★ ratings with few reviews |
+| **Cuisine Specificity** | up to 3% | Regional cuisines (Sichuan, Neapolitan) over generic (Chinese, Italian) |
 | **Other factors** | ~4% | Commune visibility, cold-start, rarity |
 
 ### Scarcity Score (The Secret Sauce)
@@ -416,7 +417,8 @@ This project is inspired by **[Lauren Leek's London Food Dashboard](https://laur
 | **19 Commune Classification** | Each Brussels commune tagged by food scene type |
 | **Café/Bar Detection** | Name-based classification to separate from restaurants |
 | **Opening Hours Analysis** | Closes early, weekdays only, closed Sunday signals |
-| **Restaurant Quality Tiers** | Must Try, Recommended, Above Average, Average based on score |
+| **Cuisine Specificity (Proust Factor)** | Regional cuisines rewarded over generic categories |
+| **Kitchen Confidential Tiers** | Chef's Kiss, Kitchen Approved, Workable, Line Cook Shrug |
 
 ### What We Didn't Implement ❌
 

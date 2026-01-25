@@ -1446,6 +1446,10 @@
                 <span class="info-icon">🏆</span>
                 <span class="info-text"><strong>Recognized</strong> — Bonus for Michelin, Bib Gourmand, Gault&Millau, or r/brussels mentions</span>
             </div>
+            <div class="info-item">
+                <span class="info-icon">🍝</span>
+                <span class="info-text"><strong>Regional focus</strong> — Specific cuisines like Sichuan or Neapolitan get a small boost over generic "Chinese" or "Italian"</span>
+            </div>
             <hr>
             <div class="info-icons">
                 <span>
@@ -2426,13 +2430,23 @@
 
         infoClose.addEventListener('click', () => {
             infoOverlay.classList.remove('active');
+            // Remember that user has seen the info popup
+            localStorage.setItem('brussels_food_map_info_seen', 'true');
         });
 
         infoOverlay.addEventListener('click', (e) => {
             if (e.target === infoOverlay) {
                 infoOverlay.classList.remove('active');
+                localStorage.setItem('brussels_food_map_info_seen', 'true');
             }
         });
+
+        // Show info popup on first visit
+        if (!localStorage.getItem('brussels_food_map_info_seen')) {
+            setTimeout(() => {
+                infoOverlay.classList.add('active');
+            }, 500); // Small delay to let the map load first
+        }
     </script>
 </body>
 </html>

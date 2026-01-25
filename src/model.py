@@ -11,6 +11,7 @@ import pickle
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.compose import TransformedTargetRegressor
 from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
@@ -20,15 +21,56 @@ import h3
 from features import load_data, engineer_features, prepare_ml_features
 
 
-def train_rating_model(X, y):
-    """Train the gradient boosting model to predict ratings."""
-    model = HistGradientBoostingRegressor(
+# Logit transformation for bounded rating target (1-5)
+# Maps bounded [1,5] to unbounded (-inf, +inf) for better regression
+def _rating_to_logit(y):
+    """Transform ratings [1,5] to unbounded logit space."""
+    # Clamp to avoid log(0) or log(negative)
+    y_clamped = np.clip(y, 1.01, 4.99)
+    # Normalize to (0, 1)
+    y_norm = (y_clamped - 1) / 4.0
+    # Logit transform: log(p / (1-p))
+    return np.log(y_norm / (1 - y_norm))
+
+
+def _logit_to_rating(z):
+    """Inverse transform: logit space back to ratings [1,5]."""
+    # Inverse logit (sigmoid)
+    y_norm = 1 / (1 + np.exp(-z))
+    # Scale back to [1, 5]
+    return y_norm * 4.0 + 1.0
+
+
+def train_rating_model(X, y, use_logit_transform=False):
+    """
+    Train the gradient boosting model to predict ratings.
+
+    Args:
+        use_logit_transform: If True, applies logit transformation on target variable
+            (Lauren Leek's approach). This helps when ratings are spread across the
+            full 1-5 range, but hurts when ratings are concentrated (like Brussels
+            where 50% of restaurants are 4.0-4.5).
+    """
+    base_model = HistGradientBoostingRegressor(
         max_iter=200,
         max_depth=8,
         learning_rate=0.1,
         min_samples_leaf=20,
         random_state=42
     )
+
+    if use_logit_transform:
+        # Wrap with target transformation (logit for bounded ratings)
+        # Only beneficial when ratings span the full 1-5 range
+        model = TransformedTargetRegressor(
+            regressor=base_model,
+            func=_rating_to_logit,
+            inverse_func=_logit_to_rating,
+            check_inverse=False  # Clamping makes it not strictly invertible
+        )
+    else:
+        # Direct regression - better for concentrated rating distributions
+        model = base_model
 
     # Cross-validation to evaluate
     cv_scores = cross_val_score(model, X, y, cv=5, scoring="r2")
