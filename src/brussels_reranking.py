@@ -808,10 +808,10 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     total = max(0.0, min(1.0, total))
 
     # Determine restaurant quality tier based on score (Kitchen Confidential theme)
-    # Thresholds calibrated for ~3-5% Chef's Kiss, ~20% Kitchen Approved
-    if total >= 0.70:
+    # Thresholds calibrated for ~15% Chef's Kiss, ~20% Kitchen Approved
+    if total >= 0.60:
         restaurant_tier = "Chef's Kiss"
-    elif total >= 0.55:
+    elif total >= 0.50:
         restaurant_tier = "Kitchen Approved"
     elif total >= 0.40:
         restaurant_tier = "Workable"

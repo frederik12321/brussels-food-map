@@ -1428,35 +1428,35 @@
             <h3>How we adjust Google ratings</h3>
             <div class="info-item">
                 <span class="info-icon">⭐</span>
-                <span class="info-text"><strong>Base rating</strong> (30%) — Google Maps rating as foundation</span>
+                <span class="info-text"><strong>Base rating</strong> (35%) — Google Maps rating as foundation</span>
             </div>
             <div class="info-item">
                 <span class="info-icon">📈</span>
-                <span class="info-text"><strong>Beats expectations</strong> (25%) — ML detects places rated higher than predicted</span>
+                <span class="info-text"><strong>Beats expectations</strong> (20%) — ML detects places rated higher than predicted</span>
             </div>
             <div class="info-item">
                 <span class="info-icon">📊</span>
-                <span class="info-text"><strong>Saturation curve</strong> (-20% to +8%) — 100-500 reviews is the sweet spot; 1500+ in tourist areas = factory</span>
+                <span class="info-text"><strong>Saturation curve</strong> — 100-500 reviews is the sweet spot; 1500+ in tourist areas = factory</span>
             </div>
             <div class="info-item">
                 <span class="info-icon">🔒</span>
-                <span class="info-text"><strong>Scarce access</strong> (15%) — Limited hours or days? Locals know it's worth the effort</span>
+                <span class="info-text"><strong>Scarce access</strong> (12%) — Limited hours or days? Locals know it's worth the effort</span>
             </div>
             <div class="info-item">
                 <span class="info-icon">🏪</span>
-                <span class="info-text"><strong>Independent</strong> (12%) — Non-chains get priority. Friteries exempt from volume penalties</span>
+                <span class="info-text"><strong>Independent</strong> (10%) — Non-chains get priority. Friteries exempt from volume penalties</span>
             </div>
             <div class="info-item">
                 <span class="info-icon">📍</span>
-                <span class="info-text"><strong>Location</strong> (-15%) — Penalty near Grand Place & Rue des Bouchers</span>
+                <span class="info-text"><strong>Location</strong> — Penalty near Grand Place & Rue des Bouchers</span>
             </div>
             <div class="info-item">
                 <span class="info-icon">🏆</span>
-                <span class="info-text"><strong>Recognized</strong> (up to 12%) — Michelin, Bib Gourmand, Gault&Millau, r/brussels</span>
+                <span class="info-text"><strong>Recognized</strong> (8%) — Michelin, Bib Gourmand, Gault&Millau, r/brussels</span>
             </div>
             <div class="info-item">
                 <span class="info-icon">🍝</span>
-                <span class="info-text"><strong>Regional cuisine</strong> (3%) — Sichuan beats generic Chinese</span>
+                <span class="info-text"><strong>Regional cuisine</strong> (4%) — Sichuan beats generic Chinese</span>
             </div>
             <hr>
             <div class="info-icons">
@@ -1912,8 +1912,8 @@
         // Get tier from brussels_score
         // Thresholds must match backend (brussels_reranking.py)
         function getTierFromScore(score) {
-            if (score >= 0.70) return 'must_try';
-            if (score >= 0.55) return 'recommended';
+            if (score >= 0.60) return 'must_try';
+            if (score >= 0.50) return 'recommended';
             if (score >= 0.40) return 'above_average';
             return 'average';
         }
@@ -2323,7 +2323,7 @@
         function updateStats() {
             document.getElementById('total-restaurants').textContent = restaurants.length;
             document.getElementById('total-gems').textContent =
-                restaurants.filter(r => (r.brussels_score || 0) >= 0.55).length;
+                restaurants.filter(r => (r.brussels_score || 0) >= 0.50).length;
 
             const cuisines = new Set(restaurants.map(r => r.cuisine).filter(Boolean));
             document.getElementById('total-cuisines').textContent = cuisines.size;
