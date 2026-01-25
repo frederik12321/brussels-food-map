@@ -1,6 +1,52 @@
+# Environment
 .env
+.env.local
+.env.production
+
+# Python
 __pycache__/
 *.pyc
-.DS_Store
+*.pyo
+*.pyd
+.Python
+*.so
+.eggs/
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
 venv/
 .venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files (keep sample data, exclude large/sensitive files)
+# Uncomment these if you don't want to track data:
+# data/*.json
+# data/*.csv
+# data/*.pkl
+
+# Model files (can be regenerated)
+data/*.pkl
+
+# Stats (privacy)
+data/stats.json
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

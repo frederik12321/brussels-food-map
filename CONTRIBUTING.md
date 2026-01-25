@@ -1,65 +1,90 @@
-# Contributing to Brussels Food Map
+# Contributing to Local Food Map
 
-Thank you for your interest in contributing to Brussels Food Map!
+Thank you for your interest in contributing! This project welcomes contributions of all kinds.
 
 ## Ways to Contribute
 
-### Report Issues
+### 🌍 Adapt for Your City
 
-Found a bug or have a suggestion? Open an issue on GitHub with:
-- Clear description of the problem or suggestion
-- Steps to reproduce (for bugs)
+The most impactful contribution is adapting this for your own city:
+
+1. **Fork the repository**
+2. **Copy the city template**: `cp config/city_template.py config/your_city_config.py`
+3. **Fill in your city's data**:
+   - District/neighborhood boundaries and classifications
+   - Local food streets where locals eat
+   - Tourist trap zones
+   - Michelin and local guide data
+   - Chain restaurant patterns
+   - Reddit/local forum subreddit
+4. **Document your data sources** in your PR
+5. **Share your deployment** in the Issues!
+
+### 🐛 Report Bugs
+
+Found a bug? Please open an issue with:
+- Description of the bug
+- Steps to reproduce
+- Expected vs actual behavior
 - Screenshots if applicable
 
-### Restaurant Data Corrections
+### 💡 Suggest Features
 
-If you notice incorrect restaurant data:
-- **Wrong category**: A shop listed as a restaurant, or vice versa
-- **Closed permanently**: Restaurant no longer exists
-- **Wrong location**: Coordinates are off
+Have an idea? Open an issue with:
+- Description of the feature
+- Use case / why it would be useful
+- Any implementation ideas
 
-Please open an issue with the restaurant name and the correction needed.
-
-### Algorithm Improvements
-
-Ideas for improving the ranking algorithm are welcome! Consider:
-- New signals that indicate quality (with data sources)
-- Adjustments to existing weights
-- Brussels-specific knowledge we're missing
-
-### Code Contributions
+### 🔧 Submit Code
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-improvement`)
+2. Create a feature branch: `git checkout -b feature/your-feature`
 3. Make your changes
-4. Test locally (`python src/app.py`)
-5. Commit with clear messages
-6. Open a Pull Request
+4. Run tests if available
+5. Commit: `git commit -m "Add your feature"`
+6. Push: `git push origin feature/your-feature`
+7. Open a Pull Request
 
-## Development Setup
+## Code Guidelines
 
-```bash
-# Clone your fork
-git clone https://github.com/YOUR_USERNAME/brussels-food-map.git
-cd brussels-food-map
+### Python
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate
+- Follow PEP 8 style guide
+- Use meaningful variable names
+- Add docstrings to functions
+- Keep functions focused and small
 
-# Install dependencies
-pip install -r requirements.txt
+### Commits
 
-# Run locally
-python src/app.py
-```
+- Use clear, descriptive commit messages
+- Reference issues when applicable: "Fix #123"
+- Keep commits focused on single changes
 
-## Code Style
+### City Configurations
 
-- Python: Follow PEP 8
-- JavaScript: Use consistent formatting (the project uses vanilla JS)
-- Comments: Explain *why*, not *what*
+When adding a new city:
+- Use the template in `config/city_template.py`
+- Include comments explaining data sources
+- Test the full pipeline before submitting
+- Document any city-specific quirks
+
+## City-Specific Data Sources
+
+When researching your city, consider:
+
+- **Districts/Neighborhoods**: Wikipedia, local government sites
+- **Tourist Zones**: Travel guides, TripAdvisor "most visited"
+- **Diaspora Hubs**: Local news, community organization sites
+- **Michelin Stars**: Official Michelin Guide
+- **Local Guides**: TimeOut, Eater, local food blogs
+- **Reddit**: Check r/[yourcity] for food recommendations
 
 ## Questions?
 
-Open an issue with the "question" label.
+- Open an issue for questions
+- Check existing issues first
+- Be patient and respectful
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the MIT License.

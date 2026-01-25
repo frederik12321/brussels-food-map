@@ -1,10 +1,45 @@
-# Brussels Food Map 🍴
+# Local Food Map 🍴
 
-**Discover hidden culinary gems in Brussels using machine learning and local context.**
+**Discover hidden culinary gems using machine learning and local context.**
 
-A web application that combines Google Maps data with a Brussels-specific ranking algorithm to surface underrated restaurants that tourists and generic rating systems tend to overlook.
+A web application that combines Google Maps data with a city-specific ranking algorithm to surface underrated restaurants that tourists and generic rating systems tend to overlook.
 
-🔗 **Live Demo**: [brussels-food-map.up.railway.app](https://brussels-food-map.up.railway.app)
+🔗 **Brussels Demo**: [brussels-food-map.up.railway.app](https://brussels-food-map.up.railway.app)
+
+---
+
+## 🌍 Adapt This for Your City
+
+This project is designed to be easily adapted for any city. The core algorithm is city-agnostic—you just need to provide local context data.
+
+### Quick Start for Your City
+
+```bash
+# 1. Fork this repo
+git clone https://github.com/YOUR_USERNAME/local-food-map.git
+cd local-food-map
+
+# 2. Copy the city template
+cp config/city_template.py config/your_city_config.py
+
+# 3. Fill in your city's data (see below)
+# 4. Run the pipeline
+# 5. Deploy!
+```
+
+### What You Need to Configure
+
+| Component | Description | Example |
+|-----------|-------------|---------|
+| **City Center** | Lat/lng coordinates | `(51.5074, -0.1278)` for London |
+| **Tourist Epicenter** | Main tourist trap zone | Times Square, Eiffel Tower |
+| **Districts** | Neighborhoods with tier classifications | Soho (mixed), Brick Lane (diaspora_hub) |
+| **Local Streets** | Streets where locals eat | Not on tourist maps |
+| **Chain Patterns** | Regex patterns for chains to penalize | Local fast food chains |
+| **Michelin List** | Starred restaurants in your city | From Michelin Guide |
+| **Reddit Subreddit** | Local community for endorsements | r/london, r/nyc |
+
+See `config/city_template.py` for a complete template with examples.
 
 ---
 
@@ -19,9 +54,7 @@ Google Maps ratings favor:
 
 This means authentic local spots, diaspora restaurants, and neighborhood gems often get buried.
 
-### Our Solution: Brussels-Specific Reranking
-
-We built a two-stage ranking system:
+### Our Solution: Two-Stage Reranking
 
 #### Stage 1: ML-Based Undervaluation Detection
 
@@ -38,9 +71,9 @@ A **HistGradientBoostingRegressor** model predicts what rating a restaurant *sho
 
 Positive residual → Restaurant performs *better* than expected → Undervalued gem
 
-#### Stage 2: Brussels Context Scoring
+#### Stage 2: Local Context Scoring
 
-The final `brussels_score` combines multiple signals:
+The final score combines multiple signals:
 
 | Component | Weight | Description |
 |-----------|--------|-------------|
@@ -48,13 +81,12 @@ The final `brussels_score` combines multiple signals:
 | **ML Residual** | 25% | Undervaluation bonus from Stage 1 |
 | **Scarcity Score** | 15% | Limited hours/days = local favorite |
 | **Independent Bonus** | 10% | Non-chain restaurants |
-| **Tourist Trap Penalty** | -15% | High-volume mediocre places near Grand Place |
-| **Guide Recognition** | up to 12% | Michelin stars, Bib Gourmand, Gault&Millau |
-| **Reddit Community** | up to 8% | Mentioned positively on r/brussels |
+| **Tourist Trap Penalty** | -15% | High-volume mediocre places near tourist center |
+| **Guide Recognition** | up to 12% | Michelin stars, local guides |
+| **Community Endorsement** | up to 8% | Mentioned on local subreddit |
 | **Local Street Bonus** | 6% | Known local foodie streets |
-| **Perfection Penalty** | up to -4% | Statistically unlikely 5.0★ ratings with few reviews |
-| **Cuisine Specificity** | up to 3% | Regional cuisines (Sichuan, Neapolitan) over generic (Chinese, Italian) |
-| **Other factors** | ~4% | Commune visibility, cold-start, rarity |
+| **Perfection Penalty** | up to -4% | Statistically unlikely 5.0★ ratings |
+| **Cuisine Specificity** | up to 3% | Regional cuisines over generic |
 
 ### Scarcity Score (The Secret Sauce)
 
@@ -66,7 +98,7 @@ Scarcity = weighted sum of:
   - Hours scarcity (closes early = lunch spots)
   - Days scarcity (fewer days open = exclusive)
   - Schedule scarcity (closed weekends = local workers)
-  - Cuisine scarcity (rare cuisines in Brussels)
+  - Cuisine scarcity (rare cuisines in your city)
 ```
 
 A lunch-only spot open 4 days a week with 150 reviews? Probably a hidden gem that locals know about.
@@ -75,92 +107,42 @@ A lunch-only spot open 4 days a week with 150 reviews? Probably a hidden gem tha
 
 ## Tier System
 
-Restaurants are categorized into four tiers based on `brussels_score` (Kitchen Confidential theme):
+Restaurants are categorized into four tiers (Kitchen Confidential theme):
 
-| Tier | Score | Icon | Color | Description |
-|------|-------|------|-------|-------------|
-| **Chef's Kiss** | ≥ 0.60 | 👑 Crown | Gold #FFD700 | Exceptional craft, the real deal |
-| **Kitchen Approved** | ≥ 0.45 | ❤️ Heart | Green #2ECC71 | Would eat here off-shift |
-| **Workable** | ≥ 0.30 | 🍴 Utensils | Blue #3498DB | Feeds you right |
-| **Line Cook Shrug** | < 0.30 | ● Dot | Gray #95A5A6 | Uninspired |
-
----
-
-## Data Pipeline
-
-```
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐     ┌──────────────┐
-│  scraper.py │ ──▶ │ features.py  │ ──▶ │  model.py   │ ──▶ │ brussels_    │
-│             │     │              │     │             │     │ reranking.py │
-│ Google Maps │     │ Feature      │     │ ML Model    │     │              │
-│ Places API  │     │ Engineering  │     │ Training    │     │ Context      │
-│             │     │              │     │ & Residuals │     │ Scoring      │
-└─────────────┘     └──────────────┘     └─────────────┘     └──────────────┘
-       │                   │                    │                    │
-       ▼                   ▼                    ▼                    ▼
-brussels_restaurants   brussels_restaurants  restaurants_with    restaurants_
-      .json              _processed.csv      _predictions.csv   _brussels_reranked.csv
-```
-
-### 1. Data Collection (`scraper.py`)
-
-Scrapes restaurant data from Google Maps Places API:
-- Name, rating, review count, price level
-- Location (lat/lng), address
-- Opening hours
-- Cuisine type
-
-### 2. Feature Engineering (`features.py`)
-
-Transforms raw data into ML features:
-- Log-transform review counts
-- One-hot encode cuisines
-- Extract opening hours patterns (closes early, weekdays only, etc.)
-- Assign H3 hexagonal grid indices
-- Detect chain restaurants
-
-### 3. ML Model (`model.py`)
-
-Trains HistGradientBoostingRegressor:
-- Predicts expected rating based on features
-- Calculates residuals (actual - predicted)
-- Clusters neighborhoods using K-means on hex aggregates
-
-### 4. Brussels Reranking (`brussels_reranking.py`)
-
-Applies local context:
-- Tourist trap detection (Grand Place proximity)
-- Diaspora authenticity scoring
-- Scarcity signals (hours, days, reviews)
-- Guide recognition (Michelin, Gault&Millau)
-- Local street bonuses
+| Tier | Score | Icon | Description |
+|------|-------|------|-------------|
+| **Chef's Kiss** | ≥ 0.60 | 👑 | Exceptional craft, the real deal |
+| **Kitchen Approved** | ≥ 0.45 | ❤️ | Would eat here off-shift |
+| **Workable** | ≥ 0.30 | 🍴 | Feeds you right |
+| **Line Cook Shrug** | < 0.30 | ● | Uninspired |
 
 ---
 
 ## Project Structure
 
 ```
-brussels-food-map/
+local-food-map/
+├── config/
+│   ├── city_config_base.py     # Base configuration class
+│   ├── brussels_config.py      # Brussels reference implementation
+│   └── city_template.py        # Template for new cities
 ├── data/
-│   ├── brussels_restaurants.json          # Raw scraped data
-│   ├── brussels_restaurants_processed.csv # Cleaned & featured
-│   ├── restaurants_with_predictions.csv   # ML predictions added
-│   ├── restaurants_brussels_reranked.csv  # Final ranked data
-│   ├── hex_features.csv                   # Neighborhood aggregates
-│   └── summary.json                       # Statistics
+│   ├── restaurants.json        # Raw scraped data
+│   ├── restaurants_processed.csv
+│   ├── restaurants_with_predictions.csv
+│   ├── restaurants_reranked.csv  # Final ranked data
+│   └── hex_features.csv        # Neighborhood aggregates
 ├── src/
 │   ├── scraper.py              # Google Maps API scraper
 │   ├── features.py             # Feature engineering
 │   ├── model.py                # ML model training
-│   ├── brussels_reranking.py   # Brussels-specific scoring
-│   ├── brussels_context.py     # Local knowledge (communes, streets)
+│   ├── city_reranking.py       # City-specific scoring
+│   ├── city_context.py         # Local knowledge
 │   └── app.py                  # Flask web application
 ├── templates/
-│   ├── index.html              # Frontend (Leaflet.js map)
-│   ├── privacy.html            # Privacy policy
-│   └── terms.html              # Terms of service
+│   └── index.html              # Frontend (Leaflet.js map)
 ├── requirements.txt
-├── Procfile                    # Railway deployment
+├── Procfile                    # Railway/Heroku deployment
 └── README.md
 ```
 
@@ -177,12 +159,12 @@ brussels-food-map/
 
 ```bash
 # Clone the repository
-git clone https://github.com/frederik12321/brussels-food-map.git
-cd brussels-food-map
+git clone https://github.com/frederik12321/local-food-map.git
+cd local-food-map
 
 # Create virtual environment
 python -m venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -204,8 +186,8 @@ python src/features.py
 # 3. Train ML model
 python src/model.py
 
-# 4. Apply Brussels reranking
-python src/brussels_reranking.py
+# 4. Apply city reranking
+python src/city_reranking.py
 
 # 5. Start web server
 python src/app.py
@@ -213,9 +195,7 @@ python src/app.py
 
 Open http://localhost:5001 in your browser.
 
-### Quick Start (Using Existing Data)
-
-If you just want to run the app with pre-processed data:
+### Quick Start (Pre-processed Data)
 
 ```bash
 python src/app.py
@@ -229,12 +209,12 @@ python src/app.py
 
 1. Fork this repository
 2. Connect to Railway
-3. Add environment variable: `GOOGLE_MAPS_API_KEY` (optional, only for re-scraping)
+3. Add environment variable: `GOOGLE_MAPS_API_KEY` (optional)
 4. Deploy
 
-The `Procfile` and `railway.json` are pre-configured.
+### Vercel / Render / Heroku
 
-### Manual
+The `Procfile` and configuration files are pre-configured for common platforms.
 
 ```bash
 gunicorn src.app:app --bind 0.0.0.0:$PORT
@@ -247,14 +227,11 @@ gunicorn src.app:app --bind 0.0.0.0:$PORT
 | Endpoint | Description |
 |----------|-------------|
 | `GET /` | Main web interface |
-| `GET /privacy` | Privacy policy |
-| `GET /terms` | Terms of service |
 | `GET /api/restaurants` | JSON array of all restaurants |
 | `GET /api/restaurants?cuisine=Japanese` | Filter by cuisine |
-| `GET /api/restaurants?min_rating=4.5` | Filter by minimum rating |
-| `GET /api/restaurants?brussels_gems=true` | Top 100 restaurants only |
-| `GET /api/restaurants?search=kamo` | Search by name |
-| `GET /api/hexagons` | GeoJSON of neighborhood hexagons |
+| `GET /api/restaurants?min_rating=4.5` | Filter by rating |
+| `GET /api/restaurants?gems=true` | Top 100 only |
+| `GET /api/hexagons` | GeoJSON neighborhood data |
 
 ---
 
@@ -263,193 +240,97 @@ gunicorn src.app:app --bind 0.0.0.0:$PORT
 - **Backend**: Flask, Python
 - **ML**: scikit-learn (HistGradientBoostingRegressor)
 - **Spatial**: H3 (Uber's hexagonal grid), K-means clustering
-- **Frontend**: Leaflet.js, CartoDB Voyager tiles
+- **Frontend**: Leaflet.js, CartoDB tiles
 - **Data**: Google Maps Places API
-- **Deployment**: Railway
+- **Deployment**: Railway, Vercel, Render
 
 ---
 
-## Brussels Context Knowledge
+## Brussels Implementation Details
 
-The algorithm incorporates local knowledge about Brussels:
-
-### Commune Tiers
-
-- **Tourist Heavy**: Bruxelles-Ville (center)
-- **EU Bubble**: Etterbeek, parts of Ixelles
-- **Diaspora Hubs**: Saint-Gilles, Schaerbeek, Molenbeek, Saint-Josse
-- **Local Foodie**: Uccle, Woluwe-Saint-Lambert, Auderghem
-- **Underexplored**: Anderlecht, Forest, Jette, Evere
-
-### Known Local Streets
-
-- Rue de Flandre (authentic Belgian)
-- Chaussée de Charleroi (diverse)
-- Rue Sainte-Catherine (seafood)
-- Parvis de Saint-Gilles (trendy local)
-- Place Jourdan (frites!)
-
-### Tourist Trap Zones
-
-- Grand Place (exponential penalty within 250m)
-- Rue des Bouchers (heavy penalty)
-- Manneken Pis area
-
----
-
-## Data Coverage & Granularity
-
-### What's Analyzed
-
-| Level | Coverage | Detection Method |
-|-------|----------|------------------|
-| **Communes** | All 19 Brussels communes | Nearest center (approximate) |
-| **Neighborhoods** | 13 special areas | 0.5km radius |
-| **Local Streets** | 14 foodie streets | 120-200m radius |
-| **Cuisines** | 11 diaspora types | Street-level context (informational) |
-| **Guides** | ~100 restaurants | Name matching |
+The Brussels version includes rich local context:
 
 ### Commune Classifications
 
-| Tier | Communes |
-|------|----------|
-| **Tourist Heavy** (-15%) | Bruxelles |
-| **EU Bubble** (-5%) | Etterbeek |
-| **Diaspora Hub** (+15%) | Saint-Gilles, Schaerbeek, Molenbeek, Saint-Josse |
-| **Local Foodie** (+10%) | Uccle, Woluwe-Saint-Lambert, Woluwe-Saint-Pierre, Auderghem, Watermael-Boitsfort |
-| **Underexplored** (+12%) | Anderlecht, Forest, Jette, Evere, Ganshoren, Koekelberg, Berchem-Sainte-Agathe |
-| **Mixed** (neutral) | Ixelles |
-
-### Special Neighborhoods (0.5km radius)
-
-**Local Foodie**: Matongé, Châtelain, Sainte-Catherine, Marolles, Saint-Boniface, Flagey, Parvis Saint-Gilles, Dansaert
-
-**Mixed**: Sablon, Gare du Nord
-
-**Tourist Trap**: Grand Place, Rue des Bouchers
-
-**EU Bubble**: European Quarter
+| Tier | Areas |
+|------|-------|
+| **Tourist Heavy** | Bruxelles-Ville center |
+| **Diaspora Hubs** | Saint-Gilles, Schaerbeek, Molenbeek, Saint-Josse |
+| **Local Foodie** | Uccle, Woluwe, Auderghem |
+| **Underexplored** | Anderlecht, Forest, Jette, Evere |
 
 ### Diaspora Cultural Context
 
-Brussels is a city where 75% of the population has foreign origins. The algorithm recognizes this diversity:
+Brussels is 75% foreign-origin population. Street-level diaspora hubs:
 
-**Street-Level Diaspora Hubs**:
-- **Matongé (Chaussée d'Ixelles/Porte de Namur)** → Congolese, Central African
-- **Chaussée de Haecht** → Turkish, Moroccan, Pakistani
+- **Matongé** → Congolese, Central African
+- **Chaussée de Haecht** → Turkish, Moroccan
 - **Rue de Brabant** → North African, Middle Eastern
-- **Rue de Laeken** → Greek, Turkish
-- **Chaussée de Gand** → Moroccan, North African
-- **Chaussée de Wavre** → Sub-Saharan African, Congolese
-
-**Approach**: We display diaspora context as *informational only* in the restaurant popup (when a restaurant is in a historically significant diaspora area). The scoring impact is minimal (1% tiebreaker) to avoid algorithmic bias that would reward restaurants simply for being in certain ethnic neighborhoods rather than for quality.
-
-This design choice reflects that:
-1. Restaurant quality should be judged on food, not geography
-2. Gentrification and economic factors affect where diaspora businesses can afford rent
-3. Great authentic food exists both inside and outside traditional diaspora zones
 
 ### Guide Recognition
 
-| Guide | Count | Bonus |
-|-------|-------|-------|
-| Michelin 2-star | 5 | +12% |
-| Michelin 1-star | 11 | +8% |
-| Bib Gourmand | ~30 | +5% |
-| Gault&Millau 15+ | ~50 | +4% |
-
-### Reddit Community Boost
-
-Restaurants mentioned positively on r/brussels get a boost based on mention frequency:
-
-| Mentions | Bonus | Label |
-|----------|-------|-------|
-| 10+ | +8% | r/brussels favorite |
-| 5-9 | +6% | r/brussels favorite |
-| 2-4 | +3% | r/brussels approved |
-
-Hidden gems (< 200 reviews) get an additional 20% multiplier on their Reddit bonus.
-
-### Perfection Penalty
-
-Perfect 5.0★ ratings are statistically unlikely with many reviews (0% of 500+ review restaurants have 5.0★). We apply a mild penalty to account for this:
-
-| Rating | Reviews | Penalty | Reason |
-|--------|---------|---------|--------|
-| 5.0★ | <50 | -4% | 29% of restaurants in this bucket have 5.0★ |
-| 5.0★ | 50-100 | -2.5% | Still limited data |
-| 5.0★ | 100-200 | -1% | Unusual but possible |
-| 4.9★ | <30 | -2% | Very few data points |
-
-This penalty is mild enough to allow promising new restaurants to rank well, while preventing statistically suspicious perfect ratings from dominating the top rankings.
-
-### Limitations
-
-- Commune detection uses nearest center, not official boundaries
-- Neighborhood radius is fixed at 0.5km
-- Guide lists are manually maintained and may become outdated
+| Guide | Bonus |
+|-------|-------|
+| Michelin 2-star | +12% |
+| Michelin 1-star | +8% |
+| Bib Gourmand | +5% |
+| Gault&Millau 15+ | +4% |
+| r/brussels favorite | up to +8% |
 
 ---
 
-## Inspiration & Differences from Original
+## Inspiration & Credits
 
-This project is inspired by **[Lauren Leek's London Food Dashboard](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates)**, which brilliantly exposed how Google Maps ratings systematically undervalue certain restaurants.
+**Original Inspiration**: [Lauren Leek's London Food Dashboard](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates) - The insight that ML residuals can identify undervalued restaurants.
 
-### What We Kept from Lauren's Approach ✅
+### What We Kept ✅
 
-| Feature | Description |
-|---------|-------------|
-| **ML Residual Analysis** | Core concept: predict expected rating, find places that exceed it |
-| **Review Count Sweet Spot** | Too few = unreliable, too many = tourist trap |
-| **Chain Detection** | Penalize chain restaurants |
-| **Spatial Clustering (H3)** | Hexagonal grid for neighborhood analysis |
-| **Tourist Trap Signals** | Proximity-based penalties |
+- ML Residual Analysis
+- Review Count Sweet Spot
+- Chain Detection
+- Spatial Clustering (H3)
+- Tourist Trap Signals
 
-### What We Added for Brussels 🆕
+### What We Added 🆕
 
-| Feature | Description |
-|---------|-------------|
-| **Scarcity Score** | Limited hours/days = local favorite (lunch-only spots, weekday-only places) |
-| **Guide Recognition** | Michelin stars, Bib Gourmand, Gault&Millau bonuses |
-| **Reddit Community Boost** | Restaurants mentioned on r/brussels by locals get a boost |
-| **Local Street Bonus** | Known foodie streets (Rue de Flandre, Parvis Saint-Gilles, etc.) |
-| **EU Bubble Penalty** | Schuman area expat-targeted restaurant detection |
-| **19 Commune Classification** | Each Brussels commune tagged by food scene type |
-| **Café/Bar Detection** | Name-based classification to separate from restaurants |
-| **Opening Hours Analysis** | Closes early, weekdays only, closed Sunday signals |
-| **Cuisine Specificity (Proust Factor)** | Regional cuisines rewarded over generic categories |
-| **Kitchen Confidential Tiers** | Chef's Kiss, Kitchen Approved, Workable, Line Cook Shrug |
+- **Scarcity Score** - Limited hours = local favorite
+- **Guide Recognition** - Michelin, local guides
+- **Community Endorsement** - Reddit/local forums
+- **Cuisine Specificity** - Regional > generic
+- **Opening Hours Analysis** - Closes early, weekdays only
+- **District Classification** - Diaspora hubs, tourist traps
 
-### What We Didn't Implement ❌
+### Not Implemented ❌
 
-| Feature | Reason |
-|---------|--------|
-| **Review Language Analysis** | Google API doesn't provide this easily |
-| **Review Text Sentiment** | Would require NLP pipeline, scope creep |
-| **Photo Analysis** | Food photos vs selfies ratio - interesting but complex |
-| **Time-based Review Patterns** | When locals vs tourists review - data not available |
-
-### Design Philosophy Differences
-
-Lauren's dashboard focused on **data visualization and exploration**. We focused on:
-
-1. **Actionable Rankings** - Clear tier system (Must Try → Average)
-2. **Mobile-First UX** - Optimized for on-the-go restaurant discovery
-3. **Local Context** - Deep Brussels-specific knowledge baked into scoring
-4. **Modern UI** - Clean, minimal design inspired by contemporary food apps
+- Review Language Analysis (API limitation)
+- Review Text Sentiment (scope)
+- Photo Analysis (complexity)
 
 ---
 
-## Credits
+## Contributing
 
-**Original Inspiration**: [Lauren Leek](https://laurenleek.substack.com/) - Her article ["How Google Maps Quietly Allocates Fame"](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates) sparked this entire project. The core insight that ML residuals can identify undervalued restaurants is brilliant.
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
-**Brussels Adaptation**: Local context, scarcity scoring, guide recognition, and the Flemish feast UI.
+### Adapting for a New City
 
-**Built with**: Claude (Anthropic) - Pair programming partner for the entire codebase.
+We'd love to see this adapted for other cities! If you create a version for your city:
+
+1. Create your city config in `config/your_city_config.py`
+2. Document your local context data sources
+3. Share your deployment link in Issues
+4. Consider contributing city-agnostic improvements back upstream
 
 ---
 
 ## License
 
 MIT License - feel free to adapt for your own city!
+
+---
+
+**Built with**: Claude (Anthropic) as pair programming partner.
