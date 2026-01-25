@@ -20,6 +20,7 @@ from collections import Counter
 from brussels_context import (
     COMMUNES, NEIGHBORHOODS, TIER_WEIGHTS,
     DIASPORA_AUTHENTICITY, BELGIAN_AUTHENTICITY,
+    FRITERIE_AUTHENTICITY, BRUXELLOIS_INSTITUTIONS,
     get_commune, get_neighborhood, get_diaspora_context,
     distance_to_grand_place, distance_to_eu_quarter,
     haversine_distance, is_on_local_street,
@@ -225,6 +226,60 @@ def diaspora_authenticity_score(cuisine, commune, review_languages=None):
                 score = min(1.0, score + 0.2 * relevant_pct)
 
     return score
+
+
+def is_friterie(name):
+    """
+    Detect if a restaurant is a friterie/fritkot based on name.
+    These are quintessentially Brussels establishments.
+    """
+    if not name:
+        return False
+    name_lower = name.lower()
+    friterie_keywords = ['frit', 'frituur', 'friture', 'fritkot', 'friterie']
+    return any(keyword in name_lower for keyword in friterie_keywords)
+
+
+def normalize_name_for_matching(name):
+    """
+    Normalize restaurant name for matching against BRUXELLOIS_INSTITUTIONS.
+    Removes accents, punctuation, and converts to lowercase.
+    """
+    if not name:
+        return ""
+    import unicodedata
+    # Normalize unicode and remove accents
+    normalized = unicodedata.normalize('NFD', name)
+    without_accents = ''.join(c for c in normalized if unicodedata.category(c) != 'Mn')
+    # Lowercase and strip
+    return without_accents.lower().strip()
+
+
+def bruxellois_authenticity_score(name, commune):
+    """
+    Calculate authenticity score for traditional Bruxellois establishments.
+
+    Returns score 0-1 based on:
+    1. Curated list of known authentic institutions
+    2. Friterie in working-class commune
+    """
+    if not name:
+        return 0.0
+
+    name_lower = name.lower().strip()
+    name_normalized = normalize_name_for_matching(name)
+
+    # Check curated institutions list (exact and partial matches)
+    for institution_name, score in BRUXELLOIS_INSTITUTIONS.items():
+        # Exact match
+        if institution_name in name_lower or institution_name in name_normalized:
+            return score
+
+    # Check if friterie in authentic commune
+    if is_friterie(name) and commune in FRITERIE_AUTHENTICITY:
+        return FRITERIE_AUTHENTICITY[commune]
+
+    return 0.0
 
 
 def commune_visibility_boost(commune, commune_review_totals):
@@ -783,6 +838,12 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     # 18. Diaspora context (informational - for UI display only)
     diaspora_context = get_diaspora_context(cuisine, commune, lat, lng)
 
+    # 19. Bruxellois authenticity bonus (up to 5%)
+    # Rewards authentic Brussels establishments: friteries in working-class
+    # communes and curated list of local institutions
+    bruxellois_score = bruxellois_authenticity_score(name, commune)
+    bruxellois_bonus = 0.05 * bruxellois_score
+
     # Total score (sum of all components)
     total = (
         review_adjustment +
@@ -801,7 +862,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         perfection_penalty +
         family_bonus +
         specificity_bonus +
-        shop_penalty
+        shop_penalty +
+        bruxellois_bonus
     )
 
     # Clamp to [0, 1] for normalized output

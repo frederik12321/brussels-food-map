@@ -328,6 +328,56 @@ BELGIAN_AUTHENTICITY = {
     "French": {"Ixelles": 0.7, "Uccle": 0.7, "Saint-Gilles": 0.6},
 }
 
+# Friterie authenticity by commune
+# Working-class communes where locals know quality frites
+# Data shows: friteries in these areas score 24% higher than tourist areas
+FRITERIE_AUTHENTICITY = {
+    "Jette": 1.0,                  # Highest scoring friteries
+    "Evere": 0.95,
+    "Berchem-Sainte-Agathe": 0.95,
+    "Anderlecht": 0.9,
+    "Forest": 0.9,
+    "Schaerbeek": 0.85,
+    "Ganshoren": 0.85,
+    "Molenbeek-Saint-Jean": 0.8,
+    "Koekelberg": 0.8,
+    "Saint-Gilles": 0.6,           # Gentrifying
+    "Ixelles": 0.5,                # Gentrified
+    "Bruxelles": 0.3,              # Tourist areas - penalty
+}
+
+# Curated list of authentic Bruxellois establishments
+# These are places where locals go - not tourist traps
+# Normalized names (lowercase, stripped) for matching
+BRUXELLOIS_INSTITUTIONS = {
+    # === HIDDEN GEMS - No tourist would stumble here ===
+    "potverdoemmeke": 1.0,        # Schaerbeek, menu in dialect
+    "potes en toque": 1.0,        # Ganshoren, residential farmhouse
+    "friture rene": 1.0,          # Anderlecht, locals only
+    "friture rené": 1.0,          # Accent variant
+    "petits bouchons": 1.0,       # Uccle, where chefs go after service
+    "zinneke": 1.0,               # Evere (Het Zinneke), slow-food crowd
+    "fernand obb": 1.0,           # Saint-Gilles, counter service, locals queuing
+    "porteuse d'eau": 1.0,        # Saint-Gilles, hidden in Art Nouveau block
+    "volle gas": 1.0,             # Ixelles, Place Fernand Cocq, neighborhood spot
+
+    # === INSTITUTIONS - Famous but still authentic ===
+    # Some tourists, but quality maintained and locals still go
+    "fin de siecle": 0.9,         # Guidebooks found it, but cash-only keeps it honest
+    "fin de siècle": 0.9,         # Accent variant
+    "brigittines": 0.9,           # Serious kitchen, earned reputation
+    "maison antoine": 0.9,        # Famous queues but still the real thing
+    "noordzee": 0.9,              # Standing room seafood, quality held
+    "mer du nord": 0.9,           # French name variant
+
+    # === CLASSIC BRUXELLOIS ===
+    "spinnekopke": 0.9,           # Traditional Brussels cuisine
+    "vismet": 0.9,                # Seafood institution
+    "kelderke": 0.9,              # Grand Place but authentic
+    "taverne du passage": 0.85,   # Galeries, touristic but classic
+    "stekerlapatte": 0.9,         # Saint-Gilles classic
+}
+
 # Street-level diaspora mapping (2026 detailed data)
 # Maps cuisines to specific commercial streets/areas where authentic restaurants cluster
 # This is informational - shows cultural geography without scoring impact
