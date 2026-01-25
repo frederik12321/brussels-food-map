@@ -11,6 +11,8 @@ Implements the Brussels reranking formula that accounts for:
 """
 
 import math
+import json
+import os
 import pandas as pd
 import numpy as np
 from collections import Counter
@@ -25,44 +27,156 @@ from brussels_context import (
 )
 
 
-def tourist_trap_score(lat, lng, review_languages=None):
+# Reddit mentions cache (loaded once)
+_reddit_mentions_cache = None
+
+def load_reddit_mentions():
+    """
+    Load Reddit mentions from data file.
+    Returns dict: {normalized_name: mention_count}
+    """
+    global _reddit_mentions_cache
+    if _reddit_mentions_cache is not None:
+        return _reddit_mentions_cache
+
+    # Try to load filtered mentions
+    data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
+    mentions_file = os.path.join(data_dir, "reddit_mentions_filtered.json")
+
+    if not os.path.exists(mentions_file):
+        # Fall back to unfiltered
+        mentions_file = os.path.join(data_dir, "reddit_mentions.json")
+
+    if not os.path.exists(mentions_file):
+        _reddit_mentions_cache = {}
+        return _reddit_mentions_cache
+
+    try:
+        with open(mentions_file, 'r') as f:
+            mentions_list = json.load(f)
+        # Convert to dict with normalized names
+        _reddit_mentions_cache = {
+            m['name'].lower().strip(): m['reddit_mentions']
+            for m in mentions_list
+        }
+    except Exception:
+        _reddit_mentions_cache = {}
+
+    return _reddit_mentions_cache
+
+
+def reddit_community_score(name, review_count):
+    """
+    Calculate Reddit community endorsement score.
+
+    Restaurants mentioned positively on r/brussels by locals get a boost.
+    Scaled by mention count and adjusted for restaurant size.
+
+    Returns: score (0-1), mention_count
+    """
+    mentions = load_reddit_mentions()
+
+    if not name or not mentions:
+        return 0, 0
+
+    # Normalize name for matching
+    name_lower = name.lower().strip()
+
+    # Try exact match first
+    mention_count = mentions.get(name_lower, 0)
+
+    # If no exact match, try partial matching for multi-word names
+    if mention_count == 0 and len(name_lower) > 8:
+        for mention_name, count in mentions.items():
+            # Check if either contains the other (for names like "Kamo" vs "Kamo Brussels")
+            if mention_name in name_lower or name_lower in mention_name:
+                mention_count = max(mention_count, count)
+
+    if mention_count == 0:
+        return 0, 0
+
+    # Calculate score based on mention count
+    # 1 mention = small boost, 5+ mentions = significant boost
+    if mention_count >= 10:
+        base_score = 1.0  # Maximum - highly recommended
+    elif mention_count >= 5:
+        base_score = 0.8  # Strong community support
+    elif mention_count >= 3:
+        base_score = 0.6  # Good mentions
+    elif mention_count >= 2:
+        base_score = 0.4  # Some recognition
+    else:
+        base_score = 0.2  # Single mention
+
+    # Boost smaller restaurants more (Reddit finds hidden gems)
+    # Big places with many reviews don't need the Reddit boost as much
+    if review_count and review_count < 200:
+        size_multiplier = 1.2  # Hidden gem bonus
+    elif review_count and review_count > 2000:
+        size_multiplier = 0.7  # Already well-known
+    else:
+        size_multiplier = 1.0
+
+    final_score = min(1.0, base_score * size_multiplier)
+
+    return final_score, mention_count
+
+
+def tourist_trap_score(lat, lng, rating, review_count, review_languages=None):
     """
     Calculate tourist trap score (0-1).
     Higher = more likely tourist trap.
 
-    Based on:
-    - Distance to Grand Place (closer = worse)
-    - Neighborhood tier
-    - Review language distribution (if available)
+    REALISTIC APPROACH: Location alone doesn't make a tourist trap.
+    We only penalize when there are MULTIPLE signals:
+    - Near Grand Place/Rue des Bouchers AND
+    - High review volume (tourist magnet) AND
+    - Below-average rating (quality suffers from volume)
+
+    A good restaurant near Grand Place should NOT be penalized.
     """
-    # Distance component (exponential decay from Grand Place)
     dist_gp = distance_to_grand_place(lat, lng)
-    distance_score = math.exp(-dist_gp / 0.25)  # 0.25km decay constant (tighter radius)
 
     # Check if in known tourist trap neighborhood
     neighborhood, neighborhood_data = get_neighborhood(lat, lng)
-    neighborhood_score = 0
-    if neighborhood_data and neighborhood_data.get("tier") == "tourist_trap":
-        neighborhood_score = 0.5
+    in_tourist_zone = False
 
-    # Rue des Bouchers specific (notorious tourist trap)
     if neighborhood == "Rue des Bouchers":
-        neighborhood_score = 0.8
+        in_tourist_zone = True
+    elif neighborhood_data and neighborhood_data.get("tier") == "tourist_trap":
+        in_tourist_zone = True
+    elif dist_gp < 0.15:  # Within 150m of Grand Place
+        in_tourist_zone = True
 
-    # Language distribution (if we have it)
-    language_score = 0
-    if review_languages:
-        # High proportion of English-only reviews = tourist indicator
-        total = sum(review_languages.values())
-        if total > 0:
-            english_pct = review_languages.get("en", 0) / total
-            # Penalty if >60% English reviews
-            if english_pct > 0.6:
-                language_score = (english_pct - 0.6) * 2
+    # If not in tourist zone, no penalty
+    if not in_tourist_zone:
+        return 0
 
-    # Combine scores
-    score = 0.5 * distance_score + 0.3 * neighborhood_score + 0.2 * language_score
-    return min(1.0, score)
+    # In tourist zone - but are there other signals?
+    # Good restaurants (4.5+) in tourist areas are often STILL good
+    # Only penalize if rating is mediocre AND review count is high
+
+    # Signal 1: High volume (tourist magnet)
+    high_volume = review_count > 1500
+
+    # Signal 2: Below-average rating (quality suffers)
+    mediocre_rating = rating < 4.3
+
+    # Both signals needed for full penalty
+    if high_volume and mediocre_rating:
+        # Classic tourist trap: lots of reviews, mediocre quality
+        # Penalty scales with how bad the rating is
+        penalty = 0.4 + 0.3 * (4.3 - rating)  # 0.4-0.7 range
+        return min(1.0, penalty)
+    elif high_volume:
+        # High volume but good rating - mild penalty (tourist-famous but good)
+        return 0.15
+    elif mediocre_rating and dist_gp < 0.1:
+        # Very close to GP with mediocre rating - mild penalty
+        return 0.2
+    else:
+        # In tourist zone but no red flags - no penalty
+        return 0
 
 
 def diaspora_authenticity_score(cuisine, commune, review_languages=None):
@@ -469,8 +583,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     # 2. ML residual (undervalued bonus) - secondary driver
     residual_score = 0.25 * min(1.0, max(-1.0, residual * 2))
 
-    # 3. Tourist trap penalty
-    tourist_penalty = -0.15 * tourist_trap_score(lat, lng, review_languages) if lat and lng else 0
+    # 3. Tourist trap penalty (only for mediocre high-volume places near GP)
+    tourist_penalty = -0.15 * tourist_trap_score(lat, lng, rating, review_count, review_languages) if lat and lng else 0
 
     # 4. Diaspora authenticity bonus - DISABLED (Brussels is too international for this to be meaningful)
     diaspora_bonus = 0
@@ -555,6 +669,11 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     uncertainty_score, uncertainty_flags = reputation_uncertainty_score(name, rating, review_count)
     reputation_penalty = -0.15 * uncertainty_score  # Up to -0.15 penalty for uncertainty
 
+    # 16. Reddit community endorsement bonus
+    # Restaurants mentioned positively on r/brussels by locals get a boost
+    reddit_score, reddit_mentions = reddit_community_score(name, review_count)
+    reddit_bonus = 0.08 * reddit_score  # Up to 0.08 bonus (8% of total score)
+
     # Total score
     total = (
         review_penalty +
@@ -572,7 +691,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         scarcity_bonus +
         tier_adjustment +
         guide_bonus +
-        reputation_penalty
+        reputation_penalty +
+        reddit_bonus
     )
 
     # Return score and component breakdown
@@ -591,6 +711,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         "michelin_stars": michelin_stars,
         "bib_gourmand": is_bib_gourmand,
         "gault_millau": is_gault_millau,
+        "reddit_mentions": reddit_mentions,  # Number of Reddit mentions
         "reputation_flags": uncertainty_flags,  # Reasons for rating uncertainty
         "scarcity_components": scarcity_components,  # Detailed breakdown
         "components": {
@@ -610,6 +731,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "tier_adjustment": tier_adjustment,
             "guide_bonus": guide_bonus,
             "reputation_penalty": reputation_penalty,
+            "reddit_bonus": reddit_bonus,  # Reddit community endorsement
         }
     }
 
@@ -656,6 +778,7 @@ def rerank_restaurants(df):
     df["michelin_stars"] = [r["michelin_stars"] for r in results]
     df["bib_gourmand"] = [r["bib_gourmand"] for r in results]
     df["gault_millau"] = [r["gault_millau"] for r in results]
+    df["reddit_mentions"] = [r["reddit_mentions"] for r in results]
 
     # Add component columns for debugging/transparency
     for component in ["tourist_penalty", "scarcity_bonus", "local_street_bonus"]:

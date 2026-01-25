@@ -739,6 +739,11 @@
             border: 1px solid #ffd700;
         }
 
+        .guide-badge.reddit {
+            background: linear-gradient(135deg, #FF4500 0%, #CC3700 100%);
+            color: white;
+        }
+
         .guide-badges {
             display: flex;
             gap: 6px;
@@ -1369,6 +1374,10 @@
                 <span class="info-text"><strong>Off the beaten path</strong> — Penalty near Grand Place & tourist traps</span>
             </div>
             <div class="info-item">
+                <span class="info-icon" style="color: #FF4500;">●</span>
+                <span class="info-text"><strong>r/brussels approved</strong> — Recommended by locals on Reddit</span>
+            </div>
+            <div class="info-item">
                 <span class="info-icon">🏆</span>
                 <span class="info-text"><strong>Guide-approved</strong> — Michelin, Bib Gourmand, Gault&Millau bonus</span>
             </div>
@@ -1847,6 +1856,10 @@
             if (restaurant.gault_millau) {
                 guideBadges += `<span class="guide-badge gault-millau">Gault&Millau</span>`;
             }
+            // Reddit community endorsement
+            if (restaurant.reddit_mentions && restaurant.reddit_mentions >= 2) {
+                guideBadges += `<span class="guide-badge reddit">r/brussels</span>`;
+            }
             const badgesHtml = guideBadges ? `<div class="guide-badges">${guideBadges}</div>` : '';
 
             const score = restaurant.brussels_score || 0;
@@ -2084,6 +2097,10 @@
                 // Gault & Millau is independent - can be shown alongside Michelin/Bib
                 if (r.gault_millau) {
                     cardGuideBadges += `<span class="guide-badge gault-millau">Gault&Millau</span>`;
+                }
+                // Reddit community endorsement
+                if (r.reddit_mentions && r.reddit_mentions >= 2) {
+                    cardGuideBadges += `<span class="guide-badge reddit">r/brussels</span>`;
                 }
 
                 const isMobileView = window.innerWidth <= 768;
