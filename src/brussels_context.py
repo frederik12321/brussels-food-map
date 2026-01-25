@@ -532,6 +532,8 @@ NON_RESTAURANT_SHOPS = [
     r"\bmary chocolatier\b", r"\bplanète chocolat\b", r"\bfrederic blondeel\b",
     # Generic shop indicators
     r"\bchocolatier\b", r"\bchocolate shop\b", r"\bpralines\b",
+    # Butcher shops / slagerijen
+    r"\bspek\s*[&n]\s*boonen\b",
 ]
 
 
