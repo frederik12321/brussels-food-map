@@ -155,6 +155,8 @@ def api_restaurants():
             df = df[df["bib_gourmand"] == True]
         elif guide_filter == "gaultmillau":
             df = df[df["gault_millau"] == True]
+        elif guide_filter == "reddit":
+            df = df[df["reddit_mentions"] >= 2]
         elif guide_filter == "any_guide":
             df = df[(df["michelin_stars"] > 0) | (df["bib_gourmand"] == True) | (df["gault_millau"] == True)]
 
