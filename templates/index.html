@@ -1273,9 +1273,8 @@
                 <div class="filter-group full-width">
                     <label class="filter-label">Show</label>
                     <div class="toggle-group">
-                        <button class="toggle-btn active" id="show-all">All</button>
-                        <button class="toggle-btn" id="show-brussels-gems">Brussels Gems</button>
-                        <button class="toggle-btn" id="show-underrated">Underrated</button>
+                        <button class="toggle-btn active" id="show-all" title="Show all restaurants matching your filters">All</button>
+                        <button class="toggle-btn" id="show-brussels-gems" title="Top 100 overall: combines quality, local appeal, scarcity & guide recognition">🏆 Top 100</button>
                     </div>
                 </div>
             </div>
@@ -1639,6 +1638,14 @@
                 }
             }
 
+            // Reddit community endorsement
+            if (restaurant.reddit_mentions && restaurant.reddit_mentions >= 2) {
+                const redditText = restaurant.reddit_mentions >= 5
+                    ? `r/brussels favorite (${restaurant.reddit_mentions}x mentioned)`
+                    : `r/brussels approved (${restaurant.reddit_mentions}x)`;
+                explanations.push(`<span class="explain-positive" style="color: #FF4500;">🔥 ${redditText}</span>`);
+            }
+
             // Local street bonus
             if (restaurant.local_street) {
                 explanations.push(`<span class="explain-positive">📍 ${restaurant.local_street} (local favorite)</span>`);
@@ -1692,13 +1699,13 @@
                 }
             }
 
-            // Tier-based explanations
-            if (restaurant.tier) {
-                if (restaurant.tier === 'underexplored') {
+            // Commune tier-based explanations (area type, not quality tier)
+            if (restaurant.commune_tier) {
+                if (restaurant.commune_tier === 'underexplored') {
                     explanations.push(`<span class="explain-positive">🔍 Hidden gem in underexplored area</span>`);
-                } else if (restaurant.tier === 'tourist_trap') {
+                } else if (restaurant.commune_tier === 'tourist_trap') {
                     explanations.push(`<span class="explain-negative">⚠️ Tourist trap zone</span>`);
-                } else if (restaurant.tier === 'eu_bubble') {
+                } else if (restaurant.commune_tier === 'eu_bubble') {
                     explanations.push(`<span class="explain-neutral">🇪🇺 EU quarter area</span>`);
                 }
             }
@@ -1987,7 +1994,6 @@
             params.append('sort_by', sortBy);
 
             if (currentFilter === 'brussels_gems') params.append('brussels_gems', 'true');
-            if (currentFilter === 'underrated') params.append('gems_only', 'true');
             if (currentFilter === 'diaspora') params.append('diaspora_only', 'true');
 
             try {
@@ -2068,7 +2074,7 @@
 
             listEl.innerHTML = restaurants.slice(0, 50).map(r => {
                 const score = r.brussels_score?.toFixed(2) || '';
-                const isUnderexplored = r.tier === 'underexplored';
+                const isUnderexplored = r.commune_tier === 'underexplored';
                 const commune = r.commune || '';
                 const openStatus = getOpenStatus(r.opening_hours);
 
@@ -2219,7 +2225,12 @@
 
         document.getElementById('show-all').addEventListener('click', () => setFilter('all'));
         document.getElementById('show-brussels-gems').addEventListener('click', () => setFilter('brussels_gems'));
-        document.getElementById('show-underrated').addEventListener('click', () => setFilter('underrated'));
+
+        // Add touch feedback for mobile
+        document.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.addEventListener('touchstart', () => btn.style.opacity = '0.7');
+            btn.addEventListener('touchend', () => btn.style.opacity = '1');
+        });
 
         function debounce(func, wait) {
             let timeout;

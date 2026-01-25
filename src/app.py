@@ -100,7 +100,6 @@ def api_restaurants():
     max_rating = request.args.get("max_rating", type=float)
     cuisine = request.args.get("cuisine")
     min_reviews = request.args.get("min_reviews", type=int)
-    gems_only = request.args.get("gems_only", type=lambda x: x.lower() == "true")
     brussels_gems = request.args.get("brussels_gems", type=lambda x: x.lower() == "true")
     search = request.args.get("search", "").lower()
     price_level = request.args.get("price_level", type=int)
@@ -137,10 +136,6 @@ def api_restaurants():
     if diaspora_only:
         diaspora_cuisines = ["Congolese", "African", "Moroccan", "Turkish", "Lebanese", "Ethiopian", "Middle Eastern"]
         df = df[df["cuisine"].isin(diaspora_cuisines)]
-
-    if gems_only:
-        # Show restaurants with positive residuals (better than expected)
-        df = df[df["residual"] > 0].nlargest(100, "residual")
 
     if brussels_gems and "brussels_score" in df.columns:
         # Show top 100 by Brussels score
@@ -194,12 +189,12 @@ def api_restaurants():
         "id", "name", "address", "lat", "lng", "rating", "review_count",
         "cuisine", "venue_type", "price_numeric", "is_chain",
         "predicted_rating", "residual", "google_maps_url",
-        "commune", "neighborhood", "local_street", "tier", "brussels_score",
+        "commune", "neighborhood", "local_street", "tier", "commune_tier", "brussels_score",
         "score_tourist_penalty", "score_scarcity_bonus", "score_local_street_bonus",
         "closes_early", "typical_close_hour", "weekdays_only", "closed_sunday",
         "days_open_count", "is_rare_cuisine", "opening_hours",
         # Guide recognition
-        "michelin_stars", "bib_gourmand", "gault_millau",
+        "michelin_stars", "bib_gourmand", "gault_millau", "reddit_mentions",
         # Scarcity sub-components for transparency
         "scarcity_review_scarcity", "scarcity_hours_scarcity", "scarcity_days_scarcity",
         "scarcity_schedule_scarcity", "scarcity_cuisine_scarcity"

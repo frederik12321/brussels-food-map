@@ -82,15 +82,9 @@ def reddit_community_score(name, review_count):
     # Normalize name for matching
     name_lower = name.lower().strip()
 
-    # Try exact match first
+    # Only exact matches - no fuzzy matching to avoid false positives
+    # e.g., "Le Coq" should only match the specific restaurant, not "Le Coq D'or"
     mention_count = mentions.get(name_lower, 0)
-
-    # If no exact match, try partial matching for multi-word names
-    if mention_count == 0 and len(name_lower) > 8:
-        for mention_name, count in mentions.items():
-            # Check if either contains the other (for names like "Kamo" vs "Kamo Brussels")
-            if mention_name in name_lower or name_lower in mention_name:
-                mention_count = max(mention_count, count)
 
     if mention_count == 0:
         return 0, 0
@@ -695,13 +689,24 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         reddit_bonus
     )
 
+    # Determine restaurant quality tier based on score
+    if total >= 0.60:
+        restaurant_tier = "Must Try"
+    elif total >= 0.45:
+        restaurant_tier = "Recommended"
+    elif total >= 0.30:
+        restaurant_tier = "Above Average"
+    else:
+        restaurant_tier = "Average"
+
     # Return score and component breakdown
     return {
         "brussels_score": total,
         "commune": commune,
         "neighborhood": neighborhood,
         "local_street": local_street_name,
-        "tier": tier,
+        "commune_tier": tier,  # Renamed: this is the commune/neighborhood tier
+        "tier": restaurant_tier,  # This is the restaurant quality tier
         "closes_early": closes_early,
         "typical_close_hour": typical_close_hour,
         "weekdays_only": weekdays_only,
@@ -768,7 +773,8 @@ def rerank_restaurants(df):
     df["brussels_score"] = [r["brussels_score"] for r in results]
     df["neighborhood"] = [r["neighborhood"] for r in results]
     df["local_street"] = [r["local_street"] for r in results]
-    df["tier"] = [r["tier"] for r in results]
+    df["tier"] = [r["tier"] for r in results]  # Restaurant quality tier (Must Try, etc.)
+    df["commune_tier"] = [r["commune_tier"] for r in results]  # Commune/neighborhood type
     df["closes_early"] = [r["closes_early"] for r in results]
     df["typical_close_hour"] = [r["typical_close_hour"] for r in results]
     df["weekdays_only"] = [r["weekdays_only"] for r in results]
