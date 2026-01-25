@@ -520,7 +520,10 @@ CHAIN_PATTERNS = [
     r"paul", r"class'croute", r"pizza express", r"vapiano", r"wagamama",
     r"nando", r"five guys", r"pitaya", r"sushi shop", r"planet sushi",
     r"bavet", r"balls & glory", r"ellis gourmet", r"manhattn",
-    r"delitraiteur", r"o'tacos", r"frituur", r"fritland",
+    r"delitraiteur", r"o'tacos",
+    # Note: "frituur/friterie" are NOT chains - they're independent Belgian institutions
+    # Only specific friterie chains should be listed here
+    r"\bfritland\b",  # Fritland is a specific chain with multiple locations
     # Açaí/smoothie bowl chains
     r"oakberry",
 ]
