@@ -29,6 +29,28 @@ _stats_lock = Lock()
 _stats_cache = None
 
 
+def safe_parse_hours(hours_str):
+    """Safely parse opening hours string to list.
+
+    Uses ast.literal_eval which only parses Python literals (safe),
+    but validates the result is actually a list of strings.
+    """
+    if not hours_str or (isinstance(hours_str, float) and math.isnan(hours_str)):
+        return None
+    if isinstance(hours_str, list):
+        return hours_str
+    if not isinstance(hours_str, str):
+        return None
+    try:
+        result = ast.literal_eval(hours_str)
+        # Validate it's a list of strings (not arbitrary data)
+        if isinstance(result, list) and all(isinstance(x, str) for x in result):
+            return result
+        return None
+    except (ValueError, SyntaxError):
+        return None
+
+
 def load_stats():
     """Load page view statistics."""
     global _stats_cache
@@ -269,18 +291,13 @@ def api_restaurants():
     # This is a basic server-side filter - more accurate filtering happens client-side
     if open_day and "opening_hours" in df.columns:
         def is_open_on_day(hours_str, day):
-            if not hours_str or pd.isna(hours_str):
+            hours = safe_parse_hours(hours_str)
+            if not hours:
                 return True  # Include unknowns
-            try:
-                hours = ast.literal_eval(hours_str) if isinstance(hours_str, str) else hours_str
-                if not hours:
-                    return True
-                for h in hours:
-                    if h and h.startswith(day):
-                        return "Closed" not in h
-                return False
-            except:
-                return True
+            for h in hours:
+                if h and h.startswith(day):
+                    return "Closed" not in h
+            return False
         df = df[df["opening_hours"].apply(lambda x: is_open_on_day(x, open_day))]
 
     # Sort
@@ -323,10 +340,7 @@ def api_restaurants():
             if value is None or (isinstance(value, float) and math.isnan(value)):
                 record[key] = None
             elif key == "opening_hours" and isinstance(value, str):
-                try:
-                    record[key] = ast.literal_eval(value)
-                except (ValueError, SyntaxError):
-                    record[key] = None
+                record[key] = safe_parse_hours(value)
 
     return jsonify(result)
 
@@ -391,7 +405,7 @@ def api_gems():
     if df is None:
         return jsonify({"error": "No data available."}), 404
 
-    limit = request.args.get("limit", 50, type=int)
+    limit = min(request.args.get("limit", 50, type=int), 500)  # Cap at 500
 
     gems = df.nlargest(limit, "residual")[
         ["name", "address", "cuisine", "rating", "review_count",
@@ -414,7 +428,7 @@ def api_brussels_gems():
     if "brussels_score" not in df.columns:
         return jsonify({"error": "Brussels reranking not available. Run brussels_reranking.py first."}), 404
 
-    limit = request.args.get("limit", 50, type=int)
+    limit = min(request.args.get("limit", 50, type=int), 500)  # Cap at 500
     commune = request.args.get("commune")
 
     if commune and commune != "all":

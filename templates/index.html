@@ -1656,6 +1656,14 @@
             list.classList.toggle('show');
         }
 
+        // HTML escape function to prevent XSS
+        function escapeHtml(text) {
+            if (text === null || text === undefined) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         function getOpenStatus(openingHours) {
             if (!openingHours || openingHours.length === 0) {
                 return { status: 'unknown', text: '' };
@@ -2018,10 +2026,10 @@
             const regionalTag = isRegional ? ' <span style="background:#f0fdf4;color:#166534;padding:1px 6px;border-radius:4px;font-size:10px;margin-left:4px;">Regional</span>' : '';
 
             marker.bindPopup(`
-                <div class="popup-name">${restaurant.name}</div>
+                <div class="popup-name">${escapeHtml(restaurant.name)}</div>
                 ${badgesHtml}
-                <div class="popup-commune">${commune}${neighborhood}</div>
-                <div class="popup-cuisine">${cuisineDisplay}${regionalTag}</div>
+                <div class="popup-commune">${escapeHtml(commune)}${escapeHtml(neighborhood)}</div>
+                <div class="popup-cuisine">${escapeHtml(cuisineDisplay)}${regionalTag}</div>
                 <div class="popup-stats">
                     <span>★ ${restaurant.rating?.toFixed(1) || 'N/A'}</span>
                     <span>${restaurant.review_count || 0} reviews</span>
@@ -2260,14 +2268,14 @@
                 return `
                     <div class="restaurant-card" onclick="${isMobileView ? 'flyToMobile' : 'flyTo'}(${r.lat}, ${r.lng})">
                         <div class="restaurant-header">
-                            <div class="restaurant-name">${r.name}</div>
+                            <div class="restaurant-name">${escapeHtml(r.name)}</div>
                             <div class="restaurant-badges">
                                 ${cardGuideBadges}
                                 ${isUnderexplored ? '<span class="badge badge-underexplored">Hidden</span>' : ''}
                             </div>
                         </div>
-                        <div class="restaurant-location">${commune}</div>
-                        <div class="restaurant-cuisine">${r.cuisine || 'Restaurant'}</div>
+                        <div class="restaurant-location">${escapeHtml(commune)}</div>
+                        <div class="restaurant-cuisine">${escapeHtml(r.cuisine) || 'Restaurant'}</div>
                         <div class="restaurant-meta">
                             <span class="restaurant-rating">
                                 <span class="star">★</span>
