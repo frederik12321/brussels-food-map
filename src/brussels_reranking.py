@@ -298,6 +298,81 @@ def unified_scarcity_score(restaurant):
     return total, components
 
 
+def manipulation_penalty(name, rating, review_count):
+    """
+    Detect potential Google Maps manipulation signals.
+
+    Red flags:
+    1. Keyword stuffing in name (long names, | separators, SEO keywords)
+    2. Suspiciously perfect ratings (5.0 with many reviews)
+    3. Extreme review counts (>10k = likely tourist trap or manipulated)
+    4. Rating/review anomalies
+
+    Returns: penalty score (0-1, higher = more suspicious)
+    """
+    penalty = 0
+    flags = []
+
+    # 1. Keyword stuffing in name
+    name_len = len(name) if name else 0
+
+    # Very long names (> 60 chars) are suspicious
+    if name_len > 80:
+        penalty += 0.4
+        flags.append("very_long_name")
+    elif name_len > 60:
+        penalty += 0.2
+        flags.append("long_name")
+
+    # Pipe separators are SEO spam
+    if name and '|' in name:
+        penalty += 0.15
+        flags.append("pipe_separator")
+
+    # Multiple dashes often indicate keyword stuffing
+    if name and name.count(' - ') >= 2:
+        penalty += 0.1
+        flags.append("multiple_dashes")
+
+    # SEO keywords in name
+    seo_keywords = ['best', 'top', '#1', 'near', 'authentic', 'real', 'original', 'famous']
+    if name:
+        name_lower = name.lower()
+        for keyword in seo_keywords:
+            if keyword in name_lower:
+                penalty += 0.1
+                flags.append(f"seo_keyword_{keyword}")
+                break  # Only penalize once
+
+    # 2. Suspiciously perfect ratings
+    if rating == 5.0 and review_count:
+        if review_count > 100:
+            # 5.0 with >100 reviews is statistically very unlikely without manipulation
+            penalty += 0.3
+            flags.append("perfect_rating_many_reviews")
+        elif review_count > 50:
+            penalty += 0.15
+            flags.append("perfect_rating_suspicious")
+
+    # 3. Extreme review counts (tourist traps or manipulation)
+    if review_count:
+        if review_count > 15000:
+            # Very extreme - likely tourist trap
+            penalty += 0.25
+            flags.append("extreme_reviews")
+        elif review_count > 10000:
+            penalty += 0.15
+            flags.append("very_high_reviews")
+
+    # 4. High rating + extreme reviews combo (worst case)
+    if rating and rating >= 4.8 and review_count and review_count > 5000:
+        penalty += 0.2
+        flags.append("high_rating_extreme_reviews")
+
+    # Cap at 1.0
+    return min(1.0, penalty), flags
+
+
 def eu_bubble_penalty(lat, lng, price_level, review_languages=None):
     """
     Penalty for EU bubble restaurants.
@@ -468,6 +543,11 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     elif is_gault_millau:
         guide_bonus = 0.05  # Gault Millau only: small boost
 
+    # 15. Manipulation detection penalty
+    # Detects: keyword stuffing, suspicious perfect ratings, extreme reviews
+    manip_score, manip_flags = manipulation_penalty(name, rating, review_count)
+    manipulation_pen = -0.20 * manip_score  # Up to -0.20 penalty for manipulation
+
     # Total score
     total = (
         review_penalty +
@@ -484,7 +564,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         local_street_bonus +
         scarcity_bonus +
         tier_adjustment +
-        guide_bonus
+        guide_bonus +
+        manipulation_pen
     )
 
     # Return score and component breakdown
@@ -503,6 +584,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         "michelin_stars": michelin_stars,
         "bib_gourmand": is_bib_gourmand,
         "gault_millau": is_gault_millau,
+        "manipulation_flags": manip_flags,  # List of detected manipulation signals
         "scarcity_components": scarcity_components,  # Detailed breakdown
         "components": {
             "review_penalty": review_penalty,
@@ -520,6 +602,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "scarcity_bonus": scarcity_bonus,  # Unified scarcity (includes hours, days, cuisine)
             "tier_adjustment": tier_adjustment,
             "guide_bonus": guide_bonus,
+            "manipulation_penalty": manipulation_pen,
         }
     }
 
