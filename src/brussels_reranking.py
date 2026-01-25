@@ -647,10 +647,11 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         # (e.g., Maison Antoine, Frit Flagey)
         review_penalty = 0
     elif tier in ["local_foodie", "diaspora_hub", "underexplored"]:
-        # High-volume in LOCAL areas = probably a genuine institution, not a tourist trap
-        # (e.g., Barracuda in Flagey with 7000 reviews - just been around a long time)
-        # Only apply mild penalty
-        review_penalty = -0.03
+        # High-volume in LOCAL areas - could be old institution OR new delivery-optimized
+        # We can't tell without review velocity data, so apply moderate penalty
+        # (e.g., Barracuda in Flagey: 7000 reviews in 1 year = factory, not institution)
+        penalty_factor = min(1.0, (review_count - 1500) / 8000)  # Scales slower
+        review_penalty = -0.05 - (0.07 * penalty_factor)  # -0.05 to -0.12
     else:
         # "Disneyfication" zone (1500+ reviews in tourist/mixed areas)
         # Processing customers like cattle, likely pre-cooking food
