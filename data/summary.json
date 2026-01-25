@@ -1,12 +1,12 @@
 {
-  "total_restaurants": 4684,
-  "mean_rating": 4.303181041844578,
-  "mean_predicted": 4.303181041890506,
-  "mean_residual": -4.5929021284554926e-11,
-  "std_residual": 0.39025983398098324,
+  "total_restaurants": 4681,
+  "mean_rating": 4.302777184362316,
+  "mean_predicted": 4.302777184386408,
+  "mean_residual": -2.4092380586443352e-11,
+  "std_residual": 0.3907028394615207,
   "num_hexagons": 275,
   "cuisines": {
-    "Other": 1806,
+    "Other": 1803,
     "Bar": 466,
     "Cafe": 429,
     "Bakery": 357,
@@ -51,9 +51,9 @@
     "Eastern European": 1
   },
   "cluster_counts": {
-    "Elite": 200,
-    "Everyday": 33,
-    "Emerging": 27,
+    "Elite": 198,
+    "Everyday": 38,
+    "Emerging": 24,
     "Strong": 15
   }
 }
