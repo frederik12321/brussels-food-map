@@ -808,11 +808,12 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     total = max(0.0, min(1.0, total))
 
     # Determine restaurant quality tier based on score
-    if total >= 0.60:
+    # Thresholds calibrated for ~5-8% Must Try, ~15-20% Recommended
+    if total >= 0.70:
         restaurant_tier = "Must Try"
-    elif total >= 0.45:
+    elif total >= 0.55:
         restaurant_tier = "Recommended"
-    elif total >= 0.30:
+    elif total >= 0.40:
         restaurant_tier = "Above Average"
     else:
         restaurant_tier = "Average"
