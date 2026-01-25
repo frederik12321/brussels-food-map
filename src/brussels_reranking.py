@@ -323,9 +323,9 @@ def reputation_uncertainty_score(name, rating, review_count):
         uncertainty += 0.15
         flags.append("long_name")
 
-    # Pipe separators are SEO patterns
+    # Pipe separators are SEO patterns - strong penalty
     if name and '|' in name:
-        uncertainty += 0.1
+        uncertainty += 0.25
         flags.append("seo_formatting")
 
     # Multiple dashes often indicate keyword stuffing
@@ -348,8 +348,8 @@ def reputation_uncertainty_score(name, rating, review_count):
     # This is natural, not fraud - but we should be cautious
     if rating == 5.0 and review_count:
         if review_count > 200:
-            # 5.0 with >200 reviews is statistically very rare
-            uncertainty += 0.25
+            # 5.0 with >200 reviews is statistically very rare - strong penalty
+            uncertainty += 0.40
             flags.append("statistically_unlikely_perfect")
         elif review_count > 100:
             # Still unusual but could be legitimate niche place
@@ -361,15 +361,16 @@ def reputation_uncertainty_score(name, rating, review_count):
     # High volume often means tourist-optimized, not local quality
     if review_count:
         if review_count > 15000:
-            uncertainty += 0.20
+            # Very extreme - strong penalty
+            uncertainty += 0.35
             flags.append("tourist_volume")
         elif review_count > 10000:
-            uncertainty += 0.10
+            uncertainty += 0.20
             flags.append("high_volume")
 
     # 4. High rating + extreme reviews = tourist trap pattern
     if rating and rating >= 4.8 and review_count and review_count > 8000:
-        uncertainty += 0.15
+        uncertainty += 0.25
         flags.append("tourist_trap_pattern")
 
     # Cap at 1.0
