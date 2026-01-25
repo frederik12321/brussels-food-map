@@ -79,8 +79,9 @@ The final score combines multiple signals:
 |-----------|--------|-------------|
 | **Base Quality** | 30% | Normalized Google rating (0-5 → 0-1) |
 | **ML Residual** | 25% | Undervaluation bonus from Stage 1 |
+| **Saturation Curve** | -20% to +8% | Review count as proxy for commercialization |
 | **Scarcity Score** | 15% | Limited hours/days = local favorite |
-| **Independent Bonus** | 10% | Non-chain restaurants |
+| **Independent Bonus** | 12% | Non-chain restaurants |
 | **Tourist Trap Penalty** | -15% | High-volume mediocre places near tourist center |
 | **Guide Recognition** | up to 12% | Michelin stars, local guides |
 | **Community Endorsement** | up to 8% | Mentioned on local subreddit |
@@ -88,13 +89,28 @@ The final score combines multiple signals:
 | **Perfection Penalty** | up to -4% | Statistically unlikely 5.0★ ratings |
 | **Cuisine Specificity** | up to 3% | Regional cuisines over generic |
 
+### Brussels Saturation Curve
+
+In a mid-sized European capital (1.2M people), review count is a proxy for commercialization. Unlike NYC/London, Brussels locals don't generate 2000+ reviews for authentic spots.
+
+| Review Count | Effect | Reasoning |
+|-------------|--------|-----------|
+| 0-35 | Penalty | Unreliable data |
+| 35-100 | +5% | "Discovery" zone |
+| 100-500 | +8% | "Sweet Spot" - locals/EU expats |
+| 500-800 | +3% | "Famous Local" - institutions |
+| 800-1500 | Neutral | Transition zone |
+| 1500+ (tourist areas) | -10% to -20% | "Disneyfication" - tourist traps |
+| 1500+ (local areas) | -5% to -12% | Could be delivery-optimized |
+
+**Fritkot Exception**: Belgian friteries are high-turnover by design and exempt from high-volume penalties.
+
 ### Scarcity Score (The Secret Sauce)
 
 Restaurants that are *hard to access* are often local favorites:
 
 ```
 Scarcity = weighted sum of:
-  - Review scarcity (50-500 reviews = sweet spot)
   - Hours scarcity (closes early = lunch spots)
   - Days scarcity (fewer days open = exclusive)
   - Schedule scarcity (closed weekends = local workers)
@@ -293,12 +309,15 @@ Brussels is 75% foreign-origin population. Street-level diaspora hubs:
 
 ### What We Added 🆕
 
+- **Brussels Saturation Curve** - Review count as commercialization proxy
+- **Fritkot Exception** - Belgian friteries exempt from volume penalties
 - **Scarcity Score** - Limited hours = local favorite
 - **Guide Recognition** - Michelin, local guides
 - **Community Endorsement** - Reddit/local forums
 - **Cuisine Specificity** - Regional > generic
 - **Opening Hours Analysis** - Closes early, weekdays only
 - **District Classification** - Diaspora hubs, tourist traps
+- **Location-Aware Penalties** - Stronger penalties in tourist zones
 
 ### Not Implemented ❌
 
