@@ -23,7 +23,8 @@ from brussels_context import (
     get_commune, get_neighborhood, get_diaspora_context,
     distance_to_grand_place, distance_to_eu_quarter,
     haversine_distance, is_on_local_street,
-    has_michelin_recognition, has_gault_millau, has_bib_gourmand
+    has_michelin_recognition, has_gault_millau, has_bib_gourmand,
+    get_cuisine_specificity_bonus
 )
 from afsca_hygiene import get_afsca_score, match_restaurant
 
@@ -762,7 +763,13 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     else:
         family_bonus = 0
 
-    # 20. Get diaspora context (informational - for UI display, not scoring)
+    # 20. Proust Factor: Cuisine specificity bonus
+    # Regional cuisines ("Sichuan", "Neapolitan") get a small boost over generic ("Chinese", "Italian")
+    # Reflects intentionality and authenticity - a "Sicilian" restaurant knows exactly what it is
+    cuisine_specificity = get_cuisine_specificity_bonus(cuisine)
+    specificity_bonus = 0.03 * cuisine_specificity  # Up to 3% boost for highly specific cuisines
+
+    # 21. Get diaspora context (informational - for UI display, not scoring)
     diaspora_context = get_diaspora_context(cuisine, commune, lat, lng)
 
     # Total score
@@ -786,7 +793,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         reddit_bonus +
         perfection_penalty +
         afsca_bonus +
-        family_bonus
+        family_bonus +
+        specificity_bonus
     )
 
     # Determine restaurant quality tier based on score
@@ -844,6 +852,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "perfection_penalty": perfection_penalty,  # Penalty for statistically unlikely perfect ratings
             "afsca_bonus": afsca_bonus,  # AFSCA hygiene certification bonus
             "family_bonus": family_bonus,  # Family restaurant naming pattern bonus
+            "specificity_bonus": specificity_bonus,  # Proust Factor: regional cuisine specificity
         }
     }
 

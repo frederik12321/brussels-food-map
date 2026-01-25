@@ -413,6 +413,106 @@ DIASPORA_STREETS = {
     ],
 }
 
+# Proust Factor: Cuisine Specificity Mapping
+# Regional/specific cuisines are more authentic than generic categories
+# "Sichuan" > "Chinese", "Neapolitan" > "Italian", etc.
+# Returns bonus multiplier (0 = generic, 1.0 = highly specific)
+CUISINE_SPECIFICITY = {
+    # Asian specificity
+    "Sichuan": 1.0,
+    "Szechuan": 1.0,
+    "Cantonese": 0.9,
+    "Hunan": 1.0,
+    "Taiwanese": 0.9,
+    "Shanghainese": 1.0,
+    "Dim Sum": 0.8,
+    "Pekinese": 0.9,
+    "Hakka": 1.0,
+    # Japanese specificity
+    "Ramen": 0.8,
+    "Izakaya": 0.9,
+    "Kaiseki": 1.0,
+    "Omakase": 1.0,
+    "Yakitori": 0.9,
+    "Tonkatsu": 0.9,
+    "Okonomiyaki": 1.0,
+    # Korean specificity
+    "Korean BBQ": 0.8,
+    "Hansik": 1.0,
+    # Indian specificity
+    "South Indian": 0.9,
+    "Punjabi": 0.9,
+    "Gujarati": 1.0,
+    "Bengali": 1.0,
+    "Kerala": 1.0,
+    "Chettinad": 1.0,
+    "Hyderabadi": 0.9,
+    # Italian specificity
+    "Neapolitan": 0.9,
+    "Sicilian": 1.0,
+    "Tuscan": 0.9,
+    "Roman": 0.9,
+    "Venetian": 1.0,
+    "Sardinian": 1.0,
+    "Piedmontese": 1.0,
+    "Emilian": 1.0,
+    # Spanish specificity
+    "Basque": 1.0,
+    "Catalan": 0.9,
+    "Galician": 1.0,
+    "Andalusian": 0.9,
+    # French specificity
+    "Lyonnaise": 0.9,
+    "Provençal": 0.9,
+    "Alsatian": 0.9,
+    "Breton": 0.9,
+    "Burgundian": 1.0,
+    "Savoyard": 0.9,
+    # Mexican specificity
+    "Oaxacan": 1.0,
+    "Yucatecan": 1.0,
+    "Jalisciense": 1.0,
+    # Middle Eastern specificity
+    "Levantine": 0.8,
+    "Palestinian": 1.0,
+    "Yemeni": 1.0,
+    "Kurdish": 1.0,
+    # African specificity
+    "Ethiopian": 0.8,  # Already somewhat specific
+    "Eritrean": 0.9,
+    "Senegalese": 1.0,
+    "Ivorian": 1.0,
+    "Cameroonian": 1.0,
+    "Ghanaian": 1.0,
+    "Nigerian": 0.9,
+    # Generic cuisines (no bonus)
+    "Chinese": 0,
+    "Japanese": 0,
+    "Italian": 0,
+    "French": 0,
+    "Indian": 0,
+    "Thai": 0,
+    "Vietnamese": 0,
+    "Mexican": 0,
+    "American": 0,
+    "Mediterranean": 0,
+    "Asian": 0,
+    "European": 0,
+    "International": 0,
+    "Fusion": 0,
+}
+
+
+def get_cuisine_specificity_bonus(cuisine):
+    """
+    Return specificity bonus for a cuisine type.
+    Specific regional cuisines get a small boost over generic categories.
+    """
+    if not cuisine:
+        return 0
+    return CUISINE_SPECIFICITY.get(cuisine, 0)
+
+
 # Known chain restaurants in Belgium
 CHAIN_PATTERNS = [
     r"mcdonald", r"burger king", r"quick", r"kfc", r"subway", r"domino",
