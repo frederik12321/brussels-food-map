@@ -150,6 +150,12 @@ def terms():
     return render_template("terms.html")
 
 
+@app.route("/dashboard")
+def dashboard():
+    """Admin dashboard with visitor statistics."""
+    return render_template("dashboard.html")
+
+
 @app.route("/api/stats")
 def api_stats():
     """

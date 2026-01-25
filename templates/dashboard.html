@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Brussels Food Map</title>
+    <style>
+        :root {
+            --bg-primary: #FDF6E3;
+            --bg-secondary: #EDE0D4;
+            --text-primary: #18181b;
+            --text-secondary: #52525b;
+            --text-muted: #a1a1aa;
+            --border-subtle: #e4e4e7;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-change {
+            font-size: 13px;
+            color: var(--accent-green);
+            margin-top: 4px;
+        }
+
+        .chart-container {
+            background: white;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .chart {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            padding-top: 20px;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 0;
+        }
+
+        .bar {
+            width: 100%;
+            max-width: 40px;
+            background: linear-gradient(180deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+            transition: height 0.3s ease;
+        }
+
+        .bar-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .bar-value {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .refresh-btn {
+            background: var(--text-primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 24px;
+        }
+
+        .refresh-btn:hover {
+            background: #27272a;
+        }
+
+        .last-updated {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: 16px;
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-value {
+                font-size: 28px;
+            }
+
+            .chart {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">&larr; Back to Map</a>
+
+    <h1>Brussels Food Map Dashboard</h1>
+    <p class="subtitle">Visitor statistics (privacy-friendly: no cookies, no tracking)</p>
+
+    <div class="header-row">
+        <button class="refresh-btn" onclick="loadStats()">Refresh</button>
+        <span class="last-updated" id="last-updated"></span>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total Views</div>
+            <div class="stat-value" id="total-views">-</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Today</div>
+            <div class="stat-value" id="today-views">-</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Last 7 Days</div>
+            <div class="stat-value" id="week-views">-</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Last 30 Days</div>
+            <div class="stat-value" id="month-views">-</div>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <div class="chart-title">Daily Views (Last 30 Days)</div>
+        <div class="chart" id="chart">
+            <div class="loading">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+
+                // Update stat cards
+                document.getElementById('total-views').textContent = data.total.toLocaleString();
+                document.getElementById('today-views').textContent = data.today.toLocaleString();
+                document.getElementById('week-views').textContent = data.last_7_days.toLocaleString();
+                document.getElementById('month-views').textContent = data.last_30_days.toLocaleString();
+
+                // Update last updated time
+                document.getElementById('last-updated').textContent =
+                    'Last updated: ' + new Date().toLocaleTimeString();
+
+                // Build chart
+                renderChart(data.daily);
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                document.getElementById('chart').innerHTML =
+                    '<div class="loading">Error loading data</div>';
+            }
+        }
+
+        function renderChart(daily) {
+            const chartEl = document.getElementById('chart');
+
+            // Get last 30 days
+            const days = [];
+            for (let i = 29; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                days.push({
+                    date: dateStr,
+                    views: daily[dateStr] || 0,
+                    label: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                });
+            }
+
+            // Find max for scaling
+            const maxViews = Math.max(...days.map(d => d.views), 1);
+
+            // Render bars
+            chartEl.innerHTML = days.map(d => {
+                const height = (d.views / maxViews) * 160;
+                return `
+                    <div class="bar-wrapper">
+                        <div class="bar-value">${d.views > 0 ? d.views : ''}</div>
+                        <div class="bar" style="height: ${Math.max(height, 4)}px" title="${d.label}: ${d.views} views"></div>
+                        <div class="bar-label">${d.label.split(' ')[1]}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load on page load
+        loadStats();
+
+        // Auto-refresh every 60 seconds
+        setInterval(loadStats, 60000);
+    </script>
+</body>
+</html>
