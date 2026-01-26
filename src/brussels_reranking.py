@@ -383,29 +383,259 @@ RARE_CUISINES_BRUSSELS = {
 }
 
 
+def parse_opening_hours(opening_hours_str):
+    """
+    Parse Google Maps opening hours string into structured data.
+
+    Input format: "['Monday: 11:30 AM – 2:00 PM, 5:00 PM – 1:00 AM', 'Tuesday: Closed', ...]"
+
+    Returns dict with:
+    - days_open: number of days open (0-7)
+    - total_hours_per_week: approximate total hours open
+    - latest_close_hour: latest closing hour (0-23, where 1 = 1am next day)
+    - has_service_coupe: True if has afternoon break (closes ~15:00, reopens ~18:00)
+    - closes_late: True if regularly closes after 1:00 AM
+    - is_lunch_only: True if closes before 17:00 most days
+    """
+    import ast
+    import re
+
+    result = {
+        "days_open": 0,
+        "total_hours_per_week": 0,
+        "latest_close_hour": 0,
+        "has_service_coupe": False,
+        "closes_late": False,
+        "is_lunch_only": False,
+        "parsed": False
+    }
+
+    if not opening_hours_str or pd.isna(opening_hours_str):
+        return result
+
+    try:
+        # Parse the string as a Python list
+        hours_list = ast.literal_eval(opening_hours_str)
+        if not isinstance(hours_list, list):
+            return result
+
+        days_open = 0
+        total_hours = 0
+        close_hours = []
+        service_coupe_count = 0
+        late_close_count = 0
+        early_close_count = 0
+
+        for day_str in hours_list:
+            if not isinstance(day_str, str):
+                continue
+
+            # Check if closed
+            if "Closed" in day_str or "closed" in day_str:
+                continue
+
+            days_open += 1
+
+            # Extract time ranges - handle unicode characters
+            # Format: "Monday: 11:30 AM – 2:00 PM, 5:00 PM – 1:00 AM"
+            day_str_clean = day_str.replace('\u202f', ' ').replace('\u2009', ' ').replace('–', '-').replace('—', '-')
+
+            # Find all time ranges
+            time_pattern = r'(\d{1,2}):?(\d{2})?\s*(AM|PM|am|pm)?\s*-\s*(\d{1,2}):?(\d{2})?\s*(AM|PM|am|pm)?'
+            matches = re.findall(time_pattern, day_str_clean)
+
+            day_close_hours = []
+            day_open_hours = []
+
+            for match in matches:
+                open_hour = int(match[0])
+                open_ampm = match[2].upper() if match[2] else None
+                close_hour = int(match[3])
+                close_ampm = match[5].upper() if match[5] else None
+
+                # Convert to 24-hour format
+                # If open_ampm is missing, infer from close_ampm and context
+                if open_ampm == 'PM' and open_hour != 12:
+                    open_hour += 12
+                elif open_ampm == 'AM' and open_hour == 12:
+                    open_hour = 0
+                elif open_ampm is None:
+                    # Infer: if close is PM and open < close, open is likely same period
+                    # Exception: 12:00-2:00 PM means 12:00 PM (noon)
+                    if close_ampm == 'PM':
+                        if open_hour <= close_hour or open_hour == 12:
+                            # Same period: 12:00-2:00 PM or 1:00-3:00 PM
+                            if open_hour != 12:
+                                open_hour += 12
+                        else:
+                            # Cross-period: 7:00-10:00 PM means 7:00 PM
+                            open_hour += 12
+                    elif close_ampm == 'AM':
+                        # Late night: 10:00-2:00 AM means 10:00 PM to 2:00 AM
+                        if open_hour >= 6:  # Assume evening start
+                            open_hour += 12
+
+                if close_ampm == 'PM' and close_hour != 12:
+                    close_hour += 12
+                elif close_ampm == 'AM' and close_hour == 12:
+                    close_hour = 0
+
+                # Handle overnight closing (e.g., closes at 1 AM = 25 for calculation)
+                if close_hour < open_hour:
+                    close_hour += 24
+
+                day_open_hours.append(open_hour)
+                day_close_hours.append(close_hour)
+
+                # Calculate hours for this shift
+                shift_hours = close_hour - open_hour
+                if shift_hours > 0:
+                    total_hours += shift_hours
+
+            # Check for service coupé (gap between ~14:00-15:00 and ~18:00-19:00)
+            if len(matches) >= 2:
+                # Multiple time ranges = likely service coupé
+                if day_open_hours and day_close_hours:
+                    # Check if first shift ends around lunch (13-16) and second starts evening (17-20)
+                    first_close = day_close_hours[0] if len(day_close_hours) > 0 else 0
+                    second_open = day_open_hours[1] if len(day_open_hours) > 1 else 0
+                    if 13 <= first_close <= 16 and 17 <= second_open <= 20:
+                        service_coupe_count += 1
+
+            # Track latest close hour
+            if day_close_hours:
+                latest = max(day_close_hours)
+                # Normalize: 25 = 1am, 26 = 2am, etc.
+                if latest > 24:
+                    latest = latest - 24
+                close_hours.append(latest)
+
+                # Late close = after 1:00 AM (represented as 1 after normalization)
+                if max(day_close_hours) >= 25:  # 1:00 AM or later
+                    late_close_count += 1
+
+                # Early close = before 5:00 PM
+                if max(day_close_hours) <= 17:
+                    early_close_count += 1
+
+        result["days_open"] = days_open
+        result["total_hours_per_week"] = total_hours
+        result["latest_close_hour"] = max(close_hours) if close_hours else 0
+        result["has_service_coupe"] = service_coupe_count >= 3  # At least 3 days with service coupé
+        result["closes_late"] = late_close_count >= 3  # At least 3 days closing after 1 AM
+        result["is_lunch_only"] = early_close_count >= 4 and days_open >= 4  # Closes early most days
+        result["parsed"] = True
+
+    except Exception as e:
+        # Parsing failed, return defaults
+        pass
+
+    return result
+
+
+def calculate_horseshoe_bonus(restaurant):
+    """
+    Calculate the "Horseshoe Theory" bonus for operating hours.
+
+    The horseshoe rewards BOTH extremes of the operating hours spectrum:
+
+    1. "Lark Bonus" (The Artisan) - Left tail of horseshoe
+       - Open < 30 hours/week OR has service coupé
+       - Signals: "I prioritize prep time and quality over revenue"
+       - Examples: Sourdough bakery, supper club, serious bistro
+
+    2. "Owl Bonus" (The Community Anchor) - Right tail of horseshoe
+       - Open past 1:00 AM regularly
+       - Signals: "I work incredibly hard to serve when others won't"
+       - Examples: Late-night pitta, frituur, neighborhood bar
+
+    3. "Middle Zone" (The Factory) - No bonus
+       - Standard 7-day, 11:00-22:00 non-stop
+       - Signals: "I maximize table turnover"
+       - Examples: Chains, tourist traps, generic brasseries
+
+    Returns: (bonus_score 0-1, bonus_type string or None)
+    """
+    opening_hours = restaurant.get("opening_hours")
+    rating = restaurant.get("rating", 0)
+
+    # Only apply to restaurants with decent ratings
+    if not rating or rating < 4.0:
+        return 0, None
+
+    # Parse hours
+    hours_data = parse_opening_hours(opening_hours)
+
+    if not hours_data["parsed"]:
+        return 0, None
+
+    # Check for Lark Bonus (Artisan)
+    is_lark = False
+    lark_score = 0
+
+    # Service coupé is the strongest signal of serious cooking
+    if hours_data["has_service_coupe"]:
+        is_lark = True
+        lark_score = 1.0  # Full bonus
+
+    # Very limited hours (< 30h/week) also qualifies
+    elif hours_data["total_hours_per_week"] > 0 and hours_data["total_hours_per_week"] < 30:
+        is_lark = True
+        lark_score = 0.8
+
+    # Lunch-only spots (closes before 5pm most days)
+    elif hours_data["is_lunch_only"]:
+        is_lark = True
+        lark_score = 0.7
+
+    # Limited days (open 4 or fewer days)
+    elif hours_data["days_open"] <= 4 and hours_data["days_open"] > 0:
+        is_lark = True
+        lark_score = 0.6
+
+    # Check for Owl Bonus (Community Anchor)
+    is_owl = False
+    owl_score = 0
+
+    if hours_data["closes_late"]:
+        is_owl = True
+        owl_score = 0.8  # Reward late-night service
+
+    # A restaurant can be BOTH (rare but possible: limited days but late hours)
+    # In that case, take the higher bonus
+    if is_lark and is_owl:
+        if lark_score >= owl_score:
+            return lark_score, "lark"
+        else:
+            return owl_score, "owl"
+    elif is_lark:
+        return lark_score, "lark"
+    elif is_owl:
+        return owl_score, "owl"
+
+    # Middle zone: no bonus
+    return 0, None
+
+
 def unified_scarcity_score(restaurant):
     """
-    Calculate a unified scarcity score based on review count and cuisine rarity.
+    Calculate a unified scarcity score based on review count, cuisine rarity,
+    and the "Horseshoe Theory" for operating hours.
 
-    DESIGN DECISION (Jan 2025): Hours/days scarcity REMOVED due to class bias.
+    HORSESHOE THEORY (Jan 2025): Replaced linear hours bias with U-curve.
 
-    The "limited hours = quality" assumption is problematic:
-    - It rewards privilege (can afford to close 3 days/week) over passion
-    - It penalizes hardworking immigrant families (pittas, kebabs) who work
-      11am-2am, 7 days/week to survive
-    - A Turkish pitta open 7 days should not be penalized vs a trendy brunch
-      spot open only Sat-Sun
+    The old "limited hours = quality" assumption was class-biased:
+    - It rewarded privilege (can afford to close 3 days/week)
+    - It penalized hardworking immigrant families (pittas, kebabs)
 
-    FUTURE: When hours data is parsed, implement "Horseshoe Theory":
-    - "Lark Bonus": Open <24h/week OR has service coupé (closed 15:00-18:00)
-    - "Owl Bonus": Open past 01:00 AM (late-night community anchor)
-    - "Middle Zone": Standard 7-day 11:00-22:00 = no bonus (chains, tourist traps)
+    NEW APPROACH: Reward BOTH extremes of the operating hours spectrum:
+    - "Lark Bonus": Service coupé, <30h/week, lunch-only (artisan signal)
+    - "Owl Bonus": Open past 1:00 AM (community anchor signal)
+    - "Middle Zone": Standard 7-day 11:00-22:00 = no bonus (chains)
 
-    This rewards BOTH extremes (artisan AND hardworking) without penalizing
-    either for their operating model.
-
-    Current components:
+    Components:
     - Review count scarcity: "Goldilocks zone" of 50-500 reviews
+    - Horseshoe bonus: Lark (artisan) or Owl (late-night) bonus
     - Cuisine scarcity: rare cuisines in Brussels (minimal weight)
 
     Returns tuple: (total_score, component_breakdown)
@@ -431,29 +661,33 @@ def unified_scarcity_score(restaurant):
             review_scarcity = 0.3  # Starting to get too popular
     components["review_scarcity"] = review_scarcity
 
-    # 2-4. Hours/Days/Schedule scarcity - DISABLED (class bias)
-    # These are kept at 0 for backwards compatibility with data exports
-    # Will be replaced with "Horseshoe" bonuses when hours data is parsed
+    # 2. Horseshoe bonus - rewards BOTH extremes
+    horseshoe_score, horseshoe_type = calculate_horseshoe_bonus(restaurant)
+    components["horseshoe_bonus"] = horseshoe_score
+    components["horseshoe_type"] = horseshoe_type  # "lark", "owl", or None
+
+    # Legacy fields for backwards compatibility (kept at 0)
     components["hours_scarcity"] = 0
     components["days_scarcity"] = 0
     components["schedule_scarcity"] = 0
 
-    # 5. Cuisine scarcity (rare in Brussels) - minimal weight
+    # 3. Cuisine scarcity (rare in Brussels) - minimal weight
     # Rare cuisine doesn't mean good food, but adds diversity value
     cuisine_scarcity = RARE_CUISINES_BRUSSELS.get(cuisine, 0)
     components["cuisine_scarcity"] = cuisine_scarcity
 
-    # Combine with weights - now heavily review-focused
-    # Hours/days/schedule have 0 weight (disabled)
+    # Combine with weights
     weights = {
-        "review_scarcity": 0.90,    # Primary signal: not over-hyped
-        "hours_scarcity": 0.00,     # DISABLED: class bias
-        "days_scarcity": 0.00,      # DISABLED: class bias
-        "schedule_scarcity": 0.00,  # DISABLED: class bias
-        "cuisine_scarcity": 0.10,   # Minor: rare cuisine diversity bonus
+        "review_scarcity": 0.70,    # Primary: not over-hyped
+        "horseshoe_bonus": 0.20,    # Secondary: artisan OR late-night
+        "cuisine_scarcity": 0.10,   # Minor: rare cuisine diversity
     }
 
-    total = sum(weights[k] * components[k] for k in weights)
+    total = (
+        weights["review_scarcity"] * review_scarcity +
+        weights["horseshoe_bonus"] * horseshoe_score +
+        weights["cuisine_scarcity"] * cuisine_scarcity
+    )
 
     return total, components
 
@@ -1021,6 +1255,10 @@ def rerank_restaurants(df):
     # Add scarcity sub-components for detailed analysis
     for sub in ["review_scarcity", "hours_scarcity", "days_scarcity", "schedule_scarcity", "cuisine_scarcity"]:
         df[f"scarcity_{sub}"] = [r["scarcity_components"][sub] for r in results]
+
+    # Add horseshoe bonus columns
+    df["horseshoe_bonus"] = [r["scarcity_components"].get("horseshoe_bonus", 0) for r in results]
+    df["horseshoe_type"] = [r["scarcity_components"].get("horseshoe_type") for r in results]
 
     # Filter out non-restaurant shops (chocolate shops, etc.)
     # These should not appear in the database at all
