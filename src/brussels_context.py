@@ -13,6 +13,15 @@ GRAND_PLACE = (50.8467, 4.3525)
 # Place Schuman (EU bubble center)
 PLACE_SCHUMAN = (50.8427, 4.3827)
 
+# Brussels Capital Region approximate bounding box
+# These bounds include all 19 communes with a small margin
+BRUSSELS_BOUNDS = {
+    "lat_min": 50.76,   # Southern edge (Watermael-Boitsfort)
+    "lat_max": 50.91,   # Northern edge (Evere/Schaerbeek)
+    "lng_min": 4.26,    # Western edge (Berchem-Sainte-Agathe)
+    "lng_max": 4.48,    # Eastern edge (Woluwe-Saint-Pierre)
+}
+
 # Brussels 19 communes with approximate center coordinates
 COMMUNES = {
     "Anderlecht": {"lat": 50.8333, "lng": 4.3072, "tier": "underexplored"},
@@ -1050,6 +1059,25 @@ def haversine_distance(lat1, lng1, lat2, lng2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
 
     return R * c
+
+
+def is_within_brussels(lat, lng):
+    """
+    Check if a location is within Brussels Capital Region bounds.
+
+    Returns True if the coordinates fall within the 19 Brussels communes area.
+    Uses a bounding box approximation for fast filtering.
+    """
+    if lat is None or lng is None:
+        return False
+    try:
+        lat = float(lat)
+        lng = float(lng)
+    except (TypeError, ValueError):
+        return False
+
+    return (BRUSSELS_BOUNDS["lat_min"] <= lat <= BRUSSELS_BOUNDS["lat_max"] and
+            BRUSSELS_BOUNDS["lng_min"] <= lng <= BRUSSELS_BOUNDS["lng_max"])
 
 
 def get_commune(lat, lng):

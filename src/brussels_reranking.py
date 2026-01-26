@@ -1006,6 +1006,27 @@ def rerank_restaurants(df):
         if len(shops_removed) > 10:
             print(f"  ... and {len(shops_removed) - 10} more")
 
+    # Filter out hotels and other non-food establishments
+    # These are places where primary_type indicates non-food business
+    NON_FOOD_TYPES = [
+        "hotel", "motel", "hostel", "lodging",
+        "sauna", "spa", "gym", "fitness_center", "beauty_salon",
+        "hair_salon", "wellness_center", "massage", "public_bath",
+        "furniture_store", "home_goods_store", "home_improvement_store",
+        "clothing_store", "shopping_mall", "department_store",
+        "movie_theater", "night_club", "casino"
+    ]
+    if "primary_type" in df.columns:
+        non_food_mask = df["primary_type"].isin(NON_FOOD_TYPES)
+        non_food_removed = df[non_food_mask]["name"].tolist()
+        df = df[~non_food_mask]
+        if non_food_removed:
+            print(f"\nRemoved {len(non_food_removed)} non-food establishments (hotels, spas, etc.):")
+            for name in non_food_removed[:10]:
+                print(f"  - {name}")
+            if len(non_food_removed) > 10:
+                print(f"  ... and {len(non_food_removed) - 10} more")
+
     # Sort by Brussels score
     df = df.sort_values("brussels_score", ascending=False)
 

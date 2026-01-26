@@ -12,6 +12,8 @@ import pandas as pd
 import numpy as np
 import h3
 
+from brussels_context import is_within_brussels
+
 # Common chain restaurant patterns in Belgium/Brussels
 CHAIN_PATTERNS = [
     r"mcdonald", r"burger king", r"quick", r"kfc", r"subway", r"domino",
@@ -22,14 +24,25 @@ CHAIN_PATTERNS = [
     r"otomat", r"manhattn", r"il fiore", r"delitraiteur"
 ]
 
-# Non-restaurant entries to exclude (supermarkets, grocery stores)
+# Non-restaurant entries to exclude (supermarkets, grocery stores, hotels)
 EXCLUDE_PATTERNS = [
-    r"carrefour", r"delhaize", r"colruyt", r"aldi\b", r"lidl", r"proxy"
+    r"carrefour", r"delhaize", r"colruyt", r"aldi\b", r"lidl", r"proxy",
+    r"\bhotel\b", r"\bhôtel\b", r"thermen", r"wellness"
 ]
 
-# Primary types to exclude
+# Primary types to exclude (non-food establishments)
 EXCLUDE_TYPES = [
-    "supermarket", "grocery_store", "convenience_store"
+    "supermarket", "grocery_store", "convenience_store",
+    # Hotels and lodging
+    "hotel", "motel", "hostel", "lodging",
+    # Wellness and fitness
+    "sauna", "spa", "gym", "fitness_center", "beauty_salon",
+    "hair_salon", "wellness_center", "massage", "public_bath",
+    # Retail stores
+    "furniture_store", "home_goods_store", "home_improvement_store",
+    "clothing_store", "shopping_mall", "department_store",
+    # Other non-food
+    "movie_theater", "night_club", "casino"
 ]
 
 
@@ -52,9 +65,16 @@ def detect_chain(name):
 
 
 def should_exclude(row):
-    """Check if a place should be excluded (supermarkets, grocery stores, etc.)."""
+    """Check if a place should be excluded (non-food establishments, outside Brussels, etc.)."""
     name = row.get("name", "") or ""
     primary_type = row.get("primary_type", "") or ""
+    lat = row.get("lat")
+    lng = row.get("lng")
+
+    # Check if location is outside Brussels Capital Region
+    if lat is not None and lng is not None:
+        if not is_within_brussels(lat, lng):
+            return True
 
     # Check name patterns
     name_lower = name.lower()
@@ -267,6 +287,96 @@ def extract_cuisine(types, primary_type, name=None):
         for pattern in caribbean_patterns:
             if pattern in name_lower:
                 return "Caribbean"
+
+        # Italian patterns (pizza, pasta, osteria)
+        italian_patterns = ["pizza", "pizzeria", "pasta", "osteria", "trattoria", "risotto", "lasagna", "napoli", "roma ", "italiano", "italiana"]
+        for pattern in italian_patterns:
+            if pattern in name_lower:
+                return "Italian"
+
+        # Burger patterns
+        burger_patterns = ["burger", "burgers", "smash"]
+        for pattern in burger_patterns:
+            if pattern in name_lower:
+                return "Burger"
+
+        # Poke/Hawaiian patterns
+        poke_patterns = ["poké", "poke", "hawaiian", "açaí", "acai", "bowl"]
+        for pattern in poke_patterns:
+            if pattern in name_lower:
+                return "Hawaiian"
+
+        # Chicken/Fast food patterns
+        chicken_patterns = ["chicken", "poulet", "kip ", "wings", "fried chicken"]
+        for pattern in chicken_patterns:
+            if pattern in name_lower:
+                return "Fast Food"
+
+        # Turkish patterns (kebab variants)
+        turkish_extra_patterns = ["kebab", "kebap", "döner", "doner", "lahmacun", "pide"]
+        for pattern in turkish_extra_patterns:
+            if pattern in name_lower:
+                return "Turkish"
+
+        # Indian patterns (tandoori, curry)
+        indian_patterns = ["tandoori", "curry", "masala", "biryani", "naan", "tikka", "punjab", "delhi", "mumbai", "bombay"]
+        for pattern in indian_patterns:
+            if pattern in name_lower:
+                return "Indian"
+
+        # Asian generic patterns
+        asian_patterns = ["wok", "asia", "asian", "orient"]
+        for pattern in asian_patterns:
+            if pattern in name_lower:
+                return "Asian"
+
+        # Thai patterns
+        thai_patterns = ["thai", "thaï", "bangkok", "pad thai", "tom yum"]
+        for pattern in thai_patterns:
+            if pattern in name_lower:
+                return "Thai"
+
+        # Vietnamese patterns
+        vietnamese_patterns = ["viet", "pho", "banh mi", "saigon", "hanoi"]
+        for pattern in vietnamese_patterns:
+            if pattern in name_lower:
+                return "Vietnamese"
+
+        # Chinese patterns
+        chinese_patterns = ["china", "chinese", "chinois", "beijing", "shanghai", "canton", "dim sum", "dumpling"]
+        for pattern in chinese_patterns:
+            if pattern in name_lower:
+                return "Chinese"
+
+        # Belgian patterns (taverne, frituur, snack frite)
+        belgian_extra_patterns = ["taverne", "frituur", "friterie", "frit ", "fritkot", "estaminet"]
+        for pattern in belgian_extra_patterns:
+            if pattern in name_lower:
+                return "Belgian"
+
+        # Brunch/Breakfast patterns
+        brunch_patterns = ["brunch", "breakfast", "eggs", "pancake", "ontbijt"]
+        for pattern in brunch_patterns:
+            if pattern in name_lower:
+                return "Brunch"
+
+        # Salad/Healthy patterns
+        healthy_patterns = ["salad", "salade", "healthy", "veggie", "green", "detox", "superfood"]
+        for pattern in healthy_patterns:
+            if pattern in name_lower:
+                return "Vegetarian"
+
+        # Greek patterns
+        greek_patterns = ["greek", "grec", "gyros", "souvlaki", "tzatziki", "athena", "olymp", "zorba"]
+        for pattern in greek_patterns:
+            if pattern in name_lower:
+                return "Greek"
+
+        # Lebanese/Middle Eastern extra
+        lebanese_patterns = ["liban", "lebanese", "mezze", "fattoush", "tabouleh", "manouche"]
+        for pattern in lebanese_patterns:
+            if pattern in name_lower:
+                return "Lebanese"
 
     return "Other"
 
