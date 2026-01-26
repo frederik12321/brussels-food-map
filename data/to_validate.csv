@@ -1,0 +1,151 @@
+name,cuisine,commune,address,rating,review_count,score_diaspora_bonus,price_level
+Royal Indian Restaurant,Indian,Bruxelles,"Rue de la Fourche 5, 1000 Bruxelles, Belgium",4.5,3294,0.014,PRICE_LEVEL_MODERATE
+Bistro,French,Saint-Gilles,"Av. de la Porte de Hal 40, 1060 Saint-Gilles, Belgium",5.0,1,0.042,
+Turkish Grill Kebap (Halal),Turkish,Bruxelles,"Rue Antoine Dansaert 179, 1000 Bruxelles, Belgium",4.3,140,0.014,
+Quartz,French,Saint-Gilles,"Rue de la Réforme 22, 1050 Ixelles, Belgium",4.9,120,0.042,
+ABC,Seafood,Bruxelles,"Rue Sainte-Catherine 46, 1000 Bruxelles, Belgium",4.4,194,0.056,PRICE_LEVEL_MODERATE
+Yi Chan,Chinese,Bruxelles,"Rue Jules Van Praet 13, 1000 Bruxelles, Belgium",4.2,1227,0.042,PRICE_LEVEL_MODERATE
+Taste of Taj Mahal,Indian,Etterbeek,"Av. de la Couronne 203, 1050 Bruxelles, Belgium",3.1,340,0.0315,PRICE_LEVEL_MODERATE
+Phở & Bánh Mì,Vietnamese,Auderghem,"Waversesteenweg 1699, 1160 Oudergem, Belgium",4.5,340,0.014,PRICE_LEVEL_MODERATE
+Le Prince,Lebanese,Saint-Gilles,"Chau. de Charleroi 57/59, 1060 Bruxelles, Belgium",3.9,1844,0.042,PRICE_LEVEL_MODERATE
+Diyar Restaurant,Turkish,Saint-Josse-ten-Noode,"Chau. de Haecht 91, 1030 Schaerbeek, Belgium",4.9,121,0.07,
+Reboost açai,Brazilian,Ixelles,"Rue du Bailli 57, 1050 Ixelles, Belgium",4.9,84,0.0455,
+Celili Pacha,Turkish,Schaerbeek,"Rue Goossens 1, 1030 Schaerbeek, Belgium",4.5,315,0.063,
+Friterie Michel,Greek,Etterbeek,"Chau. Saint-Pierre 5, 1040 Etterbeek, Belgium",4.5,294,0.014,PRICE_LEVEL_INEXPENSIVE
+Be Bo Bun,Vietnamese,Saint-Josse-ten-Noode,"Av. des Arts 24, 1000 Bruxelles, Belgium",4.3,146,0.014,PRICE_LEVEL_MODERATE
+Shanghai,Chinese,Bruxelles,"Rue des Bouchers 25, 1000 Bruxelles, Belgium",3.8,162,0.042,PRICE_LEVEL_INEXPENSIVE
+Kafenio,Greek,Etterbeek,"Rue Stevin 134, 1000 Bruxelles, Belgium",4.6,2157,0.014,PRICE_LEVEL_MODERATE
+Panda,Chinese,Auderghem,"Waversesteenweg 1543, 1160 Oudergem, Belgium",4.4,322,0.014,PRICE_LEVEL_MODERATE
+ANJALI,Indian,Ixelles,"Rue du Page 49, 1050 Ixelles, Belgium",4.5,99,0.063,
+Seun Hing,Chinese,Forest,"Chau. de Neerstalle 18, 1190 Forest, Belgium",4.4,32,0.014,
+"O,GYROS",Greek,Auderghem,"Chau. de Wavre 1612, 1160 Auderghem, Belgium",4.7,294,0.014,
+Kaza Restaurant,Chinese,Schaerbeek,"Av. Princesse Elisabeth 140, 1030 Schaerbeek, Belgium",4.8,175,0.014,
+Agra Restaurant,Indian,Etterbeek,"Waversesteenweg 1002, 1160 Oudergem, Belgium",3.9,241,0.0315,PRICE_LEVEL_MODERATE
+Foor'n,Lebanese,Ixelles,"Rue de Stassart 131, 1050 Ixelles, Belgium",4.9,1045,0.0455,
+Restaurant Süslü by Tuna,Turkish,Schaerbeek,"Chau. de Helmet 202, 1030 Schaerbeek, Belgium",4.4,394,0.063,
+Asiagrill 🇨🇳,Chinese,Bruxelles,"Rue du Marché au Charbon 98, 1000 Bruxelles, Belgium",4.2,204,0.042,PRICE_LEVEL_INEXPENSIVE
+Mission Masala's Bombay BBQ,Indian,Ixelles,"Chau. d'Ixelles 280, 1050 Ixelles, Belgium",4.3,859,0.063,PRICE_LEVEL_MODERATE
+La Cité Du Dragon,Chinese,Watermael-Boitsfort,"Chau. de Waterloo 1022-1024, 1180 Bruxelles, Belgium",3.8,1665,0.014,PRICE_LEVEL_MODERATE
+Al Barmaki,Lebanese,Bruxelles,"Rue des Eperonniers 67, 1000 Bruxelles, Belgium",4.3,819,0.014,PRICE_LEVEL_MODERATE
+An Ngon,Vietnamese,Bruxelles,"Rue Jules Van Praet 15, 1000 Bruxelles, Belgium",4.0,290,0.049,
+China Express,Chinese,Ixelles,"Chau. d'Ixelles 309, 1050 Ixelles, Belgium",4.0,292,0.056,PRICE_LEVEL_INEXPENSIVE
+Thieyp,African,Ixelles,"Rue Longue Vie 46, 1050 Ixelles, Belgium",4.9,239,0.063,
+Gao Sheng restaurant chinois 🇨🇳,Chinese,Anderlecht,"Bergensesteenweg 982, 1070 Anderlecht, Belgium",4.3,287,0.014,PRICE_LEVEL_MODERATE
+Zhang Liang Malatang Brussels,Chinese,Bruxelles,"Rue des Chapeliers 36, 1000 Bruxelles, Belgium",3.0,2,0.042,
+Frites Atelier | Brussel,Belgian,Bruxelles,"Rue Sainte-Catherine 32, 1000 Bruxelles, Belgium",4.6,6931,0.035,PRICE_LEVEL_MODERATE
+Meli Mêly,Vietnamese,Evere,"Chau. de Louvain 523, 1030 Schaerbeek, Belgium",4.4,564,0.014,PRICE_LEVEL_MODERATE
+Mother India Restaurant,Indian,Uccle,"Rue de Stalle 1, 1180 Uccle, Belgium",4.2,198,0.014,PRICE_LEVEL_MODERATE
+Restaurant Doce Pimenta 🇧🇷,Brazilian,Forest,"Chau. de Bruxelles 298, 1190 Forest, Belgium",4.4,394,0.042,PRICE_LEVEL_INEXPENSIVE
+YÖRÜK ÇADIRI,Turkish,Saint-Josse-ten-Noode,"Chau. de Haecht 20, 1210 Saint-Josse-ten-Noode, Belgium",4.9,2499,0.07,PRICE_LEVEL_INEXPENSIVE
+Cicek Kebab,Turkish,Saint-Gilles,"Rue Bara 198, 1070 Anderlecht, Belgium",3.5,607,0.014,PRICE_LEVEL_INEXPENSIVE
+Taverne L'archipel,African,Ixelles,"Rue de la Paix 29, 1050 Ixelles, Belgium",4.2,92,0.063,
+Ocean 11,Seafood,Bruxelles,"Rue des Chapeliers 11, 1000 Bruxelles, Belgium",4.1,414,0.056,
+Brazil Grill 🇧🇷,Brazilian,Saint-Gilles,"Chau. d'Alsemberg 22, 1060 Saint-Gilles, Belgium",4.3,224,0.07,
+Rugbyman N°TWO,Seafood,Bruxelles,"Quai aux Briques 12, 1000 Bruxelles, Belgium",4.3,1055,0.056,PRICE_LEVEL_MODERATE
+Snack TASNEEM,Lebanese,Bruxelles,"Rue des Foulons 5, 1000 Bruxelles, Belgium",5.0,62,0.014,
+ADANA 01 OCAKBAŞI Zellik,Turkish,Berchem-Sainte-Agathe,"Brusselsesteenweg 433, 1731 Asse, Belgium",4.0,206,0.014,
+Brugmann Restaurant,French,Saint-Gilles,"Av. Brugmann 52/54, 1190 Bruxelles, Belgium",4.5,1133,0.0084,PRICE_LEVEL_VERY_EXPENSIVE
+Flagey kebab,Turkish,Ixelles,"Rue de la Brasserie 101, 1050 Ixelles, Belgium",4.3,109,0.014,
+Inanna Resto Bar,Lebanese,Saint-Gilles,"Parv. de Saint-Gilles 14, 1060 Saint-Gilles, Belgium",4.6,115,0.042,
+Stone Dial,Chinese,Uccle,"Chem. du Crabbegat 2, 1180 Uccle, Belgium",4.8,173,0.014,
+ÖNDER PIDE,Turkish,Saint-Josse-ten-Noode,"Rue Josaphat 94, 1030 Schaerbeek, Belgium",4.7,126,0.07,
+La Châtelaine du Liban,Lebanese,Ixelles,"Pl. du Châtelain 7, 1050 Ixelles, Belgium",4.1,1898,0.0455,PRICE_LEVEL_MODERATE
+Sawa resto,Lebanese,Uccle,"Rue de Nieuwenhove 84, 1180 Uccle, Belgium",4.8,170,0.014,
+HeHe Mala Tang,Chinese,Bruxelles,"BE, Rue de l'Ecuyer 53, 1000 Bruxelles, Belgium",4.1,69,0.042,
+KeKa AnTe TaMBI,Indian,Evere,"Chau. de Louvain 988, 1140 Evere, Belgium",3.7,67,0.014,
+SULTAN FOOD 3 BRUSSELS,Middle Eastern,Saint-Josse-ten-Noode,"Rue Verbist 49, 1210 Saint-Josse-ten-Noode, Belgium",4.7,785,0.063,
+Antartique,Seafood,Bruxelles,"Av. de Stalingrad 67, 1000 Bruxelles, Belgium",4.2,1420,0.056,PRICE_LEVEL_MODERATE
+Chandigarh,Indian,Saint-Josse-ten-Noode,"Rue de l'Enseignement 63, 1000 Bruxelles, Belgium",4.4,755,0.014,PRICE_LEVEL_MODERATE
+La Villa Bantou,African,Jette,"Av. Jean de Bologne 38A, 1020 Bruxelles, Belgium",3.8,182,0.014,
+Yaprak Doner,Turkish,Saint-Josse-ten-Noode,"Chau. de Haecht 92, 1030 Schaerbeek, Belgium",3.9,140,0.07,
+J&B Taverne Au Nouveau Colombier,Belgian,Anderlecht,"1080 Sint-Jans-Molenbeek, Belgium",4.7,9,0.063,
+Kebab & Grill Hub,Turkish,Saint-Gilles,"Rue Haute 319, 1000 Bruxelles, Belgium",3.3,6,0.014,
+Donerium,Turkish,Saint-Josse-ten-Noode,"Rue Willems 15, 1210 Saint-Josse-ten-Noode, Belgium",4.2,64,0.07,
+Indian Foodism Lounge,Indian,Saint-Josse-ten-Noode,"Rue des Deux Églises 76, 1210 Saint-Josse-ten-Noode, Belgium",4.3,317,0.014,
+DASTAAN,Indian,Woluwe-Saint-Lambert,"Av. Georges Henri 373, 1200 Woluwe-Saint-Lambert, Belgium",4.6,311,0.014,
+Oliban,Lebanese,Ixelles,"La Bascule, Chau. de Vleurgat 324, 1050 Ixelles, Belgium",4.3,2797,0.0455,PRICE_LEVEL_MODERATE
+The Cousin's Restaurant,Turkish,Jette,"Rue Léon Theodor 252, 1090 Bruxelles, Belgium",4.4,372,0.014,
+Greekit,Greek,Saint-Josse-ten-Noode,"Av. Livingstone 20, 1000 Bruxelles, Belgium",4.4,446,0.014,
+GÜLER PIDE KEBAP,Turkish,Anderlecht,"Rue Wayez 143, 1070 Anderlecht, Belgium",4.6,382,0.014,
+Rangla Punjab,Indian,Saint-Josse-ten-Noode,"Rue de l'Artichaut 2, 1210 Saint-Josse-ten-Noode, Belgium",4.5,417,0.014,PRICE_LEVEL_MODERATE
+Noordzee,Seafood,Bruxelles,"Rue Sainte-Catherine 45, 1000 Bruxelles, Belgium",4.6,4740,0.056,PRICE_LEVEL_MODERATE
+La Terrasse,Turkish,Jette,"Rue de Wand 189, 1020 Bruxelles, Belgium",3.9,102,0.014,
+Feta & Oregano Dilbeek,Greek,Berchem-Sainte-Agathe,"Brusselstraat 336, 1702 Dilbeek, Belgium",4.3,317,0.014,
+Centrum of Kebab,Turkish,Bruxelles,"Rue du Midi 92, 1000 Bruxelles, Belgium",3.2,294,0.014,
+Pellas 🇬🇷,Greek,Berchem-Sainte-Agathe,"Chau. de Gand 1202, 1082 Berchem-Sainte-Agathe, Belgium",4.5,342,0.014,PRICE_LEVEL_MODERATE
+Beyrouth,Lebanese,Molenbeek-Saint-Jean,"Bergensesteenweg 80, 1070 Anderlecht, Belgium",4.5,329,0.014,PRICE_LEVEL_MODERATE
+Snack Baan,Other,Anderlecht,"Lenniksebaan 67, 1701 Dilbeek, Belgium",4.2,105,0.0,
+Vybes Lounge & Restaurant,Bar,Ixelles,"Rue de Livourne 40, 1000 Bruxelles, Belgium",4.5,74,0.0,
+MAKI MAKI - Schaerbeek,Japanese,Schaerbeek,"Chau. de Helmet 241, 1030 Schaerbeek, Belgium",3.9,224,0.0,
+Brunch corner Schaerbeek,Brunch,Schaerbeek,"Av. Louis Bertrand 52, 1030 Schaerbeek, Belgium",4.1,812,0.0,PRICE_LEVEL_MODERATE
+"Continental - Creative market, hub & café",Bar,Bruxelles,"Pl. De Brouckère 41, 1000 Bruxelles, Belgium",4.4,99,0.0,
+Saveurs de l'opéra,Bakery,Saint-Gilles,"Rue Haute 192, 1000 Bruxelles, Belgium",3.0,2,0.0,
+Le Pigeon Rapide,Cafe,Woluwe-Saint-Pierre,"Rue Konkel 2, 1150 Woluwe-Saint-Pierre, Belgium",4.3,170,0.0,PRICE_LEVEL_INEXPENSIVE
+Sam Food,Other,Bruxelles,"Av. de Stalingrad 45, 1000 Bruxelles, Belgium",3.0,1,0.0,
+Badi.,Bar,Saint-Gilles,"Rue de l'Hôtel des Monnaies 80, 1060 Saint-Gilles, Belgium",4.9,139,0.0,
+Casa del Sud,Italian,Woluwe-Saint-Lambert,"Rue de la Sta de Woluwe 95, 1200 Woluwe-Saint-Lambert, Belgium",4.7,288,0.0,PRICE_LEVEL_INEXPENSIVE
+Bakkerij Marie,Bakery,Ganshoren,"Rue de l'Eglise Saint-Martin 65, 1083 Ganshoren, Belgium",4.0,379,0.0,PRICE_LEVEL_MODERATE
+La giaufrerie,Cafe,Bruxelles,"Rue au Beurre 22, 1000 Bruxelles, Belgium",4.3,3,0.0,
+MIR Concept Coffee Store ️ Place Jourdan (Etterbeek) 1040 Brussels,Cafe,Etterbeek,"Rue Gray 4A, 1040 Etterbeek, Belgium",4.7,141,0.0,
+The Sister Brussels Café,Vegan,Bruxelles,"Rue Chair et Pain 3, 1000 Bruxelles, Belgium",3.9,2631,0.0,PRICE_LEVEL_MODERATE
+Kabuki,Japanese,Bruxelles,"Rue du Marché aux Poulets 32, 1000 Bruxelles, Belgium",3.9,3296,0.0,PRICE_LEVEL_MODERATE
+Brazil Pub,Bar,Saint-Gilles,"Chau. d'Alsemberg 74, 1060 Saint-Gilles, Belgium",3.9,20,0.0,
+Snack House,Fast Food,Berchem-Sainte-Agathe,"Brusselstraat 215, 1702 Dilbeek, Belgium",4.3,241,0.0,
+Bab's Wine to share,Bar,Evere,"Av. Chazal 200, 1030 Schaerbeek, Belgium",4.7,118,0.0,
+Atelier Acqua e Sale,Italian,Ixelles,"Rue Defacqz 86/88, 1060 Saint-Gilles, Belgium",4.8,369,0.0,
+Bery’zce jus,Other,Etterbeek,"Av. de la Couronne 118, 1050 Ixelles, Belgium",5.0,11,0.0,
+Snack Le Botanique (Halal),Fast Food,Saint-Josse-ten-Noode,"Chau. de Haecht 14, 1210 Saint-Josse-ten-Noode, Belgium",4.4,707,0.0,
+SHAKY BURGER🍔,Burger,Saint-Josse-ten-Noode,"Bd des Quatre Journées 39, 1210 Saint-Josse-ten-Noode, Belgium",4.2,383,0.0,
+La cucina di Bruno,Italian,Berchem-Sainte-Agathe,"Verheydenstraat 14, 1700 Dilbeek, Belgium",4.5,40,0.0,
+Café Le Stade🍺,Bar,Molenbeek-Saint-Jean,"Rue des Béguines 186, 1080 Molenbeek-Saint-Jean, Belgium",4.0,123,0.0,PRICE_LEVEL_INEXPENSIVE
+Machu Picchu Bruxelles,Other,Ixelles,"Chau. de Vleurgat 9, 1050 Ixelles, Belgium",3.9,166,0.0,
+Cafe Den Haas,Other,Berchem-Sainte-Agathe,"Zuiderlaan 81, 1731 Asse, Belgium",3.0,1,0.0,
+SuperBowl Lux,Fast Food,Etterbeek,"Rue du Luxembourg 16a, 1000 Bruxelles, Belgium",4.1,107,0.0,
+Fonteyne The Kitchen Châtelain,Other,Ixelles,"31-32, Pl. du Châtelain, 1050 Ixelles, Belgium",4.4,153,0.0,PRICE_LEVEL_MODERATE
+Vereecke / Christophe Boulangerie Pâtisserie Bakkerij Banket,Bakery,Evere,"Rue Plaine d'Aviation 65, 1140 Evere, Belgium",4.6,493,0.0,PRICE_LEVEL_MODERATE
+La Meute,Other,Ixelles,"Rue Lesbroussart 6, 1050 Ixelles, Belgium",4.4,660,0.0,PRICE_LEVEL_MODERATE
+Life Lounge,Bar,Ixelles,"1050 Ixelles, Belgium",5.0,1,0.0,
+Baogo,Other,Bruxelles,"Rue Grétry 48/50, 1000 Bruxelles, Belgium",4.4,1902,0.0,PRICE_LEVEL_MODERATE
+YouWok Bruxelles Anderlecht,Fast Food,Anderlecht,"Bd Sylvain Dupuis 433, 1070 Anderlecht, Belgium",2.8,239,0.0,
+Mithu da Dhaba - Indian/Pakistani Food,Asian,Bruxelles,"Rue Brogniez 78, 1070 Anderlecht, Belgium",4.3,140,0.0,
+Stammbar,Bar,Bruxelles,"Rue du Marché au Charbon 114, 1000 Bruxelles, Belgium",4.2,522,0.0,PRICE_LEVEL_MODERATE
+DeliSweet Cakes Sablon,Bakery,Bruxelles,"Rue Lebeau 69, 1000 Bruxelles, Belgium",4.5,122,0.0,
+Poke & More,American,Uccle,"Av. De Fré 211, 1180 Uccle, Belgium",4.9,189,0.0,
+Restaurant Portuges,Other,Ixelles,"Rue Wéry 87, 1050 Ixelles, Belgium",4.0,3,0.0,
+Hamede,Other,Saint-Josse-ten-Noode,"Rue Royale 316, 1210 Saint-Josse-ten-Noode, Belgium",3.0,1,0.0,
+PURA,Other,Etterbeek,"Av. Michel-Ange 87, 1000 Bruxelles, Belgium",4.5,348,0.0,
+Penafidélis Bar,Other,Saint-Gilles,"Pl. Maurice van Meenen 11, 1060 Saint-Gilles, Belgium",4.4,374,0.0,PRICE_LEVEL_MODERATE
+Panos City Etterbeek (Waversesteenweg),Bakery,Etterbeek,"Chau. de Wavre 701, 1040 Etterbeek, Belgium",4.0,246,0.0,PRICE_LEVEL_MODERATE
+EXKi Arts-Loi,Fast Food,Saint-Josse-ten-Noode,"Rue de la Loi 28, 1040 Bruxelles, Belgium",4.0,376,0.0,PRICE_LEVEL_MODERATE
+Snack Frituur Koningslo,Belgian,Jette,"Streekbaan 186, 1800 Vilvoorde, Belgium",3.9,234,0.0,
+Achille,Bar,Schaerbeek,"Pl. Colignon 14, 1030 Schaerbeek, Belgium",4.5,186,0.0,
+O'Tacos Bruxelles Gare Centrale,Fast Food,Bruxelles,"Carr de l'Europe 2, 1000 Bruxelles, Belgium",4.5,157,0.0,
+Time Out Pub,Bar,Bruxelles,"Rue Auguste Orts 32, 1000 Bruxelles, Belgium",4.2,314,0.0,
+L'Estaminet,Belgian,Evere,"Trassersweg 347, 1120 Brussel, Belgium",4.4,103,0.0,PRICE_LEVEL_MODERATE
+Nomio.brussels,Other,Ixelles,"Chau. de Waterloo 889, 1180 Uccle, Belgium",4.3,35,0.0,
+Laya’s Cakes,Bakery,Ganshoren,"Av. de l'Hôpital Français 6, 1083 Bruxelles, Belgium",4.0,45,0.0,
+Hibiscus,Other,Saint-Gilles,"Rue Fernand Bernier 15, 1060 Saint-Gilles, Belgium",4.8,122,0.0,
+Le Pigeon Noir,Other,Uccle,"Rue Geleytsbeek 2, 1180 Uccle, Belgium",4.7,424,0.0,PRICE_LEVEL_EXPENSIVE
+Frituur Jojo - Sint-Pieters-Leeuw,Fast Food,Forest,"Albert van Cotthemstraat 7, 1600 Sint-Pieters-Leeuw, Belgium",4.4,491,0.0,
+Moda Nova,Bar,Saint-Gilles,"Rue de Savoie 10, 1060 Saint-Gilles, Belgium",4.2,186,0.0,PRICE_LEVEL_INEXPENSIVE
+Coimbra,Other,Saint-Gilles,"Av. Jean Volders 54, 1060 Saint-Gilles, Belgium",4.6,721,0.0,PRICE_LEVEL_MODERATE
+Levent Börek Künefe,Bakery,Saint-Josse-ten-Noode,"Chau. de Haecht 132, 1030 Schaerbeek, Belgium",4.5,319,0.0,
+Super Fourchette,Other,Bruxelles,"Rue des Hirondelles 3, 1000 Bruxelles, Belgium",4.8,255,0.0,PRICE_LEVEL_MODERATE
+Pizza Nizar,Italian,Saint-Gilles,"Av. Fonsny 86, 1060 Saint-Gilles, Belgium",4.7,122,0.0,
+Chez Maman,Bar,Bruxelles,"7, Rue des Grands Carmes, Rue des Grands Carmes 5, 1000 Bruxelles, Belgium",3.8,144,0.0,PRICE_LEVEL_EXPENSIVE
+Boulengier,Bakery,Saint-Gilles,"Av. Jean Volders 11, 1060 Saint-Gilles, Belgium",4.7,699,0.0,PRICE_LEVEL_MODERATE
+WAFFELIN,Bakery,Bruxelles,"Grand Place 37, 1000 Bruxelles, Belgium",4.2,172,0.0,
+Jeanneke,Other,Bruxelles,"Rue des Bouchers 19, 1000 Bruxelles, Belgium",4.8,89,0.0,
+COLONEL LOUISE,Other,Saint-Gilles,"Rue Jean Stas 24, 1060 Saint-Gilles, Belgium",4.5,1596,0.0,PRICE_LEVEL_EXPENSIVE
+Eneko Basque Brussels,Other,Bruxelles,"Ground Floor, Radisson Collection Hotel Grand Place, Rue du Fossé aux Loups 47, 1000 Bruxelles, Belgium",4.4,42,0.0,
+Lemon,Other,Saint-Josse-ten-Noode,"Chau. de Haecht 99, 1030 Schaerbeek, Belgium",4.2,473,0.0,
+Oz Food NV,Fast Food,Evere,"Schaarbeeklei 724, 1800 Vilvoorde, Belgium",4.5,13,0.0,
+The Eight Restaurant,Other,Jette,"De Limburg Stirumlaan 161, 1780 Wemmel, Belgium",4.8,99,0.0,
+Café Xtrème Bar,Cafe,Saint-Gilles,"1060 Saint-Gilles, Belgium",4.4,12,0.0,
+Somuncu Baba Boulangerie,Bakery,Saint-Josse-ten-Noode,"Rue des Coteaux 68, 1030 Schaerbeek, Belgium",4.7,7,0.0,
+Panos Q8 DODO Molenbeek,Bakery,Berchem-Sainte-Agathe,"Bd Louis Mettewie 95, 1080 Molenbeek-Saint-Jean, Belgium",2.3,7,0.0,PRICE_LEVEL_MODERATE
+Colmar Groot-Bijgaarden,Other,Berchem-Sainte-Agathe,"Alfons Gossetlaan 18, 1702 Dilbeek, Belgium",4.0,1555,0.0,PRICE_LEVEL_INEXPENSIVE
+L'arc En Ciel,Bar,Evere,"Rue François Vekemans 192, 1120 Bruxelles, Belgium",3.7,15,0.0,
+Cosy cool,Other,Anderlecht,"Rue Meylemeersch 90, 1070 Bruxelles, Belgium",4.1,14,0.0,
+MONSTER BUNS,Other,Anderlecht,"Chau. de Ninove 987, 1080 Molenbeek-Saint-Jean, Belgium",3.9,77,0.0,
+Monalisa saint Gilles,Bar,Saint-Gilles,"Chau. de Waterloo 296, 1060 Saint-Gilles, Belgium",5.0,4,0.0,

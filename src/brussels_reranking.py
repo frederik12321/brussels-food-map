@@ -872,6 +872,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     - EU bubble penalty
     """
     name = restaurant.get("name", "")
+    address = restaurant.get("address", "")
     lat = restaurant.get("lat")
     lng = restaurant.get("lng")
     rating = restaurant.get("rating", 0)
@@ -995,6 +996,22 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     # Artisauce case: €100+ French fine dining shouldn't get diaspora bonus
     if price_level == 4:
         diaspora_score = diaspora_score * 0.2  # Heavily reduce for fine dining
+
+    # FIX: Low rating filter - validated: 3 FOUT restaurants had rating < 3.5
+    # Shanghai (3.8), Taste of Taj Mahal (3.1), Chicago burger (1.3)
+    if rating and rating < 3.5:
+        diaspora_score = 0
+        diaspora_street_name = None
+
+    # FIX: Food hall / casino / station filter
+    # Mare (Wolf food market), VIAGE (casino), Bistro (SNCB station)
+    non_restaurant_locations = ['wolf', 'food market', 'food hall', 'casino', 'viage',
+                                'hotel restaurant', 'station', 'gare', 'sncb', 'nmbs']
+    if name and address:
+        combined = (name + ' ' + str(address)).lower()
+        if any(loc in combined for loc in non_restaurant_locations):
+            diaspora_score = 0
+            diaspora_street_name = None
 
     diaspora_bonus = 0.07 * diaspora_score
 

@@ -311,6 +311,7 @@ DIASPORA_AUTHENTICITY = {
     "Pakistani": {
         "Saint-Josse-ten-Noode": 0.7,
         "Schaerbeek": 0.6,
+        "Anderlecht": 0.6,  # Gare du Midi area - validated: Mithu da Dhaba
     },
     "Greek": {
         "Saint-Gilles": 0.8,  # Gare du Midi area (Rue de Mérode/Suède) - the "Old Greek" neighborhood
