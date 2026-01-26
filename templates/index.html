@@ -2298,11 +2298,13 @@
         }
 
         // Get tier from brussels_score
-        // Thresholds must match backend (brussels_reranking.py)
+        // Thresholds adjusted Jan 2025 for better distribution:
+        // - Chef's Kiss: ~15% (was 24% at 0.60)
+        // - More selective top tier while keeping relative rankings
         function getTierFromScore(score) {
-            if (score >= 0.60) return 'must_try';
-            if (score >= 0.50) return 'recommended';
-            if (score >= 0.40) return 'above_average';
+            if (score >= 0.65) return 'must_try';
+            if (score >= 0.55) return 'recommended';
+            if (score >= 0.45) return 'above_average';
             return 'average';
         }
 
