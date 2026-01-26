@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Hashtag Burgers & Brunch",
+    "address": "Rue Pletinckx 55, 1000, Bruxelles",
+    "average_price": 22,
+    "thefork_rating": 9.2,
+    "review_count": 1456,
+    "cuisine": "Fusion",
+    "thefork_url": "https://www.thefork.com/restaurant/hashtag-burgers-brunch-r743863"
+  },
+  {
+    "name": "Bella Ciao",
+    "address": "Avenue Marc Henri Van Laer 92, 1070, Anderlecht",
+    "average_price": 30,
+    "thefork_rating": 9.2,
+    "review_count": 754,
+    "cuisine": "Italian",
+    "thefork_url": "https://www.thefork.com/restaurant/bella-ciao-r528319"
+  },
+  {
+    "name": "Il Lionelo",
+    "address": "371, rue Vanderkindere, 1180, Uccle",
+    "average_price": 56,
+    "thefork_rating": 9.0,
+    "review_count": 534,
+    "cuisine": "Pizzeria",
+    "thefork_url": "https://www.thefork.com/restaurant/il-lionelo-r39798"
+  },
+  {
+    "name": "Indian Tadka",
+    "address": "Rue du Progrès 21, 1210, Saint-Josse-ten-Noode",
+    "average_price": 30,
+    "thefork_rating": 9.0,
+    "review_count": 22,
+    "cuisine": "Indian",
+    "thefork_url": "https://www.thefork.com/restaurant/indian-tadka-r837283"
+  },
+  {
+    "name": "DEBY'S DELICE BISTRO",
+    "address": "Av. d'Auderghem 56, 1040, Etterbeek",
+    "average_price": 35,
+    "thefork_rating": 8.6,
+    "review_count": 8,
+    "cuisine": "African",
+    "thefork_url": "https://www.thefork.com/restaurant/deby-s-delice-bistro-r852492"
+  }
+]

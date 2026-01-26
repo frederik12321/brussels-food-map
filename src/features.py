@@ -288,29 +288,23 @@ def extract_cuisine(types, primary_type, name=None):
             if pattern in name_lower:
                 return "Caribbean"
 
-        # Italian patterns (pizza, pasta, osteria)
-        italian_patterns = ["pizza", "pizzeria", "pasta", "osteria", "trattoria", "risotto", "lasagna", "napoli", "roma ", "italiano", "italiana"]
+        # Italian patterns (pizza, pasta, osteria) - very specific, safe to match
+        italian_patterns = ["pizza", "pizzeria", "pasta", "osteria", "trattoria", "risotto", "lasagna", "italiano", "italiana"]
         for pattern in italian_patterns:
             if pattern in name_lower:
                 return "Italian"
 
         # Burger patterns
-        burger_patterns = ["burger", "burgers", "smash"]
+        burger_patterns = ["burger"]
         for pattern in burger_patterns:
             if pattern in name_lower:
                 return "Burger"
 
-        # Poke/Hawaiian patterns
-        poke_patterns = ["poké", "poke", "hawaiian", "açaí", "acai", "bowl"]
+        # Poke/Hawaiian patterns - specific terms only
+        poke_patterns = ["poké", "poke bowl", "hawaiian poke", "açaí", "acai"]
         for pattern in poke_patterns:
             if pattern in name_lower:
                 return "Hawaiian"
-
-        # Chicken/Fast food patterns
-        chicken_patterns = ["chicken", "poulet", "kip ", "wings", "fried chicken"]
-        for pattern in chicken_patterns:
-            if pattern in name_lower:
-                return "Fast Food"
 
         # Turkish patterns (kebab variants)
         turkish_extra_patterns = ["kebab", "kebap", "döner", "doner", "lahmacun", "pide"]
@@ -319,16 +313,10 @@ def extract_cuisine(types, primary_type, name=None):
                 return "Turkish"
 
         # Indian patterns (tandoori, curry)
-        indian_patterns = ["tandoori", "curry", "masala", "biryani", "naan", "tikka", "punjab", "delhi", "mumbai", "bombay"]
+        indian_patterns = ["tandoori", "masala", "biryani", "tikka", "punjab", "delhi", "mumbai"]
         for pattern in indian_patterns:
             if pattern in name_lower:
                 return "Indian"
-
-        # Asian generic patterns
-        asian_patterns = ["wok", "asia", "asian", "orient"]
-        for pattern in asian_patterns:
-            if pattern in name_lower:
-                return "Asian"
 
         # Thai patterns
         thai_patterns = ["thai", "thaï", "bangkok", "pad thai", "tom yum"]
@@ -336,44 +324,50 @@ def extract_cuisine(types, primary_type, name=None):
             if pattern in name_lower:
                 return "Thai"
 
-        # Vietnamese patterns
-        vietnamese_patterns = ["viet", "pho", "banh mi", "saigon", "hanoi"]
+        # Vietnamese patterns - careful with "pho"
+        vietnamese_patterns = ["vietnam", "vietnamese", "banh mi", "saigon", "hanoi", " pho ", "pho "]
         for pattern in vietnamese_patterns:
             if pattern in name_lower:
                 return "Vietnamese"
 
         # Chinese patterns
-        chinese_patterns = ["china", "chinese", "chinois", "beijing", "shanghai", "canton", "dim sum", "dumpling"]
+        chinese_patterns = ["chinese", "chinois", "dim sum", "dumpling", "peking", "szechuan", "cantonese"]
         for pattern in chinese_patterns:
             if pattern in name_lower:
                 return "Chinese"
 
+        # Asian generic patterns - after specific Asian cuisines
+        asian_patterns = ["wok ", " wok", "asian", "asiatique"]
+        for pattern in asian_patterns:
+            if pattern in name_lower:
+                return "Asian"
+
         # Belgian patterns (taverne, frituur, snack frite)
-        belgian_extra_patterns = ["taverne", "frituur", "friterie", "frit ", "fritkot", "estaminet"]
+        belgian_extra_patterns = ["taverne", "frituur", "friterie", "fritkot", "estaminet", "snack frit"]
         for pattern in belgian_extra_patterns:
             if pattern in name_lower:
                 return "Belgian"
 
         # Brunch/Breakfast patterns
-        brunch_patterns = ["brunch", "breakfast", "eggs", "pancake", "ontbijt"]
+        brunch_patterns = ["brunch", "breakfast", "pancake", "ontbijt"]
         for pattern in brunch_patterns:
             if pattern in name_lower:
                 return "Brunch"
 
-        # Salad/Healthy patterns
-        healthy_patterns = ["salad", "salade", "healthy", "veggie", "green", "detox", "superfood"]
+        # Salad/Healthy patterns - specific terms
+        healthy_patterns = ["salad bar", "saladbar", "salade bar"]
         for pattern in healthy_patterns:
             if pattern in name_lower:
                 return "Vegetarian"
 
         # Greek patterns
-        greek_patterns = ["greek", "grec", "gyros", "souvlaki", "tzatziki", "athena", "olymp", "zorba"]
+        greek_patterns = ["greek", "grec", "gyros", "souvlaki", "tzatziki", "zorba"]
         for pattern in greek_patterns:
             if pattern in name_lower:
                 return "Greek"
 
         # Lebanese/Middle Eastern extra
-        lebanese_patterns = ["liban", "lebanese", "mezze", "fattoush", "tabouleh", "manouche"]
+        lebanese_patterns = ["liban", "lebanese", "libanais", "mezze", "fattoush", "tabouleh", "manouche"]
         for pattern in lebanese_patterns:
             if pattern in name_lower:
                 return "Lebanese"

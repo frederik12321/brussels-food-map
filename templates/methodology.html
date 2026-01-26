@@ -312,10 +312,19 @@
 
         <div class="factor-card">
             <div class="factor-header">
-                <span class="factor-name">Perfect Rating Penalty</span>
-                <span class="factor-weight negative">-4% max</span>
+                <span class="factor-name">Low Review Penalty</span>
+                <span class="factor-weight negative">-20% max</span>
             </div>
-            <p class="factor-description">A perfect 5.0 with fewer than 50 reviews gets a small penalty &mdash; the rating is statistically unstable and could drop with one bad review. Not a fraud indicator, just statistical caution.</p>
+            <p class="factor-description">Restaurants with few reviews get penalized &mdash; especially if they have high ratings. A 4.9★ with only 7 reviews is statistically meaningless (likely just friends and family).</p>
+            <div class="example">
+                <div class="example-label">Penalty scale:</div>
+                <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+                    <li>&lt;10 reviews + high rating: <strong>-15% to -20%</strong></li>
+                    <li>10-20 reviews + high rating: <strong>-8% to -12%</strong></li>
+                    <li>20-50 reviews: <strong>-3% to -6%</strong></li>
+                    <li>50-200 reviews with perfect 5.0: <strong>-1% to -2%</strong></li>
+                </ul>
+            </div>
         </div>
 
         <div class="divider"></div>

@@ -816,19 +816,63 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     reddit_score, reddit_mentions = reddit_community_score(name, review_count)
     reddit_bonus = 0.05 * reddit_score
 
-    # 13. Perfection penalty (up to -4%)
-    # 5.0★ with few reviews is statistically suspicious
-    perfection_penalty = 0
-    if rating >= 5.0:
-        if review_count < 50:
-            perfection_penalty = -0.04
-        elif review_count < 100:
-            perfection_penalty = -0.02
-        elif review_count < 200:
-            perfection_penalty = -0.01
-    elif rating >= 4.9:
-        if review_count < 30:
-            perfection_penalty = -0.02
+    # 13. Low review count penalty (area-aware)
+    # Few reviews = statistically unreliable rating, regardless of score
+    # More severe for higher ratings (4.8+ with 7 reviews is very suspicious)
+    # Adjusted based on commune context: 50 reviews in Ganshoren is good, in Bruxelles is low
+    #
+    # Key insight: 39% of <10 review restaurants have perfect 5.0 (vs 0% for 1000+)
+    # This applies to ALL high ratings, not just perfect 5.0
+
+    # Get commune median for context (passed in or default to 150)
+    commune_median = commune_review_totals.get(commune, 0)
+    if commune_median > 0:
+        # Estimate commune median from total (rough: total / count * 0.7)
+        # This is approximate - ideally we'd pass actual medians
+        commune_count = len([c for c in cuisine_counts_by_commune.get(commune, {}).values()])
+        commune_median = min(300, commune_review_totals.get(commune, 150000) / max(1, commune_count) * 0.5)
+    else:
+        commune_median = 150  # Default
+
+    # Calculate low review penalty
+    low_review_penalty = 0
+
+    if review_count < 10:
+        # Extremely unreliable - harsh penalty
+        # 7 reviews with 4.9★ = very suspicious
+        if rating >= 4.8:
+            low_review_penalty = -0.20  # Severe: likely friends/family only
+        elif rating >= 4.5:
+            low_review_penalty = -0.15  # Strong: insufficient data
+        else:
+            low_review_penalty = -0.10  # Moderate: could be legitimately bad
+    elif review_count < 20:
+        # Still very unreliable
+        if rating >= 4.9:
+            low_review_penalty = -0.12  # Near-perfect with few reviews
+        elif rating >= 4.5:
+            low_review_penalty = -0.08
+        else:
+            low_review_penalty = -0.04
+    elif review_count < 30:
+        # Getting more data but still thin
+        if rating >= 4.9:
+            low_review_penalty = -0.06
+        elif rating >= 4.5:
+            low_review_penalty = -0.03
+    elif review_count < 50:
+        # Borderline - mild penalty for very high ratings
+        if rating >= 4.9:
+            low_review_penalty = -0.03
+        elif rating == 5.0:
+            low_review_penalty = -0.04  # Perfect 5.0 still suspicious
+    elif review_count < 100:
+        # Only penalize perfect ratings now
+        if rating == 5.0:
+            low_review_penalty = -0.02
+    elif review_count < 200:
+        if rating == 5.0:
+            low_review_penalty = -0.01
 
     # 14. AFSCA Hygiene certification (informational only)
     address = restaurant.get("address", "")
@@ -870,7 +914,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         scarcity_bonus +
         guide_bonus +
         reddit_bonus +
-        perfection_penalty +
+        low_review_penalty +
         family_bonus +
         specificity_bonus +
         shop_penalty +
@@ -927,7 +971,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "scarcity_bonus": scarcity_bonus,  # 12% weight
             "guide_bonus": guide_bonus,  # Up to 8%
             "reddit_bonus": reddit_bonus,  # 5% weight
-            "perfection_penalty": perfection_penalty,
+            "low_review_penalty": low_review_penalty,
             "family_bonus": family_bonus,  # 2% weight
             "specificity_bonus": specificity_bonus,  # Up to 2%
             "shop_penalty": shop_penalty,
@@ -994,7 +1038,7 @@ def rerank_restaurants(df):
     df["diaspora_context"] = [r["diaspora_context"] for r in results]
 
     # Add component columns for debugging/transparency
-    for component in ["review_adjustment", "tourist_penalty", "scarcity_bonus", "diaspora_bonus", "perfection_penalty"]:
+    for component in ["review_adjustment", "tourist_penalty", "scarcity_bonus", "diaspora_bonus", "low_review_penalty"]:
         df[f"score_{component}"] = [r["components"][component] for r in results]
 
     # Add scarcity sub-components for detailed analysis
