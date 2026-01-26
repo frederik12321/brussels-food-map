@@ -973,11 +973,29 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     residual_score = 0.20 * min(1.0, max(-1.0, residual * 2))
 
     # 3. Tourist trap penalty (up to -15%)
-    tourist_penalty = -0.15 * tourist_trap_score(lat, lng, rating, review_count, review_languages) if lat and lng else 0
+    tourist_trap_raw = tourist_trap_score(lat, lng, rating, review_count, review_languages) if lat and lng else 0
+    tourist_penalty = -0.15 * tourist_trap_raw
 
     # 4. Diaspora bonus (7% weight) - unified street + cuisine/commune
     # Combines: being on a diaspora food street + cuisine matching the area
     diaspora_score, diaspora_street_name = diaspora_bonus_score(cuisine, commune, lat, lng, review_languages)
+
+    # FIX: No diaspora bonus if in tourist trap (La Terrasse de Bruxelles case)
+    # Tourist traps shouldn't get authenticity bonus even if in right commune
+    if tourist_trap_raw > 0.3:
+        diaspora_score = 0
+        diaspora_street_name = None
+
+    # FIX: Hipster/fusion name detection - these are not authentic diaspora
+    hipster_keywords = ['eatery', 'kitchen', 'factory', 'lab', 'workshop', 'studio', 'house', 'corner', 'spot']
+    if name and any(kw in name.lower() for kw in hipster_keywords):
+        diaspora_score = diaspora_score * 0.3  # Reduce, don't eliminate
+
+    # FIX: Fine dining (price_level 4) rarely represents authentic diaspora
+    # Artisauce case: €100+ French fine dining shouldn't get diaspora bonus
+    if price_level == 4:
+        diaspora_score = diaspora_score * 0.2  # Heavily reduce for fine dining
+
     diaspora_bonus = 0.07 * diaspora_score
 
     # 5. Independent restaurant bonus (10% weight)
@@ -1002,7 +1020,21 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             if rating < expected_rating:
                 price_quality_penalty = -0.06 * (expected_rating - rating)
 
-    # 9. (Removed - local street is now part of diaspora bonus)
+    # 9. Value Score bonus (up to 4%) - rewards budget restaurants with high ratings
+    # Based on validation data: budget (€1-20) restaurants with high ratings are hidden gems
+    # Kral tantuni 5.0★ €5-10, My Snack 4.9★ €1-10, Mezzeway 4.8★ €10-20
+    value_bonus = 0
+    if price_level and rating:
+        # INEXPENSIVE (€1-10) with high rating = best value
+        if price_level == 1 and rating >= 4.5:
+            value_bonus = 0.04  # Full bonus for cheap + excellent
+        elif price_level == 1 and rating >= 4.2:
+            value_bonus = 0.02  # Partial bonus for cheap + good
+        # MODERATE (€10-20) with very high rating = good value
+        elif price_level == 2 and rating >= 4.6:
+            value_bonus = 0.02  # Bonus for moderate + excellent
+        elif price_level == 2 and rating >= 4.4:
+            value_bonus = 0.01  # Small bonus for moderate + very good
 
     # 10. Scarcity score (12% weight)
     # Combines: hours, days, schedule, rare cuisine
@@ -1133,6 +1165,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         rarity_bonus +
         eu_penalty +
         price_quality_penalty +
+        value_bonus +
         scarcity_bonus +
         guide_bonus +
         reddit_bonus +
@@ -1190,6 +1223,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "rarity_bonus": rarity_bonus,  # 1% weight
             "eu_penalty": eu_penalty,
             "price_quality_penalty": price_quality_penalty,
+            "value_bonus": value_bonus,  # Up to 4% for budget + high rating
             "scarcity_bonus": scarcity_bonus,  # 12% weight
             "guide_bonus": guide_bonus,  # Up to 8%
             "reddit_bonus": reddit_bonus,  # 5% weight

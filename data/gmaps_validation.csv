@@ -1,0 +1,51 @@
+name,cuisine,commune,authenticity_score,verdict,price_observed,review_languages,photo_quality,owner_responds,families_visible,menu_language,years_open,halal_certified,reservation_needed,terrace_focus,notes
+Gourmets Everyday,Chinese,Bruxelles,7,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,5-10y,unknown,no,inside,Simpele Chinese buurtrestaurant - temporarily closed
+Mare,Seafood,Bruxelles,3,FOUT,€10-20,tourist,professional,no,no,en-fr-only,<2y,no,no,inside,Wolf food market stall - geen echt restaurant
+Kral tantuni,Turkish,Saint-Josse-ten-Noode,9,CORRECT,€5-10,native,amateur,unknown,unknown,native,<2y,yes,no,inside,Authentieke Turkse tantuni specialist - 5.0 rating
+ALSHAMI,Middle Eastern,Bruxelles,8,CORRECT,€10-20,native,amateur,yes,yes,native,5-10y,yes,no,inside,Arabische naam - authentiek Syrisch
+Mission Masala Karma Kitchen,Indian,Bruxelles,5,TWIJFEL,€20-35,mixed,professional,unknown,no,multilingual,<2y,unknown,yes,inside,Kitchen in naam maar Tamil decoratie - prijzig
+Restaurant zamunda,African,Ixelles,8,CORRECT,€20-35,mixed,amateur,unknown,yes,multilingual,2-5y,unknown,yes,inside,Authentiek Afrikaans - Zamunda referentie
+Brasserie de la Reine,Seafood,Bruxelles,6,CORRECT,€20-35,tourist,mixed,unknown,no,en-fr-only,5-10y,no,no,both,Belgische brasserie - niet echt seafood diaspora
+Zaytün Gastronomie,Lebanese,Koekelberg,8,CORRECT,€30-40,mixed,professional,unknown,unknown,multilingual,2-5y,unknown,yes,inside,Arabische naam (olijf) - temporarily closed - 669 reviews
+Horia Oriental Natural Eatery,Oriental/Fusion,Bruxelles,5,TWIJFEL,€20-30,mixed,professional,unknown,unknown,multilingual,2-5y,unknown,yes,both,Generiek Oriental - modern healthy concept - 1329 reviews
+Hanoi Station,Vietnamese,Etterbeek,8,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Vietnamese hoofdstad naam - 2185 reviews - affordable
+Restaurant Umā,Modern European,Ixelles,4,FOUT,€100+,tourist,professional,unknown,no,en-fr-only,2-5y,no,yes,inside,Fine dining Modern European - geen diaspora
+Parfum d'Asie,Vietnamese,Bruxelles,7,CORRECT,€1-10,mixed,amateur,unknown,unknown,multilingual,5-10y,unknown,no,inside,Budget Vietnamese lunch spot - closes 3pm
+Mezzeway,Syrian,Bruxelles,8,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,<2y,unknown,no,inside,Mezze reference - 4.8 rating - 432 reviews
+New Henri 1er,Belgian,Uccle,7,CORRECT,€30-40,mixed,mixed,unknown,unknown,multilingual,5-10y,no,no,inside,Belgische brasserie - 909 reviews
+Naanry,Indian,Bruxelles,7,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,<2y,unknown,no,inside,Naan bread reference - temporarily closed
+Pideci,Turkish,Schaerbeek,9,CORRECT,€10-20,native,amateur,unknown,unknown,native,2-5y,unknown,no,inside,Turkse pide specialist - in ÖNDER PIDE
+Banh Mi Express,Vietnamese,Saint-Josse-ten-Noode,8,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Vietnamese sandwich specialist - 113 reviews
+VIAGE Grill restaurant,Casino,Bruxelles,3,FOUT,unknown,tourist,professional,unknown,no,en-fr-only,2-5y,no,yes,inside,Casino restaurant - geen diaspora
+Het Gouden Paviljoen,Chinese,Jette,7,CORRECT,€20-30,mixed,amateur,unknown,unknown,multilingual,5-10y,unknown,no,inside,Traditioneel Chinees - 507 reviews
+L'Express,Lebanese,Bruxelles,7,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,5-10y,unknown,no,inside,Zeer populair Libanees - 4108 reviews - near Grand-Place
+New China,Chinese,Ixelles,6,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,5-10y,unknown,no,inside,Standaard buurt-Chinees - 197 reviews
+Les Enfants Du Pirée,Greek,Forest,8,CORRECT,€20-30,mixed,amateur,unknown,unknown,multilingual,5-10y,unknown,no,inside,Piraeus referentie - Griekse haven - 256 reviews
+Pasha Al Sham,Lebanese/Syrian,Bruxelles,9,CORRECT,€10-20,native,amateur,unknown,unknown,native,2-5y,yes,no,inside,Arabische naam en signage - authentiek Syrisch - 216 reviews
+My Snack,Turkish,Etterbeek,6,CORRECT,€1-10,mixed,amateur,unknown,unknown,multilingual,<2y,unknown,no,inside,Budget Turkse snackbar - 4.9 rating - 104 reviews
+Chicago burger,Turkish,Saint-Gilles,3,FOUT,€10-20,mixed,amateur,unknown,unknown,multilingual,<2y,unknown,no,inside,1.3 rating - misleidende naam - slechte kwaliteit
+Tekince Kebap Business,Turkish,Saint-Josse-ten-Noode,8,CORRECT,€10-20,native,amateur,unknown,unknown,native,2-5y,yes,no,inside,Turkse naam - 1330 reviews - populaire kebab
+Opa,Greek,Woluwe-Saint-Lambert,8,CORRECT,€20-30,mixed,mixed,unknown,unknown,multilingual,2-5y,unknown,yes,both,Griekse uitroep - 1102 reviews
+Down Town Bruxelles,Lebanese/Libyan,Bruxelles,7,CORRECT,€20-30,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Libische vlag emoji - temporarily closed - 389 reviews
+SUM SUM BXL,Chinese,Ixelles,8,CORRECT,€20-30,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,yes,inside,Chinese karakters - dumpling specialist - 289 reviews
+Hyderabad House Belgium,Indian,Saint-Josse-ten-Noode,8,CORRECT,€20-30,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Regionale Indiase stad - Hyderabadi keuken - 810 reviews
+Velho Texas,Brazilian,Saint-Gilles,7,CORRECT,€20-30,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Portugese naam - Braziliaanse vlag - 92 reviews
+Mykonos Grec Grill,Greek,Saint-Gilles,7,CORRECT,€20-30,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Grieks eiland naam - 281 reviews
+Africalicious Quartier Européen,African,Etterbeek,7,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,<2y,unknown,no,inside,Afrika-thema decor - EU quarter - 388 reviews
+Greek Garden Restaurant,Greek,Berchem-Sainte-Agathe,7,CORRECT,€20-30,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Griekse Specialiteiten signage - 113 reviews
+Chez Anesti,Greek,Evere,8,CORRECT,€20-30,mixed,mixed,unknown,unknown,multilingual,5-10y,unknown,yes,inside,Griekse naam - zeer populair - 1802 reviews
+Le 17.45 Ixelles,French,Ixelles,6,CORRECT,€20-30,mixed,professional,unknown,unknown,multilingual,<2y,unknown,yes,inside,Franse wijnbar - planches concept - 335 reviews
+My Shawarma,Lebanese,Bruxelles,7,CORRECT,€1-10,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Budget shawarma - Galerie du Centre - 501 reviews
+Saveurs Edomae,Shanghainese,Bruxelles,5,TWIJFEL,€20-30,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Japanse naam voor Chinees - 3.6 rating - 184 reviews
+Traiteur Wenchang,Chinese,Jette,8,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,5-10y,unknown,no,inside,Chinese stadsnaam - traiteur - 319 reviews
+L'Horloge du Sud,African,Ixelles,7,CORRECT,€20-30,mixed,amateur,unknown,unknown,multilingual,5-10y,unknown,no,inside,Afrikaans cultureel - brasserie - 499 reviews
+AlloLiban,Lebanese,Saint-Gilles,8,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Hello Lebanon - mezze display - 4.8 rating - 290 reviews
+Be-Beirut,Lebanese,Saint-Gilles,8,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Beirut hoofdstad referentie - 257 reviews
+Little Apo,Vietnamese,Saint-Gilles,7,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Vietnamese met goede reviews - 519 reviews
+Viva Brazil Lanches,Brazilian,Saint-Gilles,7,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Portugese Lanches = snacks - 72 reviews
+Olympia Restaurant,Greek,Jette,8,CORRECT,€20-30,mixed,amateur,unknown,unknown,multilingual,5-10y,unknown,no,inside,Olympus referentie - 597 reviews
+Snack Neerstalle,Turkish,Forest,6,CORRECT,€1-10,mixed,amateur,unknown,unknown,multilingual,2-5y,yes,no,inside,Budget Turkse kebab - KLZ kebab - 325 reviews
+Al Karam 3,Lebanese,Bruxelles,7,CORRECT,€10-20,native,amateur,unknown,unknown,native,2-5y,yes,no,inside,Arabische naam - centrum locatie - geschat
+Seti,Middle Eastern,Jette,7,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Egyptische naam referentie - geschat
+Asiagrill,Chinese,Bruxelles,6,CORRECT,€10-20,mixed,amateur,unknown,unknown,multilingual,2-5y,unknown,no,inside,Generieke naam maar Chinees - 🇨🇳 emoji - geschat
+La Canne en Ville,French,Ixelles,7,CORRECT,€100+,tourist,professional,unknown,no,en-fr-only,10y+,no,yes,inside,Fine dining Frans - permanently closed - Avenue Louise
