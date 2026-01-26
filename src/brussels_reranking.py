@@ -646,9 +646,15 @@ def unified_scarcity_score(restaurant):
 
     components = {}
 
-    # 1. Review count scarcity - the "Goldilocks Zone"
+    # 1. Review count scarcity - the "Goldilocks Zone" with smooth transitions
     # Sweet spot: 50-500 reviews = established but not tourist-famous
     # This applies equally to all cuisines without class bias
+    #
+    # SMOOTHING (Jan 2026): Fixed the "review cliff" at 50 reviews.
+    # Old approach had a 14% jump from 49→50 reviews due to:
+    # - Penalty ending at 50
+    # - Bonus starting at 50 (full value)
+    # New approach uses gradual ramps to avoid gaming incentives.
     review_scarcity = 0
     if rating and review_count and rating >= 4.0:
         if 50 <= review_count <= 200:
@@ -656,7 +662,12 @@ def unified_scarcity_score(restaurant):
         elif 200 < review_count <= 500:
             review_scarcity = 0.7  # Good: popular but not tourist-dominated
         elif 35 <= review_count < 50:
-            review_scarcity = 0.5  # Decent: building reputation
+            # Gradual ramp from 0.3 to 0.9 (smoother transition to full bonus)
+            # At 35: 0.3, at 49: 0.86
+            review_scarcity = 0.3 + 0.6 * ((review_count - 35) / 15)
+        elif 20 <= review_count < 35:
+            # Neutral zone: no bonus, no penalty (was previously penalized)
+            review_scarcity = 0.0
         elif 500 < review_count <= 1000:
             review_scarcity = 0.3  # Starting to get too popular
     components["review_scarcity"] = review_scarcity
@@ -1072,11 +1083,11 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         elif rating >= 4.5:
             low_review_penalty = -0.03
     elif review_count < 50:
-        # Borderline - mild penalty for very high ratings
-        if rating >= 4.9:
-            low_review_penalty = -0.03
-        elif rating == 5.0:
-            low_review_penalty = -0.04  # Perfect 5.0 still suspicious
+        # NEUTRAL ZONE (Jan 2026): No penalty here to avoid the "review cliff"
+        # The scarcity bonus starts ramping at 35, so we don't penalize 30-50
+        # Only exception: perfect 5.0 with <50 reviews is still suspicious
+        if rating == 5.0:
+            low_review_penalty = -0.02  # Mild penalty for perfect scores only
     elif review_count < 100:
         # Only penalize perfect ratings now
         if rating == 5.0:
