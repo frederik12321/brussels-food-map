@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How We Rank Restaurants - Brussels Food Map</title>
+    <style>
+        :root {
+            --text-primary: #18181b;
+            --text-secondary: #71717a;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f4f4f5;
+            --border-subtle: #e4e4e7;
+            --accent: #2563eb;
+            --positive: #16a34a;
+            --negative: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        ul, ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: var(--accent);
+        }
+
+        .tldr {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+        }
+
+        .tldr h2 {
+            margin-top: 0;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .tldr p {
+            color: var(--text-primary);
+            margin-bottom: 0;
+        }
+
+        .factor-card {
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .factor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .factor-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .factor-weight {
+            background: var(--bg-secondary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .factor-weight.positive {
+            background: #dcfce7;
+            color: var(--positive);
+        }
+
+        .factor-weight.negative {
+            background: #fee2e2;
+            color: var(--negative);
+        }
+
+        .factor-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .example {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        .example-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .formula {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .highlight {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 40px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 32px 16px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .factor-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">&larr; Back to map</a>
+
+        <h1>How We Rank Restaurants</h1>
+        <p class="subtitle">A transparent look at the Brussels Score algorithm</p>
+
+        <div class="tldr">
+            <h2>TL;DR</h2>
+            <p>We don't just show you the highest-rated restaurants. We find places that <span class="highlight">outperform expectations</span> &mdash; local favorites, diaspora gems, and spots that locals love but tourists haven't discovered yet.</p>
+        </div>
+
+        <h2>The Problem with Star Ratings</h2>
+        <p>Google ratings are useful but flawed. A 4.5-star restaurant in a tourist area isn't the same as a 4.5-star spot in Molenbeek. Tourist-heavy restaurants get inflated ratings from one-time visitors, while authentic local spots may have fewer but more discerning reviewers.</p>
+        <p>Our algorithm tries to answer: <span class="highlight">"Is this restaurant actually good for what it is, or just good at attracting tourists?"</span></p>
+
+        <h2>The Brussels Score</h2>
+        <p>Every restaurant gets a score from 0-100 based on multiple factors. Here's how each component works:</p>
+
+        <div class="factor-card">
+            <div class="factor-header">
+                <span class="factor-name">Base Quality</span>
+                <span class="factor-weight">35% weight</span>
+            </div>
+            <p class="factor-description">The Google rating normalized to our scale. A 4.8-star restaurant scores higher than a 4.2-star one. This ensures quality still matters.</p>
+        </div>
+
+        <div class="factor-card">
+            <div class="factor-header">
+                <span class="factor-name">Outperforms Peers</span>
+                <span class="factor-weight positive">+20% max</span>
+            </div>
+            <p class="factor-description">The most important signal. We predict what rating a restaurant <em>should</em> have based on its cuisine, price, and location. If it beats that prediction, it's doing something right.</p>
+            <div class="example">
+                <div class="example-label">Example:</div>
+                A Vietnamese restaurant in Ixelles with 4.6 stars where similar restaurants average 4.2 gets <strong>+0.4 stars above expected</strong> &mdash; a strong signal of quality.
+            </div>
+        </div>
+
+        <div class="factor-card">
+            <div class="factor-header">
+                <span class="factor-name">Scarcity Bonus</span>
+                <span class="factor-weight positive">+12% max</span>
+            </div>
+            <p class="factor-description">Restaurants with limited hours, few days open, or rare cuisines get a boost. These constraints often indicate authentic, non-commercial operations.</p>
+            <div class="example">
+                <div class="example-label">Rewards:</div>
+                <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+                    <li>Closes early (before 8pm)</li>
+                    <li>Open only 4-5 days/week</li>
+                    <li>Rare cuisine in Brussels</li>
+                    <li>Low review count but high rating</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="factor-card">
+            <div class="factor-header">
+                <span class="factor-name">Guide Recognition</span>
+                <span class="factor-weight positive">+8% max</span>
+            </div>
+            <p class="factor-description">Michelin stars, Bib Gourmand, and Gault&Millau recognition add credibility. These guides have professional inspectors with consistent standards.</p>
+        </div>
+
+        <div class="factor-card">
+            <div class="factor-header">
+                <span class="factor-name">Reddit Mentions</span>
+                <span class="factor-weight positive">+5% max</span>
+            </div>
+            <p class="factor-description">Restaurants frequently recommended on r/brussels by locals. We track mentions in recommendation threads &mdash; real locals sharing real favorites.</p>
+        </div>
+
+        <div class="factor-card">
+            <div class="factor-header">
+                <span class="factor-name">Diaspora Bonus</span>
+                <span class="factor-weight positive">+7% max</span>
+            </div>
+            <p class="factor-description">Rewards diaspora cuisines located in their community's area. A Moroccan restaurant in Molenbeek or a Congolese restaurant in Matong&eacute; gets a bonus. Extra boost if on a known food corridor like Chauss&eacute;e de Haecht (Turkish) or Rue de Brabant (Maghreb).</p>
+            <div class="example">
+                <div class="example-label">Key principle:</div>
+                Only the matching cuisine gets the bonus. An Italian restaurant on Chauss&eacute;e de Haecht gets nothing &mdash; only Turkish restaurants do.
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>Penalties</h2>
+        <p>Some factors reduce a restaurant's score:</p>
+
+        <div class="factor-card">
+            <div class="factor-header">
+                <span class="factor-name">Tourist Area Penalty</span>
+                <span class="factor-weight negative">-8% max</span>
+            </div>
+            <p class="factor-description">Restaurants near Grand Place, Manneken Pis, and other tourist hotspots are penalized. High foot traffic often correlates with lower quality-to-price ratios.</p>
+        </div>
+
+        <div class="factor-card">
+            <div class="factor-header">
+                <span class="factor-name">Perfect Rating Penalty</span>
+                <span class="factor-weight negative">-5% max</span>
+            </div>
+            <p class="factor-description">A 5.0-star rating with only 20 reviews is suspicious. We slightly penalize statistically unlikely perfect scores to account for fake reviews or small sample sizes.</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>What "Above Expected" Means</h2>
+        <p>When you see <span class="highlight">"+0.3 stars above expected"</span>, here's what happened:</p>
+        <ol>
+            <li>We built a model predicting ratings based on: cuisine type, price level, location, chain status, and review count</li>
+            <li>For this restaurant, the model predicted a rating of 4.2 stars</li>
+            <li>The actual rating is 4.5 stars</li>
+            <li>The <strong>residual</strong> (+0.3) suggests this place is doing something special</li>
+        </ol>
+        <p>Restaurants with high positive residuals are our "hidden gems" &mdash; they exceed what you'd expect given their category.</p>
+
+        <div class="divider"></div>
+
+        <h2>Data Sources</h2>
+        <ul>
+            <li><strong>Restaurant data:</strong> Google Maps (ratings, reviews, hours, location)</li>
+            <li><strong>Guide recognition:</strong> Michelin Guide Belgium, Gault&Millau</li>
+            <li><strong>Community picks:</strong> r/brussels recommendation threads</li>
+            <li><strong>Food safety:</strong> AFSCA/FAVV smiley database</li>
+        </ul>
+
+        <h2>Limitations</h2>
+        <p>No algorithm is perfect. Ours has blind spots:</p>
+        <ul>
+            <li>New restaurants with few reviews may be underranked</li>
+            <li>Some great spots don't fit neatly into cuisine categories</li>
+            <li>Price data is limited (we're working on it)</li>
+            <li>The model reflects biases in Google reviews</li>
+        </ul>
+
+        <h2>Open Source</h2>
+        <p>The entire codebase is open source. You can see exactly how the scoring works, suggest improvements, or build your own version.</p>
+        <p><a href="https://github.com/frederik12321/brussels-food-map" target="_blank">View on GitHub &rarr;</a></p>
+
+        <div class="divider"></div>
+
+        <p style="text-align: center; color: var(--text-secondary); font-size: 14px;">
+            Questions? <a href="https://github.com/frederik12321/brussels-food-map/issues" target="_blank">Open an issue</a> or contribute to the project.
+        </p>
+    </div>
+</body>
+</html>

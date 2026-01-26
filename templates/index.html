@@ -838,6 +838,23 @@
             text-transform: uppercase;
             font-size: 10px;
             letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .methodology-link {
+            text-transform: none;
+            font-weight: 400;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-decoration: none;
+            opacity: 0.7;
+        }
+
+        .methodology-link:hover {
+            opacity: 1;
+            text-decoration: underline;
         }
 
         .explain-item {
@@ -1841,22 +1858,23 @@
 
             // 1. Hidden gem / Underrated (most valuable insight)
             if (restaurant.residual !== undefined && restaurant.residual !== null) {
+                const residualStars = restaurant.residual.toFixed(1);
                 if (restaurant.residual > 0.25) {
                     primary.push({
                         icon: '💎',
-                        text: 'Hidden gem — outperforms similar spots',
+                        text: `Hidden gem — +${residualStars}★ above expected`,
                         type: 'positive'
                     });
                 } else if (restaurant.residual > 0.1) {
                     primary.push({
                         icon: '✓',
-                        text: 'Better than comparable restaurants',
+                        text: `Outperforms peers by +${residualStars}★`,
                         type: 'positive'
                     });
                 } else if (restaurant.residual < -0.2) {
                     secondary.push({
                         icon: '⚠️',
-                        text: 'Rating may be inflated',
+                        text: `${residualStars}★ below expected — rating may be inflated`,
                         type: 'negative'
                     });
                 }
@@ -1931,11 +1949,11 @@
                 }
             }
 
-            // 5. Local street / neighborhood bonus
-            if (restaurant.local_street) {
+            // 5. Diaspora street bonus
+            if (restaurant.diaspora_street) {
                 secondary.push({
                     icon: '📍',
-                    text: `${restaurant.local_street} — popular local street`,
+                    text: `${restaurant.diaspora_street} — diaspora food street`,
                     type: 'positive'
                 });
             }
@@ -2114,11 +2132,12 @@
 
             if (restaurant.score_residual_score && Math.abs(restaurant.score_residual_score) > 0.02) {
                 const isPositive = restaurant.score_residual_score > 0;
+                const residualStars = restaurant.residual ? restaurant.residual.toFixed(1) : '';
                 factors.push({
                     label: isPositive ? 'Outperforms peers' : 'Below peers',
                     value: restaurant.score_residual_score,
                     max: 0.20,
-                    description: isPositive ? 'Better than similar restaurants' : 'Below similar restaurants',
+                    description: isPositive ? `+${residualStars}★ above expected` : `${residualStars}★ below expected`,
                     highlight: isPositive
                 });
             }
@@ -2153,22 +2172,16 @@
                 });
             }
 
-            if (restaurant.score_local_street_bonus && restaurant.score_local_street_bonus > 0) {
-                factors.push({
-                    label: 'Local street',
-                    value: restaurant.score_local_street_bonus,
-                    max: 0.04,
-                    description: `${restaurant.local_street} area`,
-                    highlight: true
-                });
-            }
-
             if (restaurant.score_diaspora_bonus && restaurant.score_diaspora_bonus > 0.01) {
+                const description = restaurant.diaspora_street
+                    ? `${restaurant.diaspora_street} — authentic community area`
+                    : 'Located in authentic neighborhood';
                 factors.push({
-                    label: 'Diaspora authenticity',
+                    label: 'Diaspora bonus',
                     value: restaurant.score_diaspora_bonus,
-                    max: 0.03,
-                    description: 'Located in authentic neighborhood'
+                    max: 0.07,
+                    description: description,
+                    highlight: true
                 });
             }
 
@@ -2244,7 +2257,7 @@
 
             return `
                 <div class="popup-explanation">
-                    <div class="explain-title">Why it's ranked</div>
+                    <div class="explain-title">Why it's ranked <a href="/methodology" target="_blank" class="methodology-link">How does this work?</a></div>
                     ${primaryHtml}
                     ${factorsHtml}
                     ${secondaryHtml}

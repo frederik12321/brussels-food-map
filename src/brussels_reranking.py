@@ -177,35 +177,53 @@ def tourist_trap_score(lat, lng, rating, review_count, review_languages=None):
         return 0
 
 
-def diaspora_authenticity_score(cuisine, commune, review_languages=None):
+def diaspora_bonus_score(cuisine, commune, lat, lng, review_languages=None):
     """
-    Calculate diaspora authenticity score (0-1).
+    Calculate unified diaspora bonus score (0-1).
+
+    Only gives bonus when cuisine matches the area's diaspora community.
+    An Italian restaurant in Matongé gets no bonus - only Congolese/African does.
+
+    Signals:
+    1. Cuisine/commune match: is this a diaspora cuisine in its community's area?
+    2. Diaspora street: is the restaurant on a known food corridor for this cuisine?
+
     Higher = more authentic diaspora restaurant.
-
-    Based on:
-    - Cuisine type + commune match
-    - Review language diversity
     """
-    score = 0
+    commune_score = 0
+    street_name = None
+    is_on_matching_street = False
 
-    # Check diaspora cuisine authenticity matrix
+    # 1. Check diaspora cuisine authenticity matrix (cuisine + commune)
+    # This is the PRIMARY check - no bonus if cuisine doesn't match area
     if cuisine in DIASPORA_AUTHENTICITY:
         commune_scores = DIASPORA_AUTHENTICITY[cuisine]
         if commune in commune_scores:
-            score = commune_scores[commune]
+            commune_score = commune_scores[commune]
         else:
             # Small bonus for diaspora cuisine outside typical areas
-            # (could be authentic, just in different location)
-            score = 0.2
+            # (could still be authentic, just in different location)
+            commune_score = 0.2
 
     # Check Belgian traditional authenticity
     if cuisine in BELGIAN_AUTHENTICITY:
         commune_scores = BELGIAN_AUTHENTICITY[cuisine]
         if commune in commune_scores:
-            score = max(score, commune_scores[commune])
+            commune_score = max(commune_score, commune_scores[commune])
+
+    # 2. Street bonus ONLY if cuisine already qualifies for diaspora bonus
+    # An Italian restaurant on Chaussée de Haecht gets nothing
+    # A Turkish restaurant on Chaussée de Haecht gets extra boost
+    if commune_score > 0 and lat and lng:
+        is_local, name = is_on_local_street(lat, lng)
+        if is_local:
+            street_name = name
+            is_on_matching_street = True
+            # Boost the commune score if on a relevant street
+            commune_score = min(1.0, commune_score + 0.3)
 
     # Boost if reviews are in diaspora languages
-    if review_languages and score > 0:
+    if review_languages and commune_score > 0:
         diaspora_languages = {
             "Congolese": ["fr", "ln"],  # French + Lingala
             "African": ["fr", "ln", "sw"],
@@ -222,10 +240,9 @@ def diaspora_authenticity_score(cuisine, commune, review_languages=None):
             total = sum(review_languages.values())
             if total > 0:
                 relevant_pct = sum(review_languages.get(lang, 0) for lang in relevant_langs) / total
-                # Boost authenticity if reviews are in relevant languages
-                score = min(1.0, score + 0.2 * relevant_pct)
+                commune_score = min(1.0, commune_score + 0.2 * relevant_pct)
 
-    return score
+    return commune_score, street_name
 
 
 def is_friterie(name):
@@ -668,9 +685,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     #   Scarcity:         0.12 (12%) - Limited hours/days = local gem
     #   Independent:      0.10 (10%) - Non-chain bonus
     #   Guide recognition: 0.08 (8%) - Michelin/GaultMillau
+    #   Diaspora:         0.07 (7%) - Street location + cuisine/commune match
     #   Reddit:           0.05 (5%) - Community endorsement
-    #   Local street:     0.04 (4%) - Known foodie streets
-    #   Diaspora:         0.03 (3%) - Authenticity signal
     #   Family name:      0.02 (2%) - "Chez X" pattern
     #   Cuisine rarity:   0.01 (1%) - Rare cuisines
     #   ─────────────────────────────
@@ -737,9 +753,10 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     # 3. Tourist trap penalty (up to -15%)
     tourist_penalty = -0.15 * tourist_trap_score(lat, lng, rating, review_count, review_languages) if lat and lng else 0
 
-    # 4. Diaspora authenticity bonus (3% weight)
-    # Meaningful but not dominant - rewards authentic diaspora spots
-    diaspora_bonus = 0.03 * diaspora_authenticity_score(cuisine, commune, review_languages)
+    # 4. Diaspora bonus (7% weight) - unified street + cuisine/commune
+    # Combines: being on a diaspora food street + cuisine matching the area
+    diaspora_score, diaspora_street_name = diaspora_bonus_score(cuisine, commune, lat, lng, review_languages)
+    diaspora_bonus = 0.07 * diaspora_score
 
     # 5. Independent restaurant bonus (10% weight)
     independent_bonus = 0.10 * (0 if is_chain else 1)
@@ -763,14 +780,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             if rating < expected_rating:
                 price_quality_penalty = -0.06 * (expected_rating - rating)
 
-    # 9. Local street bonus (4% weight)
-    local_street_bonus = 0
-    local_street_name = None
-    if lat and lng:
-        is_local, street_name = is_on_local_street(lat, lng)
-        if is_local:
-            local_street_bonus = 0.04
-            local_street_name = street_name
+    # 9. (Removed - local street is now part of diaspora bonus)
 
     # 10. Scarcity score (12% weight)
     # Combines: hours, days, schedule, rare cuisine
@@ -857,7 +867,6 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         rarity_bonus +
         eu_penalty +
         price_quality_penalty +
-        local_street_bonus +
         scarcity_bonus +
         guide_bonus +
         reddit_bonus +
@@ -887,7 +896,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         "brussels_score": total,
         "commune": commune,
         "neighborhood": neighborhood,
-        "local_street": local_street_name,
+        "diaspora_street": diaspora_street_name,  # Renamed from local_street
         "commune_tier": tier,  # Renamed: this is the commune/neighborhood tier
         "tier": restaurant_tier,  # This is the restaurant quality tier
         "closes_early": closes_early,
@@ -910,12 +919,11 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
             "base_quality": base_quality,  # 35% weight
             "residual_score": residual_score,  # 20% weight
             "tourist_penalty": tourist_penalty,
-            "diaspora_bonus": diaspora_bonus,  # 3% weight
+            "diaspora_bonus": diaspora_bonus,  # 7% weight (unified)
             "independent_bonus": independent_bonus,  # 10% weight
             "rarity_bonus": rarity_bonus,  # 1% weight
             "eu_penalty": eu_penalty,
             "price_quality_penalty": price_quality_penalty,
-            "local_street_bonus": local_street_bonus,  # 4% weight
             "scarcity_bonus": scarcity_bonus,  # 12% weight
             "guide_bonus": guide_bonus,  # Up to 8%
             "reddit_bonus": reddit_bonus,  # 5% weight
@@ -969,7 +977,7 @@ def rerank_restaurants(df):
     # Add new columns
     df["brussels_score"] = [r["brussels_score"] for r in results]
     df["neighborhood"] = [r["neighborhood"] for r in results]
-    df["local_street"] = [r["local_street"] for r in results]
+    df["diaspora_street"] = [r["diaspora_street"] for r in results]
     df["tier"] = [r["tier"] for r in results]  # Restaurant quality tier (Chef's Kiss, etc.)
     df["commune_tier"] = [r["commune_tier"] for r in results]  # Commune/neighborhood type
     df["closes_early"] = [r["closes_early"] for r in results]
@@ -986,7 +994,7 @@ def rerank_restaurants(df):
     df["diaspora_context"] = [r["diaspora_context"] for r in results]
 
     # Add component columns for debugging/transparency
-    for component in ["review_adjustment", "tourist_penalty", "scarcity_bonus", "local_street_bonus", "perfection_penalty"]:
+    for component in ["review_adjustment", "tourist_penalty", "scarcity_bonus", "diaspora_bonus", "perfection_penalty"]:
         df[f"score_{component}"] = [r["components"][component] for r in results]
 
     # Add scarcity sub-components for detailed analysis

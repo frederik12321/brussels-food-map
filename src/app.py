@@ -172,6 +172,12 @@ def terms():
     return render_template("terms.html")
 
 
+@app.route("/methodology")
+def methodology():
+    """Methodology page explaining the ranking system."""
+    return render_template("methodology.html")
+
+
 @app.route("/dashboard")
 def dashboard():
     """Admin dashboard with visitor statistics."""
@@ -313,10 +319,9 @@ def api_restaurants():
         "id", "name", "address", "lat", "lng", "rating", "review_count",
         "cuisine", "venue_type", "price_numeric", "is_chain",
         "predicted_rating", "residual", "google_maps_url",
-        "commune", "neighborhood", "local_street", "tier", "commune_tier", "brussels_score",
+        "commune", "neighborhood", "diaspora_street", "tier", "commune_tier", "brussels_score",
         "score_base_quality", "score_residual_score", "score_tourist_penalty", "score_scarcity_bonus",
-        "score_local_street_bonus", "score_perfection_penalty", "score_guide_bonus", "score_reddit_bonus",
-        "score_diaspora_bonus",
+        "score_diaspora_bonus", "score_perfection_penalty", "score_guide_bonus", "score_reddit_bonus",
         "closes_early", "typical_close_hour", "weekdays_only", "closed_sunday",
         "days_open_count", "is_rare_cuisine", "opening_hours",
         # Guide recognition
