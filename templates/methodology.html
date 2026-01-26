@@ -222,12 +222,12 @@
 
         <div class="tldr">
             <h2>TL;DR</h2>
-            <p>We don't just show you the highest-rated restaurants. We find places that <span class="highlight">outperform expectations</span> &mdash; local favorites, diaspora gems, and spots that locals love but tourists haven't discovered yet.</p>
+            <p>We don't just show the highest-rated restaurants. We look for places that <span class="highlight">do better than expected</span> for their type &mdash; taking into account cuisine, location, and how many reviews they have.</p>
         </div>
 
         <h2>The Problem with Star Ratings</h2>
-        <p>Google ratings are useful but flawed. A 4.5-star restaurant in a tourist area isn't the same as a 4.5-star spot in Molenbeek. Tourist-heavy restaurants get inflated ratings from one-time visitors, while authentic local spots may have fewer but more discerning reviewers.</p>
-        <p>Our algorithm tries to answer: <span class="highlight">"Is this restaurant actually good for what it is, or just good at attracting tourists?"</span></p>
+        <p>Google ratings are useful but not perfect. A 4.5-star restaurant near Grand Place isn't the same as a 4.5-star spot in a quieter neighbourhood. Busy tourist areas get more reviews from visitors, while neighbourhood spots get reviews from regulars.</p>
+        <p>Our algorithm tries to answer: <span class="highlight">"How good is this restaurant compared to similar places?"</span></p>
 
         <h2>The Brussels Score</h2>
         <p>Every restaurant gets a score from 0-100 based on multiple factors. Here's how each component works:</p>
@@ -245,10 +245,10 @@
                 <span class="factor-name">Outperforms Peers</span>
                 <span class="factor-weight positive">+20% max</span>
             </div>
-            <p class="factor-description">The most important signal. We predict what rating a restaurant <em>should</em> have based on its cuisine, price, and location. If it beats that prediction, it's doing something right.</p>
+            <p class="factor-description">We calculate what rating a restaurant "should" have based on its cuisine, price, and location. If it scores higher than expected, that's a good sign.</p>
             <div class="example">
                 <div class="example-label">Example:</div>
-                A Vietnamese restaurant in Ixelles with 4.6 stars where similar restaurants average 4.2 gets <strong>+0.4 stars above expected</strong> &mdash; a strong signal of quality.
+                A Vietnamese restaurant in Ixelles has 4.6 stars. Similar restaurants in the area average 4.2. That's <strong>+0.4 stars above expected</strong> &mdash; it's doing something well.
             </div>
         </div>
 
@@ -257,14 +257,14 @@
                 <span class="factor-name">Goldilocks Zone</span>
                 <span class="factor-weight positive">+8% max</span>
             </div>
-            <p class="factor-description">Restaurants with 50-500 reviews hit the sweet spot: established enough to trust, but not so famous they've become tourist magnets.</p>
+            <p class="factor-description">Restaurants with 50-500 reviews hit a sweet spot: enough reviews to be trustworthy, but not so many that it's only because they're in a busy tourist area.</p>
             <div class="example">
                 <div class="example-label">The zones:</div>
                 <ul style="margin: 8px 0 0 0; padding-left: 20px;">
-                    <li>50-200 reviews: <strong>Full bonus</strong> (local gem)</li>
-                    <li>200-500 reviews: <strong>Good bonus</strong> (popular but authentic)</li>
-                    <li>500-1000 reviews: <strong>Small bonus</strong> (getting famous)</li>
-                    <li>1000+ reviews: No bonus (likely tourist-driven)</li>
+                    <li>50-200 reviews: <strong>Full bonus</strong> (established, not over-hyped)</li>
+                    <li>200-500 reviews: <strong>Good bonus</strong> (popular, good reputation)</li>
+                    <li>500-1000 reviews: <strong>Small bonus</strong> (well-known)</li>
+                    <li>1000+ reviews: No bonus (likely high-traffic location)</li>
                 </ul>
             </div>
         </div>
@@ -274,18 +274,18 @@
                 <span class="factor-name">Horseshoe Bonus</span>
                 <span class="factor-weight positive">+4% max</span>
             </div>
-            <p class="factor-description">We reward <strong>both extremes</strong> of the operating hours spectrum, not just "limited hours."</p>
+            <p class="factor-description">We give a small bonus to restaurants at <strong>both ends</strong> of the hours spectrum.</p>
             <div class="example">
-                <div class="example-label">The Lark (Artisan):</div>
-                Closes mid-afternoon for prep (<em>service coup&eacute;</em>), or open &lt;30h/week. Signals: "I prioritize quality over revenue."
+                <div class="example-label">The Lark (Limited Hours):</div>
+                Closes mid-afternoon (<em>service coup&eacute;</em>), or open less than 30h/week. Think serious bistros, bakeries with fresh prep.
             </div>
             <div class="example" style="margin-top: 8px;">
-                <div class="example-label">The Owl (Community Anchor):</div>
-                Open past 1:00 AM regularly. Signals: "I work incredibly hard to serve when others won't." Late-night pittas, frituurs, and bars.
+                <div class="example-label">The Owl (Late Night):</div>
+                Open past 1:00 AM regularly. Think late-night pittas, frituurs, neighbourhood bars.
             </div>
             <div class="example" style="margin-top: 8px; background: #fef3c7;">
                 <div class="example-label">The Middle (No bonus):</div>
-                Standard 7-day, 11:00-22:00 non-stop. Often chains or tourist traps optimizing for table turnover.
+                Standard hours like 11:00-22:00 every day. Most common, no extra points.
             </div>
         </div>
 
@@ -294,7 +294,7 @@
                 <span class="factor-name">Guide Recognition</span>
                 <span class="factor-weight positive">+8% max</span>
             </div>
-            <p class="factor-description">Michelin stars, Bib Gourmand, and Gault&Millau recognition add credibility. These guides have professional inspectors with consistent standards.</p>
+            <p class="factor-description">Michelin stars, Bib Gourmand, and Gault&Millau recognition. These guides send trained inspectors who evaluate restaurants anonymously.</p>
         </div>
 
         <div class="factor-card">
@@ -302,7 +302,7 @@
                 <span class="factor-name">Reddit Mentions</span>
                 <span class="factor-weight positive">+5% max</span>
             </div>
-            <p class="factor-description">Restaurants frequently recommended on r/brussels by locals. We track mentions in recommendation threads &mdash; real locals sharing real favorites.</p>
+            <p class="factor-description">Restaurants that people on r/brussels recommend when someone asks "where should I eat?" We count how often each place gets mentioned.</p>
         </div>
 
         <div class="factor-card">
@@ -310,9 +310,9 @@
                 <span class="factor-name">Diaspora Bonus</span>
                 <span class="factor-weight positive">+7% max</span>
             </div>
-            <p class="factor-description">Rewards diaspora cuisines located in their community's area. A Moroccan restaurant in Molenbeek or a Congolese restaurant in Matong&eacute; gets a bonus. Extra boost if on a known food corridor like Chauss&eacute;e de Haecht (Turkish) or Rue de Brabant (Maghreb).</p>
+            <p class="factor-description">A Moroccan restaurant in Molenbeek or a Congolese restaurant in Matong&eacute; gets a bonus &mdash; they're in the heart of their community. Extra points on known food streets like Chauss&eacute;e de Haecht (Turkish) or Rue de Brabant (Maghreb).</p>
             <div class="example">
-                <div class="example-label">Key principle:</div>
+                <div class="example-label">How it works:</div>
                 Only the matching cuisine gets the bonus. An Italian restaurant on Chauss&eacute;e de Haecht gets nothing &mdash; only Turkish restaurants do.
             </div>
         </div>
@@ -327,7 +327,7 @@
                 <span class="factor-name">Tourist Area Penalty</span>
                 <span class="factor-weight negative">-8% max</span>
             </div>
-            <p class="factor-description">Restaurants near Grand Place, Manneken Pis, and other tourist hotspots are penalized. High foot traffic often correlates with lower quality-to-price ratios.</p>
+            <p class="factor-description">Restaurants near Grand Place, Manneken Pis, and other tourist hotspots lose some points. These areas have lots of foot traffic, and ratings there tend to be less reliable.</p>
         </div>
 
         <div class="factor-card">
@@ -335,7 +335,7 @@
                 <span class="factor-name">Low Review Penalty</span>
                 <span class="factor-weight negative">-20% max</span>
             </div>
-            <p class="factor-description">Restaurants with few reviews get penalized &mdash; especially if they have high ratings. A 4.9★ with only 7 reviews is statistically meaningless (likely just friends and family).</p>
+            <p class="factor-description">A 4.9-star rating with only 8 reviews doesn't mean much &mdash; it could just be friends and family. The fewer reviews, the bigger the penalty, especially for suspiciously high ratings.</p>
             <div class="example">
                 <div class="example-label">Penalty scale:</div>
                 <ul style="margin: 8px 0 0 0; padding-left: 20px;">
@@ -350,14 +350,14 @@
         <div class="divider"></div>
 
         <h2>What "Above Expected" Means</h2>
-        <p>When you see <span class="highlight">"+0.3 stars above expected"</span>, here's what happened:</p>
+        <p>When you see <span class="highlight">"+0.3 stars above expected"</span>, here's what it means:</p>
         <ol>
-            <li>We built a model predicting ratings based on: cuisine type, price level, location, chain status, and review count</li>
-            <li>For this restaurant, the model predicted a rating of 4.2 stars</li>
-            <li>The actual rating is 4.5 stars</li>
-            <li>The <strong>residual</strong> (+0.3) suggests this place is doing something special</li>
+            <li>We look at similar restaurants (same cuisine, price range, area)</li>
+            <li>We calculate what rating this restaurant "should" have based on those factors</li>
+            <li>If the actual rating is higher, that's a positive sign</li>
+            <li>The difference (+0.3) shows how much better it is than expected</li>
         </ol>
-        <p>Restaurants with high positive residuals are our "hidden gems" &mdash; they exceed what you'd expect given their category.</p>
+        <p>Restaurants that score above expected are doing something right compared to similar places.</p>
 
         <div class="divider"></div>
 
@@ -370,12 +370,13 @@
         </ul>
 
         <h2>Limitations</h2>
-        <p>No algorithm is perfect. Ours has blind spots:</p>
+        <p>No ranking is perfect. Here's where ours falls short:</p>
         <ul>
-            <li>New restaurants with few reviews may be underranked</li>
-            <li>Some great spots don't fit neatly into cuisine categories</li>
-            <li>Price data is limited (we're working on it)</li>
-            <li>The model reflects biases in Google reviews</li>
+            <li>New restaurants with few reviews will score lower (we can't trust the rating yet)</li>
+            <li>Some places don't fit neatly into one cuisine category</li>
+            <li>We don't have complete price data for all restaurants</li>
+            <li>Google reviews have their own biases, and we inherit those</li>
+            <li>Opening hours might be outdated for some places</li>
         </ul>
 
         <h2>Open Source</h2>
