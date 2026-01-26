@@ -316,18 +316,10 @@ DIASPORA_AUTHENTICITY = {
         "Ixelles": 0.7,
         "Saint-Gilles": 0.6,
     },
-    "Italian": {
-        # Historic post-war labor migrants + modern EU functionaries
-        "Ixelles": 0.7,
-        "Saint-Gilles": 0.65,
-        "Etterbeek": 0.6,             # EU workers
-    },
-    "Spanish": {
-        # Growing since 2008 financial crisis
-        "Ixelles": 0.7,
-        "Saint-Gilles": 0.65,
-        "Etterbeek": 0.55,
-    },
+    # Note: Italian and Spanish removed - they are mainstream European cuisines,
+    # not diaspora communities in the same sense as immigrant communities.
+    # The diaspora bonus is meant for immigrant communities where location
+    # signals authenticity (Moroccan in Molenbeek, Turkish in Saint-Josse, etc.)
 }
 
 # Belgian traditional cuisine authenticity
@@ -462,14 +454,7 @@ DIASPORA_STREETS = {
     "Greek": [
         {"name": "Ixelles", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3697},
     ],
-    "Italian": [
-        {"name": "Ixelles", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3697},
-        {"name": "EU Quarter", "commune": "Etterbeek", "lat": 50.8427, "lng": 4.3827},
-    ],
-    "Spanish": [
-        {"name": "Ixelles", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3697},
-        {"name": "Saint-Gilles", "commune": "Saint-Gilles", "lat": 50.8261, "lng": 4.3456},
-    ],
+    # Note: Italian and Spanish removed - mainstream European cuisines
 }
 
 # Proust Factor: Cuisine Specificity Mapping
