@@ -828,28 +828,154 @@
             padding-top: 12px;
             border-top: 1px solid var(--border-subtle);
             font-size: 12px;
-            line-height: 1.7;
+            line-height: 1.5;
         }
 
         .explain-title {
             color: var(--text-muted);
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             text-transform: uppercase;
             font-size: 10px;
             letter-spacing: 0.5px;
+        }
+
+        .explain-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .explain-icon {
+            flex-shrink: 0;
+            width: 18px;
+            text-align: center;
+        }
+
+        .explain-text {
+            flex: 1;
+            line-height: 1.4;
         }
 
         .explain-positive {
             color: var(--accent-green);
         }
 
+        .explain-positive .explain-text {
+            color: var(--text-primary);
+        }
+
         .explain-negative {
             color: var(--accent-red);
         }
 
+        .explain-negative .explain-text {
+            color: var(--text-primary);
+        }
+
         .explain-neutral {
             color: var(--accent-orange);
+        }
+
+        .explain-neutral .explain-text {
+            color: var(--text-primary);
+        }
+
+        /* Score breakdown visualization */
+        .score-breakdown {
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .score-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .score-bar-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            width: 60px;
+            flex-shrink: 0;
+        }
+
+        .score-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--border-subtle);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .score-bar-value {
+            font-size: 10px;
+            color: var(--text-muted);
+            width: 30px;
+            text-align: right;
+        }
+
+        /* Collapsible details */
+        .explain-more {
+            display: none;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-subtle);
+        }
+
+        .explain-more.expanded {
+            display: block;
+        }
+
+        .explain-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            padding: 4px 8px;
+            font-size: 11px;
+            color: var(--accent-blue);
+            background: none;
+            border: 1px solid var(--accent-blue);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .explain-toggle:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .popup-explanation {
+                font-size: 11px;
+            }
+
+            .explain-item {
+                font-size: 11px;
+            }
+
+            .score-breakdown {
+                padding: 8px;
+            }
+
+            .score-bar-label {
+                width: 50px;
+                font-size: 9px;
+            }
         }
 
         .commune-label {
@@ -1715,125 +1841,352 @@
         }
 
         function getScoreExplanation(restaurant) {
-            const explanations = [];
+            const primary = [];   // Most important - always show (max 2)
+            const secondary = []; // Show in expanded view
 
-            // Residual explanation (beating expected rating)
+            // === PRIMARY EXPLANATIONS (user-friendly language) ===
+
+            // 1. Hidden gem / Underrated (most valuable insight)
             if (restaurant.residual !== undefined && restaurant.residual !== null) {
-                const residualPct = Math.abs(restaurant.residual * 100).toFixed(0);
                 if (restaurant.residual > 0.25) {
-                    explanations.push(`<span class="explain-positive">💎 Underrated: +${residualPct}% above expected</span>`);
+                    primary.push({
+                        icon: '💎',
+                        text: 'Hidden gem — outperforms similar spots',
+                        type: 'positive'
+                    });
                 } else if (restaurant.residual > 0.1) {
-                    explanations.push(`<span class="explain-positive">⬆️ Above expected (+${residualPct}%)</span>`);
+                    primary.push({
+                        icon: '✓',
+                        text: 'Better than comparable restaurants',
+                        type: 'positive'
+                    });
                 } else if (restaurant.residual < -0.2) {
-                    explanations.push(`<span class="explain-negative">⬇️ Below expected (-${residualPct}%)</span>`);
+                    secondary.push({
+                        icon: '⚠️',
+                        text: 'Rating may be inflated',
+                        type: 'negative'
+                    });
                 }
             }
 
-            // Reddit community endorsement
+            // 2. Reddit community endorsement (social proof)
             if (restaurant.reddit_mentions && restaurant.reddit_mentions >= 2) {
-                const redditText = restaurant.reddit_mentions >= 5
-                    ? `r/brussels favorite (${restaurant.reddit_mentions}x mentioned)`
-                    : `r/brussels approved (${restaurant.reddit_mentions}x)`;
-                explanations.push(`<span class="explain-positive" style="color: #FF4500;">🔥 ${redditText}</span>`);
+                const item = {
+                    icon: '🔥',
+                    text: restaurant.reddit_mentions >= 5
+                        ? `Local favorite — mentioned ${restaurant.reddit_mentions}x on r/brussels`
+                        : `Recommended by r/brussels community`,
+                    type: 'positive',
+                    style: 'color: #FF4500;'
+                };
+                primary.push(item);
             }
 
-            // Local street bonus
-            if (restaurant.local_street) {
-                explanations.push(`<span class="explain-positive">📍 ${restaurant.local_street} (local favorite)</span>`);
+            // 3. Guide recognition (authoritative)
+            if (restaurant.michelin_stars || restaurant.bib_gourmand || restaurant.gault_millau) {
+                // Already shown as badges, but add context
+                if (restaurant.michelin_stars >= 1) {
+                    primary.push({
+                        icon: '⭐',
+                        text: `Michelin ${restaurant.michelin_stars > 1 ? restaurant.michelin_stars + ' stars' : 'starred'} — exceptional quality`,
+                        type: 'positive'
+                    });
+                } else if (restaurant.bib_gourmand) {
+                    primary.push({
+                        icon: '🍽️',
+                        text: 'Bib Gourmand — great value for money',
+                        type: 'positive'
+                    });
+                }
             }
 
-            // UNIFIED SCARCITY - build a combined explanation
-            // Scarcity = hard to access = likely a local gem
+            // 4. Scarcity signals (indicates authenticity)
             if (restaurant.score_scarcity_bonus > 0.02) {
                 const scarcityParts = [];
 
-                // Hours scarcity
                 if (restaurant.closes_early && restaurant.typical_close_hour) {
                     if (restaurant.typical_close_hour <= 16) {
                         scarcityParts.push("lunch only");
                     } else if (restaurant.typical_close_hour <= 20) {
-                        scarcityParts.push(`closes ${restaurant.typical_close_hour}:00`);
+                        scarcityParts.push(`closes early`);
                     }
                 }
 
-                // Days scarcity
                 if (restaurant.days_open_count && restaurant.days_open_count <= 5) {
-                    scarcityParts.push(`${restaurant.days_open_count} days/week`);
+                    scarcityParts.push(`limited hours`);
                 }
 
-                // Schedule scarcity
-                if (restaurant.weekdays_only) {
-                    scarcityParts.push("weekdays only");
-                } else if (restaurant.closed_sunday) {
-                    scarcityParts.push("closed Sundays");
-                }
-
-                // Rare cuisine
                 if (restaurant.is_rare_cuisine) {
                     scarcityParts.push("rare cuisine");
                 }
 
-                // Build the scarcity message
                 if (scarcityParts.length > 0) {
-                    const scarcityLevel = restaurant.score_scarcity_bonus > 0.08 ? "🔒 Exclusive" : "✨ Scarce";
-                    explanations.push(`<span class="explain-positive">${scarcityLevel}: ${scarcityParts.join(", ")}</span>`);
+                    const isExclusive = restaurant.score_scarcity_bonus > 0.08;
+                    primary.push({
+                        icon: isExclusive ? '🔒' : '✨',
+                        text: isExclusive
+                            ? `Exclusive — ${scarcityParts.join(", ")} (plan ahead)`
+                            : `${scarcityParts.join(", ").charAt(0).toUpperCase() + scarcityParts.join(", ").slice(1)} — worth the effort`,
+                        type: 'positive'
+                    });
                 } else if (restaurant.rating >= 4.5 && restaurant.review_count <= 300) {
-                    // Review-based scarcity only
-                    explanations.push(`<span class="explain-positive">🔒 Local gem (not over-hyped)</span>`);
+                    primary.push({
+                        icon: '🔒',
+                        text: 'Under the radar — quality without the crowds',
+                        type: 'positive'
+                    });
                 }
             }
 
-            // Tourist trap penalty
-            if (restaurant.score_tourist_penalty !== undefined && restaurant.score_tourist_penalty !== null) {
-                if (restaurant.score_tourist_penalty < -0.05) {
-                    explanations.push(`<span class="explain-negative">🚶 Tourist area penalty</span>`);
-                }
+            // 5. Local street / neighborhood bonus
+            if (restaurant.local_street) {
+                secondary.push({
+                    icon: '📍',
+                    text: `${restaurant.local_street} — popular local street`,
+                    type: 'positive'
+                });
             }
 
-            // Commune tier-based explanations (area type, not quality tier)
+            // === SECONDARY EXPLANATIONS (show in "more details") ===
+
+            // Area context
+            if (restaurant.score_tourist_penalty !== undefined && restaurant.score_tourist_penalty < -0.05) {
+                secondary.push({
+                    icon: '📍',
+                    text: 'Tourist area — can be crowded',
+                    type: 'neutral'
+                });
+            }
+
             if (restaurant.commune_tier) {
                 if (restaurant.commune_tier === 'underexplored') {
-                    explanations.push(`<span class="explain-positive">🔍 Hidden gem in underexplored area</span>`);
+                    secondary.push({
+                        icon: '🔍',
+                        text: 'Off the beaten path — authentic neighborhood',
+                        type: 'positive'
+                    });
                 } else if (restaurant.commune_tier === 'tourist_trap') {
-                    explanations.push(`<span class="explain-negative">⚠️ Tourist trap zone</span>`);
+                    // Already covered by tourist penalty
                 } else if (restaurant.commune_tier === 'eu_bubble') {
-                    explanations.push(`<span class="explain-neutral">🇪🇺 EU quarter area</span>`);
+                    secondary.push({
+                        icon: '🇪🇺',
+                        text: 'EU quarter — international crowd',
+                        type: 'neutral'
+                    });
                 }
             }
 
-            // Cold start (new promising place)
+            // New/promising
             if (restaurant.review_count && restaurant.review_count < 50 && restaurant.rating >= 4.5) {
-                explanations.push(`<span class="explain-positive">🆕 Promising new spot (${restaurant.review_count} reviews)</span>`);
+                secondary.push({
+                    icon: '🆕',
+                    text: `New discovery — early reviews are positive`,
+                    type: 'positive'
+                });
             }
 
-            // Independent restaurant bonus
-            if (restaurant.is_chain === false || restaurant.is_chain === 0) {
-                // Only mention if it's a notable factor
-                if (restaurant.brussels_score > 0.4) {
-                    explanations.push(`<span class="explain-positive">🏠 Independent restaurant</span>`);
-                }
-            } else if (restaurant.is_chain === true || restaurant.is_chain === 1) {
-                explanations.push(`<span class="explain-negative">🔗 Chain restaurant</span>`);
+            // Chain warning (only negative, not positive for independent)
+            if (restaurant.is_chain === true || restaurant.is_chain === 1) {
+                secondary.push({
+                    icon: '🔗',
+                    text: 'Chain restaurant',
+                    type: 'negative'
+                });
             }
 
-            // High rating with high review count (genuinely popular)
+            // Popular despite high volume
             if (restaurant.rating >= 4.5 && restaurant.review_count > 500) {
-                explanations.push(`<span class="explain-positive">⭐ High rating despite popularity</span>`);
+                secondary.push({
+                    icon: '👥',
+                    text: 'Consistently good — high rating with many reviews',
+                    type: 'positive'
+                });
             }
 
-            // Low confidence warning for few reviews
+            // Confidence warnings
             if (restaurant.review_count && restaurant.review_count < 10) {
-                explanations.push(`<span class="explain-negative">⚠️ Very low confidence (only ${restaurant.review_count} reviews)</span>`);
+                secondary.push({
+                    icon: '❓',
+                    text: `Only ${restaurant.review_count} reviews — rating may change`,
+                    type: 'negative'
+                });
             } else if (restaurant.review_count && restaurant.review_count < 20) {
-                explanations.push(`<span class="explain-neutral">⚠️ Low confidence (only ${restaurant.review_count} reviews)</span>`);
+                secondary.push({
+                    icon: '❓',
+                    text: `Few reviews (${restaurant.review_count}) — limited data`,
+                    type: 'neutral'
+                });
             }
 
-            // Perfection penalty - statistically unlikely perfect rating
+            // Perfect rating warning
             if (restaurant.score_perfection_penalty && restaurant.score_perfection_penalty < -0.01) {
-                explanations.push(`<span class="explain-neutral">📊 Perfect rating with few reviews (less reliable)</span>`);
+                secondary.push({
+                    icon: '📊',
+                    text: 'Perfect 5.0 with few reviews — take with grain of salt',
+                    type: 'neutral'
+                });
             }
 
-            return explanations.slice(0, 4); // Limit to top 4 explanations
+            // === CUISINE-SPECIFIC HIGHLIGHTS ===
+            const cuisine = (restaurant.cuisine || '').toLowerCase();
+            const cuisineHighlights = getCuisineHighlight(cuisine, restaurant);
+            if (cuisineHighlights) {
+                // Add to primary if we have room, otherwise secondary
+                if (primary.length < 2) {
+                    primary.push(cuisineHighlights);
+                } else {
+                    secondary.push(cuisineHighlights);
+                }
+            }
+
+            return { primary: primary.slice(0, 3), secondary: secondary.slice(0, 4) };
+        }
+
+        // Cuisine-specific highlights based on what makes each cuisine special
+        function getCuisineHighlight(cuisine, restaurant) {
+            const score = restaurant.brussels_score || 0;
+            const rating = restaurant.rating || 0;
+
+            // Only add highlights for restaurants with decent scores
+            if (score < 0.4 || rating < 4.0) return null;
+
+            const highlights = {
+                // Belgian classics
+                'belgian': { icon: '🇧🇪', text: 'Traditional Belgian — moules, stoofvlees, frites' },
+                'flemish': { icon: '🇧🇪', text: 'Flemish cuisine — hearty local dishes' },
+
+                // European cuisines
+                'italian': { icon: '🇮🇹', text: 'Italian — look for fresh pasta & regional dishes' },
+                'french': { icon: '🇫🇷', text: 'French cuisine — classic techniques' },
+                'spanish': { icon: '🇪🇸', text: 'Spanish — tapas & sharing plates' },
+                'greek': { icon: '🇬🇷', text: 'Greek — mezze & grilled meats' },
+                'portuguese': { icon: '🇵🇹', text: 'Portuguese — seafood & petiscos' },
+
+                // Asian cuisines
+                'japanese': { icon: '🇯🇵', text: 'Japanese — precision & fresh ingredients' },
+                'thai': { icon: '🇹🇭', text: 'Thai — balance of sweet, sour, spicy' },
+                'vietnamese': { icon: '🇻🇳', text: 'Vietnamese — fresh herbs & pho' },
+                'chinese': { icon: '🇨🇳', text: 'Chinese — regional styles vary widely' },
+                'korean': { icon: '🇰🇷', text: 'Korean — BBQ, bibimbap, fermented flavors' },
+                'indian': { icon: '🇮🇳', text: 'Indian — spices & regional variety' },
+                'lebanese': { icon: '🇱🇧', text: 'Lebanese — mezze & grilled meats' },
+                'turkish': { icon: '🇹🇷', text: 'Turkish — kebabs, pide, meze' },
+                'persian': { icon: '🇮🇷', text: 'Persian — rice dishes & stews' },
+                'moroccan': { icon: '🇲🇦', text: 'Moroccan — tagines & couscous' },
+
+                // Latin American
+                'mexican': { icon: '🇲🇽', text: 'Mexican — tacos, salsas, fresh flavors' },
+                'peruvian': { icon: '🇵🇪', text: 'Peruvian — ceviche & fusion flavors' },
+                'brazilian': { icon: '🇧🇷', text: 'Brazilian — churrasco & tropical flavors' },
+
+                // African
+                'ethiopian': { icon: '🇪🇹', text: 'Ethiopian — injera & sharing platters' },
+                'congolese': { icon: '🇨🇩', text: 'Congolese — poulet moambé & fufu' },
+                'senegalese': { icon: '🇸🇳', text: 'Senegalese — thieboudienne & yassa' },
+
+                // Specialty types
+                'sushi': { icon: '🍣', text: 'Sushi — freshness is key' },
+                'ramen': { icon: '🍜', text: 'Ramen — rich broths & fresh noodles' },
+                'pizza': { icon: '🍕', text: 'Pizza — check for wood-fired oven' },
+                'burger': { icon: '🍔', text: 'Burgers — quality beef & fresh buns' },
+                'seafood': { icon: '🦐', text: 'Seafood — freshness matters most' },
+                'vegetarian': { icon: '🥬', text: 'Vegetarian — creative plant-based dishes' },
+                'vegan': { icon: '🌱', text: 'Vegan — 100% plant-based menu' },
+                'brunch': { icon: '🥞', text: 'Brunch — weekend favorite' },
+            };
+
+            // Check for matches
+            for (const [key, value] of Object.entries(highlights)) {
+                if (cuisine.includes(key)) {
+                    return { ...value, type: 'neutral' };
+                }
+            }
+
+            return null;
+        }
+
+        // Generate HTML for score explanation with collapsible details
+        function generateExplanationHtml(restaurant) {
+            const { primary, secondary } = getScoreExplanation(restaurant);
+
+            if (primary.length === 0 && secondary.length === 0) {
+                return '';
+            }
+
+            const formatItem = (item) => {
+                const styleAttr = item.style ? ` style="${item.style}"` : '';
+                return `
+                    <div class="explain-item explain-${item.type}"${styleAttr}>
+                        <span class="explain-icon">${item.icon}</span>
+                        <span class="explain-text">${item.text}</span>
+                    </div>
+                `;
+            };
+
+            const primaryHtml = primary.map(formatItem).join('');
+            const secondaryHtml = secondary.length > 0
+                ? `<div class="explain-more" id="explain-more-${restaurant.place_id || Math.random()}">
+                       ${secondary.map(formatItem).join('')}
+                   </div>
+                   <button class="explain-toggle" onclick="this.previousElementSibling.classList.toggle('expanded'); this.textContent = this.previousElementSibling.classList.contains('expanded') ? '− Less' : '+ More details';">
+                       + More details
+                   </button>`
+                : '';
+
+            return `
+                <div class="popup-explanation">
+                    <div class="explain-title">Why it's ranked</div>
+                    ${primaryHtml}
+                    ${secondaryHtml}
+                </div>
+            `;
+        }
+
+        // Generate score breakdown visualization
+        function generateScoreBreakdown(restaurant) {
+            if (!restaurant.brussels_score) return '';
+
+            const score = restaurant.brussels_score;
+            const rating = restaurant.rating || 0;
+            const reviewScore = Math.min(1, (restaurant.review_count || 0) / 500);
+            const residual = restaurant.residual || 0;
+
+            // Calculate component contributions (simplified visualization)
+            const qualityScore = Math.min(100, (rating / 5) * 100);
+            const popularityScore = Math.min(100, reviewScore * 100);
+            const valueScore = Math.min(100, Math.max(0, (0.5 + residual) * 100));
+
+            const getBarColor = (value) => {
+                if (value >= 70) return 'var(--accent-green)';
+                if (value >= 40) return 'var(--accent-blue)';
+                return 'var(--accent-orange)';
+            };
+
+            return `
+                <div class="score-breakdown">
+                    <div class="score-bar-container">
+                        <span class="score-bar-label">Quality</span>
+                        <div class="score-bar">
+                            <div class="score-bar-fill" style="width: ${qualityScore}%; background: ${getBarColor(qualityScore)};"></div>
+                        </div>
+                        <span class="score-bar-value">${rating.toFixed(1)}</span>
+                    </div>
+                    <div class="score-bar-container">
+                        <span class="score-bar-label">Popularity</span>
+                        <div class="score-bar">
+                            <div class="score-bar-fill" style="width: ${popularityScore}%; background: ${getBarColor(popularityScore)};"></div>
+                        </div>
+                        <span class="score-bar-value">${restaurant.review_count || 0}</span>
+                    </div>
+                    <div class="score-bar-container">
+                        <span class="score-bar-label">Value</span>
+                        <div class="score-bar">
+                            <div class="score-bar-fill" style="width: ${valueScore}%; background: ${getBarColor(valueScore)};"></div>
+                        </div>
+                        <span class="score-bar-value">${residual > 0 ? '+' : ''}${(residual * 100).toFixed(0)}%</span>
+                    </div>
+                </div>
+            `;
         }
 
         // Professional food map icons - 18px with refined color palette
@@ -1981,14 +2334,8 @@
             const commune = restaurant.commune || 'Unknown';
             const neighborhood = restaurant.neighborhood ? ` (${restaurant.neighborhood})` : '';
 
-            // Generate score explanation
-            const explanations = getScoreExplanation(restaurant);
-            const explanationHtml = explanations.length > 0
-                ? `<div class="popup-explanation">
-                    <div class="explain-title">Why it's ranked:</div>
-                    ${explanations.join('<br>')}
-                   </div>`
-                : '';
+            // Generate improved explanation HTML with collapsible details
+            const explanationHtml = generateExplanationHtml(restaurant);
 
             // Generate opening hours HTML
             const hoursHtml = generateHoursHtml(restaurant.opening_hours);
