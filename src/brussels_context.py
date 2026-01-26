@@ -313,8 +313,8 @@ DIASPORA_AUTHENTICITY = {
         "Schaerbeek": 0.6,
     },
     "Greek": {
-        "Ixelles": 0.7,
-        "Saint-Gilles": 0.6,
+        "Saint-Gilles": 0.8,  # Gare du Midi area (Rue de Mérode/Suède) - the "Old Greek" neighborhood
+        "Ixelles": 0.5,
     },
     # Note: Italian and Spanish removed - they are mainstream European cuisines,
     # not diaspora communities in the same sense as immigrant communities.
@@ -452,6 +452,7 @@ DIASPORA_STREETS = {
         {"name": "Matongé area", "commune": "Ixelles", "lat": 50.8285, "lng": 4.3685},
     ],
     "Greek": [
+        {"name": "Gare du Midi area (Rue de Mérode/Suède)", "commune": "Saint-Gilles", "lat": 50.8365, "lng": 4.3360},
         {"name": "Ixelles", "commune": "Ixelles", "lat": 50.8275, "lng": 4.3697},
     ],
     # Note: Italian and Spanish removed - mainstream European cuisines
