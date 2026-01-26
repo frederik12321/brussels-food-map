@@ -385,32 +385,40 @@ RARE_CUISINES_BRUSSELS = {
 
 def unified_scarcity_score(restaurant):
     """
-    Calculate a unified scarcity score that combines all scarcity signals.
+    Calculate a unified scarcity score based on review count and cuisine rarity.
 
-    Scarcity = hard to access = likely a local gem.
-    Components:
-    - Review count scarcity: moderate reviews (not too few, not too many)
-    - Hours scarcity: closes early (doesn't need late-night tourist traffic)
-    - Days scarcity: fewer days open (exclusive, doesn't need to maximize revenue)
-    - Schedule scarcity: weekdays only (caters to locals/office workers)
-    - Cuisine scarcity: rare cuisine in Brussels (hard to find)
+    DESIGN DECISION (Jan 2025): Hours/days scarcity REMOVED due to class bias.
+
+    The "limited hours = quality" assumption is problematic:
+    - It rewards privilege (can afford to close 3 days/week) over passion
+    - It penalizes hardworking immigrant families (pittas, kebabs) who work
+      11am-2am, 7 days/week to survive
+    - A Turkish pitta open 7 days should not be penalized vs a trendy brunch
+      spot open only Sat-Sun
+
+    FUTURE: When hours data is parsed, implement "Horseshoe Theory":
+    - "Lark Bonus": Open <24h/week OR has service coupé (closed 15:00-18:00)
+    - "Owl Bonus": Open past 01:00 AM (late-night community anchor)
+    - "Middle Zone": Standard 7-day 11:00-22:00 = no bonus (chains, tourist traps)
+
+    This rewards BOTH extremes (artisan AND hardworking) without penalizing
+    either for their operating model.
+
+    Current components:
+    - Review count scarcity: "Goldilocks zone" of 50-500 reviews
+    - Cuisine scarcity: rare cuisines in Brussels (minimal weight)
 
     Returns tuple: (total_score, component_breakdown)
     """
     rating = restaurant.get("rating", 0)
     review_count = restaurant.get("review_count", 0)
     cuisine = restaurant.get("cuisine", "Other")
-    closes_early = restaurant.get("closes_early", False)
-    typical_close_hour = restaurant.get("typical_close_hour")
-    weekdays_only = restaurant.get("weekdays_only", False)
-    closed_weekends = restaurant.get("closed_weekends", False)
-    closed_sunday = restaurant.get("closed_sunday", False)
-    days_open_count = restaurant.get("days_open_count")
 
     components = {}
 
-    # 1. Review count scarcity (from brussels_context.scarcity_quality_score logic)
+    # 1. Review count scarcity - the "Goldilocks Zone"
     # Sweet spot: 50-500 reviews = established but not tourist-famous
+    # This applies equally to all cuisines without class bias
     review_scarcity = 0
     if rating and review_count and rating >= 4.0:
         if 50 <= review_count <= 200:
@@ -423,57 +431,26 @@ def unified_scarcity_score(restaurant):
             review_scarcity = 0.3  # Starting to get too popular
     components["review_scarcity"] = review_scarcity
 
-    # 2. Hours scarcity (closes early = local favorite)
-    hours_scarcity = 0
-    if closes_early and typical_close_hour:
-        if typical_close_hour <= 16:
-            hours_scarcity = 1.0  # Lunch-only = very local
-        elif typical_close_hour <= 18:
-            hours_scarcity = 0.8  # Early dinner closing
-        elif typical_close_hour <= 20:
-            hours_scarcity = 0.5  # Closes by 20:00
-        elif typical_close_hour < 22:
-            hours_scarcity = 0.3  # Closes before 22:00
-    components["hours_scarcity"] = hours_scarcity
+    # 2-4. Hours/Days/Schedule scarcity - DISABLED (class bias)
+    # These are kept at 0 for backwards compatibility with data exports
+    # Will be replaced with "Horseshoe" bonuses when hours data is parsed
+    components["hours_scarcity"] = 0
+    components["days_scarcity"] = 0
+    components["schedule_scarcity"] = 0
 
-    # 3. Days scarcity (fewer days = exclusive)
-    days_scarcity = 0
-    if days_open_count is not None and rating and rating >= 4.0:
-        if days_open_count <= 2:
-            days_scarcity = 1.0 if rating >= 4.5 else 0.7  # Very exclusive
-        elif days_open_count <= 3:
-            days_scarcity = 0.8 if rating >= 4.3 else 0.5  # Exclusive
-        elif days_open_count <= 4:
-            days_scarcity = 0.5 if rating >= 4.0 else 0.3  # Selective
-        elif days_open_count == 5:
-            days_scarcity = 0.2  # Standard weekdays
-        elif days_open_count == 6:
-            days_scarcity = 0.1  # Most restaurants
-        # 7 days = 0 (always open, no scarcity)
-    components["days_scarcity"] = days_scarcity
-
-    # 4. Schedule scarcity (weekdays only = caters to locals)
-    schedule_scarcity = 0
-    if weekdays_only or closed_weekends:
-        schedule_scarcity = 1.0  # Strong: doesn't need tourist weekend traffic
-    elif closed_sunday:
-        schedule_scarcity = 0.5  # Modest: family-run or traditional
-    components["schedule_scarcity"] = schedule_scarcity
-
-    # 5. Cuisine scarcity (rare in Brussels)
+    # 5. Cuisine scarcity (rare in Brussels) - minimal weight
+    # Rare cuisine doesn't mean good food, but adds diversity value
     cuisine_scarcity = RARE_CUISINES_BRUSSELS.get(cuisine, 0)
     components["cuisine_scarcity"] = cuisine_scarcity
 
-    # Combine with weights
-    # Hours + Days + Schedule are all about "limited availability"
-    # Review count is about "not over-exposed"
-    # Cuisine scarcity is minimal - rare cuisine doesn't mean good food
+    # Combine with weights - now heavily review-focused
+    # Hours/days/schedule have 0 weight (disabled)
     weights = {
-        "review_scarcity": 0.25,    # Not over-hyped
-        "hours_scarcity": 0.25,     # Limited hours
-        "days_scarcity": 0.30,      # Limited days (strongest signal)
-        "schedule_scarcity": 0.15,  # Weekend closures
-        "cuisine_scarcity": 0.05,   # Rare cuisine type (minimal weight)
+        "review_scarcity": 0.90,    # Primary signal: not over-hyped
+        "hours_scarcity": 0.00,     # DISABLED: class bias
+        "days_scarcity": 0.00,      # DISABLED: class bias
+        "schedule_scarcity": 0.00,  # DISABLED: class bias
+        "cuisine_scarcity": 0.10,   # Minor: rare cuisine diversity bonus
     }
 
     total = sum(weights[k] * components[k] for k in weights)
