@@ -883,49 +883,6 @@
             color: var(--text-primary);
         }
 
-        /* Score breakdown visualization */
-        .score-breakdown {
-            margin-top: 10px;
-            padding: 10px;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-        }
-
-        .score-bar-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
-
-        .score-bar-label {
-            font-size: 10px;
-            color: var(--text-muted);
-            width: 60px;
-            flex-shrink: 0;
-        }
-
-        .score-bar {
-            flex: 1;
-            height: 6px;
-            background: var(--border-subtle);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .score-bar-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.3s ease;
-        }
-
-        .score-bar-value {
-            font-size: 10px;
-            color: var(--text-muted);
-            width: 30px;
-            text-align: right;
-        }
-
         /* Collapsible details */
         .explain-more {
             display: none;
@@ -958,6 +915,51 @@
             color: white;
         }
 
+        /* Score factors - compact pills showing what contributes to score */
+        .score-factors {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .factors-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .factors-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .score-factor {
+            display: inline-block;
+            padding: 2px 6px;
+            font-size: 10px;
+            border-radius: 4px;
+            cursor: help;
+            white-space: nowrap;
+        }
+
+        .factor-neutral {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+
+        .factor-highlight {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .factor-negative {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .popup-explanation {
@@ -966,15 +968,6 @@
 
             .explain-item {
                 font-size: 11px;
-            }
-
-            .score-breakdown {
-                padding: 8px;
-            }
-
-            .score-bar-label {
-                width: 50px;
-                font-size: 9px;
             }
         }
 
@@ -2105,11 +2098,110 @@
             return null;
         }
 
+        // Generate score factors breakdown - shows what contributes to the score
+        function generateScoreFactors(restaurant) {
+            const factors = [];
+
+            // Collect all significant score components
+            if (restaurant.score_base_quality) {
+                factors.push({
+                    label: 'Base rating',
+                    value: restaurant.score_base_quality,
+                    max: 0.35,
+                    description: `${restaurant.rating?.toFixed(1)}★ Google rating`
+                });
+            }
+
+            if (restaurant.score_residual_score && Math.abs(restaurant.score_residual_score) > 0.02) {
+                const isPositive = restaurant.score_residual_score > 0;
+                factors.push({
+                    label: isPositive ? 'Outperforms peers' : 'Below peers',
+                    value: restaurant.score_residual_score,
+                    max: 0.20,
+                    description: isPositive ? 'Better than similar restaurants' : 'Below similar restaurants',
+                    highlight: isPositive
+                });
+            }
+
+            if (restaurant.score_scarcity_bonus && restaurant.score_scarcity_bonus > 0.02) {
+                factors.push({
+                    label: 'Scarcity bonus',
+                    value: restaurant.score_scarcity_bonus,
+                    max: 0.12,
+                    description: 'Limited hours/days = local gem',
+                    highlight: true
+                });
+            }
+
+            if (restaurant.score_guide_bonus && restaurant.score_guide_bonus > 0) {
+                factors.push({
+                    label: 'Guide recognition',
+                    value: restaurant.score_guide_bonus,
+                    max: 0.08,
+                    description: 'Michelin, Gault&Millau',
+                    highlight: true
+                });
+            }
+
+            if (restaurant.score_reddit_bonus && restaurant.score_reddit_bonus > 0) {
+                factors.push({
+                    label: 'Reddit approved',
+                    value: restaurant.score_reddit_bonus,
+                    max: 0.05,
+                    description: `Mentioned ${restaurant.reddit_mentions}x on r/brussels`,
+                    highlight: true
+                });
+            }
+
+            if (restaurant.score_local_street_bonus && restaurant.score_local_street_bonus > 0) {
+                factors.push({
+                    label: 'Local street',
+                    value: restaurant.score_local_street_bonus,
+                    max: 0.04,
+                    description: `${restaurant.local_street} area`,
+                    highlight: true
+                });
+            }
+
+            if (restaurant.score_diaspora_bonus && restaurant.score_diaspora_bonus > 0.01) {
+                factors.push({
+                    label: 'Diaspora authenticity',
+                    value: restaurant.score_diaspora_bonus,
+                    max: 0.03,
+                    description: 'Located in authentic neighborhood'
+                });
+            }
+
+            if (restaurant.score_tourist_penalty && restaurant.score_tourist_penalty < -0.02) {
+                factors.push({
+                    label: 'Tourist area',
+                    value: restaurant.score_tourist_penalty,
+                    max: -0.08,
+                    description: 'High tourist traffic zone',
+                    negative: true
+                });
+            }
+
+            if (restaurant.score_perfection_penalty && restaurant.score_perfection_penalty < -0.01) {
+                factors.push({
+                    label: 'Rating reliability',
+                    value: restaurant.score_perfection_penalty,
+                    max: -0.05,
+                    description: 'Perfect rating with few reviews',
+                    negative: true
+                });
+            }
+
+            return factors;
+        }
+
         // Generate HTML for score explanation with collapsible details
         function generateExplanationHtml(restaurant) {
             const { primary, secondary } = getScoreExplanation(restaurant);
+            const scoreFactors = generateScoreFactors(restaurant);
 
-            if (primary.length === 0 && secondary.length === 0) {
+            // If no explanations and no significant factors, show nothing
+            if (primary.length === 0 && secondary.length === 0 && scoreFactors.length === 0) {
                 return '';
             }
 
@@ -2123,7 +2215,24 @@
                 `;
             };
 
+            // Format score factors as compact pills
+            const formatFactor = (factor) => {
+                const pct = Math.abs(factor.value * 100).toFixed(0);
+                const sign = factor.value >= 0 ? '+' : '';
+                const colorClass = factor.negative ? 'factor-negative' : (factor.highlight ? 'factor-highlight' : 'factor-neutral');
+                return `<span class="score-factor ${colorClass}" title="${factor.description}">${factor.label} ${sign}${pct}%</span>`;
+            };
+
             const primaryHtml = primary.map(formatItem).join('');
+
+            // Build score factors HTML
+            const factorsHtml = scoreFactors.length > 0
+                ? `<div class="score-factors">
+                       <div class="factors-label">Score factors:</div>
+                       <div class="factors-list">${scoreFactors.map(formatFactor).join('')}</div>
+                   </div>`
+                : '';
+
             const secondaryHtml = secondary.length > 0
                 ? `<div class="explain-more" id="explain-more-${restaurant.place_id || Math.random()}">
                        ${secondary.map(formatItem).join('')}
@@ -2137,54 +2246,8 @@
                 <div class="popup-explanation">
                     <div class="explain-title">Why it's ranked</div>
                     ${primaryHtml}
+                    ${factorsHtml}
                     ${secondaryHtml}
-                </div>
-            `;
-        }
-
-        // Generate score breakdown visualization
-        function generateScoreBreakdown(restaurant) {
-            if (!restaurant.brussels_score) return '';
-
-            const score = restaurant.brussels_score;
-            const rating = restaurant.rating || 0;
-            const reviewScore = Math.min(1, (restaurant.review_count || 0) / 500);
-            const residual = restaurant.residual || 0;
-
-            // Calculate component contributions (simplified visualization)
-            const qualityScore = Math.min(100, (rating / 5) * 100);
-            const popularityScore = Math.min(100, reviewScore * 100);
-            const valueScore = Math.min(100, Math.max(0, (0.5 + residual) * 100));
-
-            const getBarColor = (value) => {
-                if (value >= 70) return 'var(--accent-green)';
-                if (value >= 40) return 'var(--accent-blue)';
-                return 'var(--accent-orange)';
-            };
-
-            return `
-                <div class="score-breakdown">
-                    <div class="score-bar-container">
-                        <span class="score-bar-label">Quality</span>
-                        <div class="score-bar">
-                            <div class="score-bar-fill" style="width: ${qualityScore}%; background: ${getBarColor(qualityScore)};"></div>
-                        </div>
-                        <span class="score-bar-value">${rating.toFixed(1)}</span>
-                    </div>
-                    <div class="score-bar-container">
-                        <span class="score-bar-label">Popularity</span>
-                        <div class="score-bar">
-                            <div class="score-bar-fill" style="width: ${popularityScore}%; background: ${getBarColor(popularityScore)};"></div>
-                        </div>
-                        <span class="score-bar-value">${restaurant.review_count || 0}</span>
-                    </div>
-                    <div class="score-bar-container">
-                        <span class="score-bar-label">Value</span>
-                        <div class="score-bar">
-                            <div class="score-bar-fill" style="width: ${valueScore}%; background: ${getBarColor(valueScore)};"></div>
-                        </div>
-                        <span class="score-bar-value">${residual > 0 ? '+' : ''}${(residual * 100).toFixed(0)}%</span>
-                    </div>
                 </div>
             `;
         }
