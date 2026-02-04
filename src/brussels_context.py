@@ -6,6 +6,177 @@ for Brussels-specific restaurant reranking.
 """
 
 import math
+import re
+import unicodedata
+
+
+# ============================================================================
+# AUTHENTICITY MARKERS - Automatic detection of cultural identity signals
+# ============================================================================
+
+# Diacritics that are UNIQUE to specific cuisines (not in French)
+# These are strong authenticity signals
+UNIQUE_DIACRITICS_BY_CUISINE = {
+    "Turkish": set("şğıİ"),  # Ş, Ğ, ı (dotless i), İ (dotted I) - UNIQUE to Turkish
+    "Vietnamese": set("ăđơưảãạằẳẵắặầẩẫấậẻẽẹềểễếệỉĩịỏõọồổỗốộờởỡớợủũụừửữứựỳỷỹỵ"),
+    "Polish": set("ąćęłńśźż"),  # ł, ą, ę are unique
+    "Romanian": set("șț"),  # ș, ț with comma below (different from Turkish ş)
+}
+
+# Diacritics that COULD be French but combined with other signals suggest authenticity
+AMBIGUOUS_DIACRITICS = {
+    "Turkish": set("öü"),  # Also in German/French, but with ş/ğ suggests Turkish
+    "Portuguese": set("ãõ"),  # ã, õ are relatively unique to Portuguese
+}
+
+# All unique diacritics combined
+AUTHENTICITY_DIACRITICS = set()
+for chars in UNIQUE_DIACRITICS_BY_CUISINE.values():
+    AUTHENTICITY_DIACRITICS.update(chars)
+for chars in AMBIGUOUS_DIACRITICS.values():
+    AUTHENTICITY_DIACRITICS.update(chars)
+
+# Flag emojis mapped to cuisines
+FLAG_EMOJI_CUISINES = {
+    "🇹🇷": "Turkish",
+    "🇧🇷": "Brazilian",
+    "🇬🇷": "Greek",
+    "🇨🇳": "Chinese",
+    "🇮🇹": "Italian",
+    "🇮🇳": "Indian",
+    "🇯🇵": "Japanese",
+    "🇰🇷": "Korean",
+    "🇻🇳": "Vietnamese",
+    "🇹🇭": "Thai",
+    "🇱🇧": "Lebanese",
+    "🇲🇦": "Moroccan",
+    "🇵🇹": "Portuguese",
+    "🇪🇸": "Spanish",
+    "🇵🇱": "Polish",
+    "🇷🇴": "Romanian",
+    "🇷🇺": "Russian",
+    "🇺🇦": "Ukrainian",
+    "🇵🇰": "Pakistani",
+    "🇧🇩": "Bangladeshi",
+    "🇪🇹": "Ethiopian",
+    "🇨🇩": "Congolese",
+    "🇸🇳": "Senegalese",
+    "🇵🇪": "Peruvian",
+    "🇲🇽": "Mexican",
+    "🇦🇷": "Argentinian",
+}
+
+
+def has_authenticity_diacritics(name):
+    """
+    Check if restaurant name contains non-French diacritics that signal cultural identity.
+
+    Returns: (bool, set of matched diacritics, likely cuisine)
+
+    Examples:
+        "YÖRÜK ÇADIRI" -> (True, {'Ö', 'Ü', 'Ç'}, "Turkish")  # Note: Ç with cedilla below
+        "Phở & Bánh Mì" -> (True, {'ở', 'á', 'ì'}, "Vietnamese")
+        "Café de Flore" -> (False, set(), None)  # French é is baseline
+        "GÜLER PIDE" -> (True, {'Ü'}, "Turkish")  # Ü with context suggests Turkish
+    """
+    if not name:
+        return False, set(), None
+
+    # Normalize to NFC to handle composed vs decomposed unicode
+    name_normalized = unicodedata.normalize('NFC', name)
+
+    found_diacritics = set()
+    found_unique = set()  # Diacritics that are definitely not French
+
+    for char in name_normalized:
+        char_lower = char.lower()
+        if char_lower in AUTHENTICITY_DIACRITICS or char in AUTHENTICITY_DIACRITICS:
+            found_diacritics.add(char)
+            # Check if it's a unique (non-ambiguous) diacritic
+            for cuisine_chars in UNIQUE_DIACRITICS_BY_CUISINE.values():
+                if char_lower in cuisine_chars or char in cuisine_chars:
+                    found_unique.add(char)
+
+    if not found_diacritics:
+        return False, set(), None
+
+    # Try to identify the likely cuisine based on which diacritics were found
+    likely_cuisine = None
+    best_match_count = 0
+
+    # First check unique diacritics
+    for cuisine, cuisine_diacritics in UNIQUE_DIACRITICS_BY_CUISINE.items():
+        found_lower = {c.lower() for c in found_diacritics}
+        match_count = len(found_lower & cuisine_diacritics)
+        if match_count > best_match_count:
+            best_match_count = match_count
+            likely_cuisine = cuisine
+
+    # If no unique match, check ambiguous
+    if not likely_cuisine:
+        for cuisine, cuisine_diacritics in AMBIGUOUS_DIACRITICS.items():
+            found_lower = {c.lower() for c in found_diacritics}
+            match_count = len(found_lower & cuisine_diacritics)
+            if match_count > best_match_count:
+                best_match_count = match_count
+                likely_cuisine = cuisine
+
+    return True, found_diacritics, likely_cuisine
+
+
+def has_flag_emoji(name):
+    """
+    Check if restaurant name contains a country flag emoji.
+
+    Returns: (bool, flag emoji if found, associated cuisine)
+
+    Examples:
+        "Brazil Grill 🇧🇷" -> (True, "🇧🇷", "Brazilian")
+        "Pellas 🇬🇷" -> (True, "🇬🇷", "Greek")
+        "Restaurant Normal" -> (False, None, None)
+    """
+    if not name:
+        return False, None, None
+
+    for flag, cuisine in FLAG_EMOJI_CUISINES.items():
+        if flag in name:
+            return True, flag, cuisine
+
+    return False, None, None
+
+
+def get_authenticity_markers(name):
+    """
+    Get all automatic authenticity markers for a restaurant name.
+
+    Returns dict with:
+        - has_diacritics: bool
+        - diacritics_found: set
+        - diacritics_cuisine: str or None
+        - has_flag: bool
+        - flag_emoji: str or None
+        - flag_cuisine: str or None
+        - authenticity_signal_score: float (0-1, higher = more signals)
+    """
+    has_diacr, diacr_found, diacr_cuisine = has_authenticity_diacritics(name)
+    has_fl, flag_emoji, flag_cuisine = has_flag_emoji(name)
+
+    # Calculate a simple signal score
+    signal_score = 0.0
+    if has_diacr:
+        signal_score += 0.5
+    if has_fl:
+        signal_score += 0.5
+
+    return {
+        "has_diacritics": has_diacr,
+        "diacritics_found": diacr_found,
+        "diacritics_cuisine": diacr_cuisine,
+        "has_flag": has_fl,
+        "flag_emoji": flag_emoji,
+        "flag_cuisine": flag_cuisine,
+        "authenticity_signal_score": signal_score,
+    }
 
 # Grand Place coordinates (tourist epicenter)
 GRAND_PLACE = (50.8467, 4.3525)
@@ -647,8 +818,8 @@ MICHELIN_STARS = {
     "orphyse chaussette": 1,
     "humphrey": 1,
     "alexandre": 1,
-    "la canne en ville": 1,
-    "canne en ville": 1,
+    # "la canne en ville": 1,  # PERMANENTLY CLOSED (2026)
+    # "canne en ville": 1,
     "le chalet de la forêt": 1,
     "chalet de la forêt": 1,
     "roberto": 1,

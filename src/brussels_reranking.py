@@ -21,6 +21,7 @@ from brussels_context import (
     COMMUNES, NEIGHBORHOODS, TIER_WEIGHTS,
     DIASPORA_AUTHENTICITY, BELGIAN_AUTHENTICITY,
     FRITERIE_AUTHENTICITY, BRUXELLOIS_INSTITUTIONS,
+    DIASPORA_STREETS, LOCAL_FOOD_STREETS,
     get_commune, get_neighborhood, get_diaspora_context,
     distance_to_grand_place, distance_to_eu_quarter,
     haversine_distance, is_on_local_street,
@@ -319,16 +320,43 @@ def diaspora_bonus_score(cuisine, commune, lat, lng, review_languages=None):
         if commune in commune_scores:
             commune_score = max(commune_score, commune_scores[commune])
 
-    # 2. Street bonus ONLY if cuisine already qualifies for diaspora bonus
-    # An Italian restaurant on Chaussée de Haecht gets nothing
-    # A Turkish restaurant on Chaussée de Haecht gets extra boost
+    # 2. Street bonus ONLY if cuisine matches the street's diaspora community
+    # An Indian restaurant on Chaussée de Wavre (Matongé) gets NO street bonus
+    # because Matongé is known for Congolese/African cuisine, not Indian.
+    # A Turkish restaurant on Chaussée de Haecht DOES get the bonus.
     if commune_score > 0 and lat and lng:
-        is_local, name = is_on_local_street(lat, lng)
+        is_local, local_street_name = is_on_local_street(lat, lng)
         if is_local:
-            street_name = name
-            is_on_matching_street = True
-            # Boost the commune score if on a relevant street
-            commune_score = min(1.0, commune_score + 0.3)
+            # Check if this street is actually relevant for this cuisine
+            # by looking at DIASPORA_STREETS mapping
+            street_matches_cuisine = False
+            if cuisine in DIASPORA_STREETS:
+                cuisine_streets = DIASPORA_STREETS[cuisine]
+                for street_info in cuisine_streets:
+                    diaspora_street_name = street_info["name"]
+                    # Normalize both names for comparison:
+                    # Extract key words and check for overlap
+                    # e.g., "Matongé (Chaussée de Wavre)" and "Chaussée de Wavre (Matongé)"
+                    # should match because they share "Matongé" and "Chaussée de Wavre"
+                    local_words = set(local_street_name.lower().replace('(', ' ').replace(')', ' ').split())
+                    diaspora_words = set(diaspora_street_name.lower().replace('(', ' ').replace(')', ' ').split())
+                    # Remove common French words that don't help matching
+                    stopwords = {'de', 'la', 'le', 'du', 'des', 'l', 'd'}
+                    local_words -= stopwords
+                    diaspora_words -= stopwords
+                    # Check if there's significant overlap (at least 1 meaningful word)
+                    overlap = local_words & diaspora_words
+                    if len(overlap) >= 1:
+                        street_matches_cuisine = True
+                        break
+
+            if street_matches_cuisine:
+                street_name = local_street_name
+                is_on_matching_street = True
+                # Boost the commune score if on a MATCHING street
+                commune_score = min(1.0, commune_score + 0.3)
+            # If on a local food street but NOT matching cuisine, no street bonus
+            # (but commune_score from DIASPORA_AUTHENTICITY still applies)
 
     # Boost if reviews are in diaspora languages
     if review_languages and commune_score > 0:
