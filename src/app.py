@@ -7,6 +7,7 @@ Now with Brussels-specific reranking!
 
 import ast
 import json
+import logging
 import math
 import os
 from datetime import datetime, date
@@ -15,8 +16,18 @@ import pandas as pd
 import h3
 import requests
 from flask import Flask, render_template, jsonify, request
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
+
+# Rate limiting to prevent DoS attacks
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
 
 # Cache data at startup for faster responses
 _cached_data = None
@@ -227,6 +238,7 @@ def dashboard():
 
 
 @app.route("/api/stats")
+@limiter.limit("100 per hour")
 def api_stats():
     """
     Simple page view statistics (privacy-friendly).
@@ -261,6 +273,7 @@ def api_stats():
 
 
 @app.route("/api/restaurants")
+@limiter.limit("100 per hour")
 def api_restaurants():
     """API endpoint for restaurant data with filtering."""
     df = load_data()
@@ -395,6 +408,7 @@ def api_restaurants():
 
 
 @app.route("/api/hexagons")
+@limiter.limit("60 per hour")
 def api_hexagons():
     """API endpoint for hexagon neighborhood data."""
     hex_df = load_hex_features()
@@ -441,12 +455,14 @@ def api_hexagons():
 
 
 @app.route("/api/summary")
+@limiter.limit("100 per hour")
 def api_summary():
     """API endpoint for summary statistics."""
     return jsonify(load_summary())
 
 
 @app.route("/api/gems")
+@limiter.limit("60 per hour")
 def api_gems():
     """API endpoint for top hidden gems."""
     df = load_data()
@@ -467,6 +483,7 @@ def api_gems():
 
 
 @app.route("/api/brussels_gems")
+@limiter.limit("60 per hour")
 def api_brussels_gems():
     """API endpoint for top restaurants by Brussels score."""
     df = load_data()
@@ -495,6 +512,7 @@ def api_brussels_gems():
 
 
 @app.route("/api/communes")
+@limiter.limit("60 per hour")
 def api_communes():
     """API endpoint for commune statistics."""
     df = load_data()
@@ -516,6 +534,7 @@ def api_communes():
 
 
 @app.route("/api/diaspora")
+@limiter.limit("60 per hour")
 def api_diaspora():
     """API endpoint for diaspora restaurants."""
     df = load_data()
