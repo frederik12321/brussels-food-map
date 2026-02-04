@@ -2371,14 +2371,13 @@
         }
 
         // Get tier from brussels_score
-        // Thresholds adjusted Jan 2025 for better distribution:
-        // - Chef's Kiss: ~15% (was 24% at 0.60)
-        // - More selective top tier while keeping relative rankings
+        // Thresholds matching backend (brussels_reranking.py _determine_tier)
+        // Chef's Kiss: ~6%, Kitchen Approved: ~16%, Workable: ~52%, Line Cook Shrug: ~26%
         function getTierFromScore(score) {
-            if (score >= 0.65) return 'must_try';
-            if (score >= 0.55) return 'recommended';
-            if (score >= 0.45) return 'above_average';
-            return 'average';
+            if (score >= 0.55) return 'must_try';      // Chef's Kiss (gold)
+            if (score >= 0.48) return 'recommended';   // Kitchen Approved (green)
+            if (score >= 0.30) return 'above_average'; // Workable (blue)
+            return 'average';                          // Line Cook Shrug (gray)
         }
 
         let selectedMarker = null;
