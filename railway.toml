@@ -1,0 +1,11 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+healthcheckPath = "/"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+
+# Mount a persistent volume for stats
+# Set STATS_FILE_PATH=/data/stats.json in Railway dashboard
+# and create a volume mounted at /data

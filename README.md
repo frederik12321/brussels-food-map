@@ -226,7 +226,11 @@ python src/app.py
 1. Fork this repository
 2. Connect to Railway
 3. Add environment variable: `GOOGLE_MAPS_API_KEY` (optional)
-4. Deploy
+4. **For persistent visitor stats:**
+   - Create a volume in Railway dashboard
+   - Mount it at `/data`
+   - Add environment variable: `STATS_FILE_PATH=/data/stats.json`
+5. Deploy
 
 ### Vercel / Render / Heroku
 

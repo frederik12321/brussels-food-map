@@ -496,6 +496,76 @@
             border-color: var(--accent-primary);
         }
 
+        /* GPS location button */
+        .gps-btn {
+            position: absolute;
+            top: 130px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 20px;
+            color: var(--text-primary);
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-normal);
+        }
+
+        .gps-btn:hover {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .gps-btn.locating {
+            animation: pulse 1.5s infinite;
+        }
+
+        .gps-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        /* User location marker */
+        .user-location-marker {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-blue);
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        .user-location-pulse {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 50%;
+            animation: location-pulse 2s infinite;
+            top: -10px;
+            left: -10px;
+        }
+
+        @keyframes location-pulse {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
         /* Info popup overlay */
         .info-overlay {
             display: none;
@@ -1522,6 +1592,7 @@
             </div>
         </div>
         <button class="info-btn" id="info-btn">i</button>
+        <button class="gps-btn" id="gps-btn" title="Find restaurants near me">📍</button>
         <div class="map-legend" id="legend-markers">
                 <div class="legend-title">Brussels Food Map</div>
                 <div class="legend-item">
@@ -2886,6 +2957,87 @@
                 infoOverlay.classList.add('active');
             }, 500); // Small delay to let the map load first
         }
+
+        // GPS Location functionality
+        const gpsBtn = document.getElementById('gps-btn');
+        let userLocationMarker = null;
+        let userLocationCircle = null;
+
+        gpsBtn.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            gpsBtn.classList.add('locating');
+            gpsBtn.innerHTML = '⏳';
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude, accuracy } = position.coords;
+
+                    // Remove previous markers
+                    if (userLocationMarker) {
+                        map.removeLayer(userLocationMarker);
+                    }
+                    if (userLocationCircle) {
+                        map.removeLayer(userLocationCircle);
+                    }
+
+                    // Create custom location marker
+                    const locationIcon = L.divIcon({
+                        className: 'user-location-container',
+                        html: `<div class="user-location-pulse"></div><div class="user-location-marker"></div>`,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    });
+
+                    userLocationMarker = L.marker([latitude, longitude], { icon: locationIcon })
+                        .addTo(map)
+                        .bindPopup('📍 You are here');
+
+                    // Add accuracy circle
+                    userLocationCircle = L.circle([latitude, longitude], {
+                        radius: accuracy,
+                        color: '#3b82f6',
+                        fillColor: '#3b82f6',
+                        fillOpacity: 0.1,
+                        weight: 1
+                    }).addTo(map);
+
+                    // Fly to location
+                    map.flyTo([latitude, longitude], 15);
+
+                    // Update button state
+                    gpsBtn.classList.remove('locating');
+                    gpsBtn.classList.add('active');
+                    gpsBtn.innerHTML = '📍';
+                },
+                (error) => {
+                    gpsBtn.classList.remove('locating');
+                    gpsBtn.innerHTML = '📍';
+
+                    let message = 'Unable to get your location';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            message = 'Location access denied. Please enable location permissions.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            message = 'Location information unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            message = 'Location request timed out.';
+                            break;
+                    }
+                    alert(message);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        });
     </script>
 </body>
 </html>

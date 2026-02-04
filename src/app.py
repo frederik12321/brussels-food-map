@@ -24,7 +24,8 @@ _cached_summary = None
 
 # Simple privacy-friendly page view counter
 # Stores only daily totals, no user data, no cookies
-_stats_file = "../data/stats.json"
+# Use STATS_FILE_PATH env var for persistent storage on Railway
+_stats_file = os.environ.get("STATS_FILE_PATH", "../data/stats.json")
 _stats_lock = Lock()
 _stats_cache = None
 
