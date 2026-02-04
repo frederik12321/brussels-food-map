@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brussels Food Map - Hidden Gems</title>
+    <!-- Favicon - fork and knife emoji -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍴</text></svg>">
     <!-- Preconnect for faster resource loading -->
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="preconnect" href="https://cartodb-basemaps-a.global.ssl.fastly.net" crossorigin>
@@ -194,6 +196,48 @@
             font-weight: 500;
             color: var(--text-secondary);
             margin-bottom: 4px;
+        }
+
+        /* Collapsible advanced filters */
+        .filters-advanced {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .filters-advanced.expanded {
+            max-height: 500px;
+        }
+
+        .filters-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+            background: transparent;
+            border: 1px dashed var(--border-default);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .filters-toggle:hover {
+            color: var(--text-primary);
+            border-color: var(--border-focus);
+            background: var(--bg-hover);
+        }
+
+        .filters-toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .filters-toggle.expanded .filters-toggle-icon {
+            transform: rotate(180deg);
         }
 
         .search-input {
@@ -1106,18 +1150,49 @@
 
         /* Loading state */
         .loading {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             padding: 40px;
             color: var(--text-muted);
+            font-size: 13px;
+            gap: 12px;
         }
 
-        .loading {
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-subtle);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Loading overlay for map */
+        .map-loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100px;
-            color: #666;
-            font-size: 13px;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .map-loading-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         /* Mobile Responsiveness */
@@ -1436,14 +1511,15 @@
             </div>
 
             <div class="filters">
+                <!-- Essential filters - always visible -->
                 <div class="filter-group full-width">
-                    <label class="filter-label">Search</label>
-                    <input type="text" class="search-input" id="search" placeholder="Restaurant name...">
+                    <label class="filter-label" for="search">Search</label>
+                    <input type="text" class="search-input" id="search" placeholder="Restaurant name..." maxlength="50">
                 </div>
 
                 <div class="filter-row">
                     <div class="filter-group">
-                        <label class="filter-label">Commune</label>
+                        <label class="filter-label" for="commune-filter">Commune</label>
                         <select id="commune-filter">
                             <option value="all">All Communes</option>
                             {% for commune in communes %}
@@ -1452,7 +1528,7 @@
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label class="filter-label">Cuisine</label>
+                        <label class="filter-label" for="cuisine-filter">Cuisine</label>
                         <select id="cuisine-filter">
                             <option value="all">All Cuisines</option>
                             {% for cuisine in cuisines %}
@@ -1464,7 +1540,7 @@
 
                 <div class="filter-row">
                     <div class="filter-group">
-                        <label class="filter-label">Venue Type</label>
+                        <label class="filter-label" for="venue-filter">Venue Type</label>
                         <select id="venue-filter">
                             <option value="all">All Venues</option>
                             <option value="Restaurant" selected>Restaurants Only</option>
@@ -1476,29 +1552,7 @@
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label class="filter-label">Min Rating</label>
-                        <select id="rating-filter">
-                            <option value="">Any</option>
-                            <option value="3.5">3.5+</option>
-                            <option value="4.0">4.0+</option>
-                            <option value="4.5">4.5+</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <label class="filter-label">Price</label>
-                        <select id="price-filter">
-                            <option value="">Any</option>
-                            <option value="1">€ (Budget)</option>
-                            <option value="2">€€ (Moderate)</option>
-                            <option value="3">€€€ (Expensive)</option>
-                            <option value="4">€€€€ (Fine Dining)</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label class="filter-label">Sort By</label>
+                        <label class="filter-label" for="sort-filter">Sort By</label>
                         <select id="sort-filter">
                             <option value="brussels_score">Brussels Score</option>
                             <option value="rating">Rating</option>
@@ -1507,52 +1561,83 @@
                     </div>
                 </div>
 
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <label class="filter-label">Open On</label>
-                        <select id="day-filter">
-                            <option value="">Any Day</option>
-                            <option value="Monday">Monday</option>
-                            <option value="Tuesday">Tuesday</option>
-                            <option value="Wednesday">Wednesday</option>
-                            <option value="Thursday">Thursday</option>
-                            <option value="Friday">Friday</option>
-                            <option value="Saturday">Saturday</option>
-                            <option value="Sunday">Sunday</option>
-                        </select>
+                <!-- Toggle for advanced filters -->
+                <button class="filters-toggle" id="filters-toggle" type="button">
+                    <span>More filters</span>
+                    <span class="filters-toggle-icon">▼</span>
+                </button>
+
+                <!-- Advanced filters - collapsible -->
+                <div class="filters-advanced" id="filters-advanced">
+                    <div class="filter-row" style="margin-top: 10px;">
+                        <div class="filter-group">
+                            <label class="filter-label" for="rating-filter">Min Rating</label>
+                            <select id="rating-filter">
+                                <option value="">Any</option>
+                                <option value="3.5">3.5+</option>
+                                <option value="4.0">4.0+</option>
+                                <option value="4.5">4.5+</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label" for="price-filter">Price</label>
+                            <select id="price-filter">
+                                <option value="">Any</option>
+                                <option value="1">€ (Budget)</option>
+                                <option value="2">€€ (Moderate)</option>
+                                <option value="3">€€€ (Expensive)</option>
+                                <option value="4">€€€€ (Fine Dining)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="filter-group">
-                        <label class="filter-label">Open At</label>
-                        <select id="time-filter">
-                            <option value="">Any Time</option>
-                            <option value="12">12:00 (Lunch)</option>
-                            <option value="13">13:00</option>
-                            <option value="14">14:00</option>
-                            <option value="18">18:00</option>
-                            <option value="19">19:00 (Dinner)</option>
-                            <option value="20">20:00</option>
-                            <option value="21">21:00</option>
-                            <option value="22">22:00 (Late)</option>
-                        </select>
+
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label" for="day-filter">Open On</label>
+                            <select id="day-filter">
+                                <option value="">Any Day</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label" for="time-filter">Open At</label>
+                            <select id="time-filter">
+                                <option value="">Any Time</option>
+                                <option value="12">12:00 (Lunch)</option>
+                                <option value="13">13:00</option>
+                                <option value="14">14:00</option>
+                                <option value="18">18:00</option>
+                                <option value="19">19:00 (Dinner)</option>
+                                <option value="20">20:00</option>
+                                <option value="21">21:00</option>
+                                <option value="22">22:00 (Late)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label" for="guide-filter">Recognition</label>
+                            <select id="guide-filter">
+                                <option value="">Any</option>
+                                <option value="michelin">Michelin Stars</option>
+                                <option value="bib">Bib Gourmand</option>
+                                <option value="gaultmillau">Gault & Millau</option>
+                                <option value="reddit">r/brussels Approved</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <label class="filter-label">Recognition</label>
-                        <select id="guide-filter">
-                            <option value="">Any</option>
-                            <option value="michelin">Michelin Stars</option>
-                            <option value="bib">Bib Gourmand</option>
-                            <option value="gaultmillau">Gault & Millau</option>
-                            <option value="reddit">r/brussels Approved</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="filter-group full-width">
+                <div class="filter-group full-width" style="margin-top: 10px;">
                     <label class="filter-label">Show</label>
-                    <div class="toggle-group">
+                    <div class="toggle-group" role="group" aria-label="Filter mode">
                         <button class="toggle-btn active" id="show-all" title="Show all restaurants matching your filters">All</button>
                         <button class="toggle-btn" id="show-brussels-gems" title="Top 100 overall: combines quality, local appeal, scarcity & guide recognition">🏆 Top 100</button>
                     </div>
@@ -1564,13 +1649,16 @@
                     <span class="results-count" id="results-count">Loading...</span>
                 </div>
                 <div id="restaurant-list">
-                    <div class="loading">Loading restaurants...</div>
+                    <div class="loading"><div class="loading-spinner"></div>Loading restaurants...</div>
                 </div>
             </div>
         </div>
 
         <div class="map-container">
             <div id="map"></div>
+            <div class="map-loading-overlay" id="map-loading">
+                <div class="loading-spinner"></div>
+            </div>
         </div>
 
         <button class="mobile-toggle" id="mobile-toggle" style="display:none;">Show Map</button>
@@ -1592,11 +1680,11 @@
                 </button>
             </div>
         </div>
-        <button class="info-btn" id="info-btn">i</button>
-        <button class="gps-btn" id="gps-btn" title="Find restaurants near me">📍</button>
+        <button class="info-btn" id="info-btn" title="About the Brussels Score ranking system" aria-label="Information about ranking">i</button>
+        <button class="gps-btn" id="gps-btn" title="Find restaurants near my location" aria-label="Use my location">📍</button>
         <div class="map-legend" id="legend-markers">
                 <div class="legend-title">Brussels Food Map</div>
-                <div class="legend-item">
+                <div class="legend-item" title="Score 55+: Exceptional quality, must visit">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#FFD700"/>
                         <path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/>
@@ -1604,21 +1692,21 @@
                     </svg>
                     <span>Chef's Kiss</span>
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" title="Score 48-54: Highly recommended">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#2ECC71"/>
                         <path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/>
                     </svg>
                     <span>Kitchen Approved</span>
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" title="Score 30-47: Solid choice, above average">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#3498DB"/>
                         <path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/>
                     </svg>
                     <span>Workable</span>
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" title="Score below 30: Standard, nothing special">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#95A5A6"/>
                         <circle cx="9" cy="9" r="2.5" fill="white"/>
@@ -2486,7 +2574,7 @@
                 <div class="popup-stats">
                     <span>★ ${restaurant.rating?.toFixed(1) || 'N/A'}</span>
                     <span>${restaurant.review_count || 0} reviews</span>
-                    ${score ? `<span>Score: ${score.toFixed(2)}</span>` : ''}
+                    ${score ? `<span title="Brussels Score: ${Math.round(score * 100)}/100">Score: ${Math.round(score * 100)}</span>` : ''}
                 </div>
                 ${hoursHtml}
                 ${diasporaHtml}
@@ -2609,6 +2697,12 @@
         }
 
         async function loadRestaurants() {
+            // Show loading state
+            const mapLoading = document.getElementById('map-loading');
+            const restaurantList = document.getElementById('restaurant-list');
+            mapLoading.classList.add('active');
+            restaurantList.innerHTML = '<div class="loading"><div class="loading-spinner"></div>Loading...</div>';
+
             const params = new URLSearchParams();
 
             const search = document.getElementById('search').value;
@@ -2659,6 +2753,9 @@
                 console.error('Error loading restaurants:', error);
                 document.getElementById('restaurant-list').innerHTML =
                     '<div class="loading">Error loading data</div>';
+            } finally {
+                // Hide loading state
+                document.getElementById('map-loading').classList.remove('active');
             }
         }
 
@@ -2714,7 +2811,7 @@
             // Show fewer items on mobile for faster rendering
             const listLimit = isMobile ? 30 : 50;
             listEl.innerHTML = restaurants.slice(0, listLimit).map(r => {
-                const score = r.brussels_score?.toFixed(2) || '';
+                const score = r.brussels_score ? Math.round(r.brussels_score * 100) : '';
                 const isUnderexplored = r.commune_tier === 'underexplored';
                 const commune = r.commune || '';
                 const openStatus = getOpenStatus(r.opening_hours);
@@ -2871,6 +2968,16 @@
         document.getElementById('guide-filter').addEventListener('change', loadRestaurants);
         document.getElementById('day-filter').addEventListener('change', loadRestaurants);
         document.getElementById('time-filter').addEventListener('change', loadRestaurants);
+
+        // Advanced filters toggle
+        const filtersToggle = document.getElementById('filters-toggle');
+        const filtersAdvanced = document.getElementById('filters-advanced');
+        filtersToggle.addEventListener('click', () => {
+            filtersAdvanced.classList.toggle('expanded');
+            filtersToggle.classList.toggle('expanded');
+            const isExpanded = filtersAdvanced.classList.contains('expanded');
+            filtersToggle.querySelector('span:first-child').textContent = isExpanded ? 'Less filters' : 'More filters';
+        });
 
         function setFilter(filter) {
             currentFilter = filter;
