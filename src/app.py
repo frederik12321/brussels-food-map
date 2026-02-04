@@ -13,6 +13,7 @@ from datetime import datetime, date
 from threading import Lock
 import pandas as pd
 import h3
+import requests
 from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
@@ -22,10 +23,9 @@ _cached_data = None
 _cached_hex = None
 _cached_summary = None
 
-# Simple privacy-friendly page view counter
-# Stores only daily totals, no user data, no cookies
-# Use STATS_FILE_PATH env var for persistent storage on Railway
-_stats_file = os.environ.get("STATS_FILE_PATH", "../data/stats.json")
+# Supabase configuration for persistent stats
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ijvhhxdfwisllokinsyi.supabase.co")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
 _stats_lock = Lock()
 _stats_cache = None
 
@@ -52,26 +52,67 @@ def safe_parse_hours(hours_str):
         return None
 
 
+def _supabase_headers():
+    """Get headers for Supabase API requests."""
+    return {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+    }
+
+
 def load_stats():
-    """Load page view statistics."""
+    """Load page view statistics from Supabase."""
     global _stats_cache
     if _stats_cache is not None:
         return _stats_cache
+
+    if not SUPABASE_KEY:
+        # Fallback if no Supabase configured
+        return {"daily": {}, "total": 0}
+
     try:
-        with open(_stats_file, "r") as f:
-            _stats_cache = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        _stats_cache = {"daily": {}, "total": 0}
+        response = requests.get(
+            f"{SUPABASE_URL}/rest/v1/page_stats?id=eq.main&select=*",
+            headers=_supabase_headers(),
+            timeout=5
+        )
+        if response.status_code == 200:
+            data = response.json()
+            if data:
+                row = data[0]
+                _stats_cache = {
+                    "daily": row.get("daily", {}),
+                    "total": row.get("total", 0)
+                }
+                return _stats_cache
+    except Exception:
+        pass
+
+    _stats_cache = {"daily": {}, "total": 0}
     return _stats_cache
 
 
 def save_stats(stats):
-    """Save page view statistics."""
+    """Save page view statistics to Supabase."""
     global _stats_cache
     _stats_cache = stats
+
+    if not SUPABASE_KEY:
+        return
+
     try:
-        with open(_stats_file, "w") as f:
-            json.dump(stats, f)
+        requests.patch(
+            f"{SUPABASE_URL}/rest/v1/page_stats?id=eq.main",
+            headers=_supabase_headers(),
+            json={
+                "total": stats["total"],
+                "daily": stats["daily"],
+                "updated_at": datetime.utcnow().isoformat()
+            },
+            timeout=5
+        )
     except Exception:
         pass  # Fail silently - stats are not critical
 
