@@ -12,6 +12,9 @@
     <link rel="dns-prefetch" href="https://unpkg.com">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           crossorigin="anonymous" />
+    <!-- Marker clustering plugin -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <style>
         :root {
             /* Modern minimal palette */
@@ -1195,6 +1198,56 @@
             pointer-events: auto;
         }
 
+        /* Marker cluster styling */
+        .marker-cluster {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--border-default);
+            border-radius: 50%;
+            box-shadow: var(--shadow-md);
+        }
+
+        .marker-cluster div {
+            background: var(--accent-primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .marker-cluster-small {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: #2ECC71;
+        }
+        .marker-cluster-small div {
+            background: #2ECC71;
+            width: 28px;
+            height: 28px;
+        }
+
+        .marker-cluster-medium {
+            background: rgba(52, 152, 219, 0.2);
+            border-color: #3498DB;
+        }
+        .marker-cluster-medium div {
+            background: #3498DB;
+            width: 34px;
+            height: 34px;
+        }
+
+        .marker-cluster-large {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #FFD700;
+        }
+        .marker-cluster-large div {
+            background: #e6c200;
+            width: 40px;
+            height: 40px;
+            font-size: 13px;
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .container {
@@ -1756,6 +1809,8 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             crossorigin="anonymous"></script>
+    <!-- Marker clustering plugin -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <script>
         // Initialize map centered on Brussels - optimized for mobile
         const isMobile = window.innerWidth <= 768;
@@ -1784,7 +1839,27 @@
             keepBuffer: isMobile ? 2 : 4
         }).addTo(map);
 
-        let markersLayer = L.layerGroup().addTo(map);
+        // Use clustering on mobile to reduce visual clutter
+        let markersLayer = isMobile
+            ? L.markerClusterGroup({
+                maxClusterRadius: 50,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                zoomToBoundsOnClick: true,
+                disableClusteringAtZoom: 16,
+                iconCreateFunction: function(cluster) {
+                    const count = cluster.getChildCount();
+                    let size = 'small';
+                    if (count > 50) size = 'large';
+                    else if (count > 20) size = 'medium';
+                    return L.divIcon({
+                        html: '<div>' + count + '</div>',
+                        className: 'marker-cluster marker-cluster-' + size,
+                        iconSize: L.point(40, 40)
+                    });
+                }
+            }).addTo(map)
+            : L.layerGroup().addTo(map);
         let hexagonsLayer = L.layerGroup();
         let communeLabelsLayer = L.layerGroup().addTo(map);
 
