@@ -1861,42 +1861,40 @@
             keepBuffer: isMobile ? 2 : 4
         }).addTo(map);
 
-        // Use clustering on mobile to reduce visual clutter
-        let markersLayer = isMobile
-            ? L.markerClusterGroup({
-                maxClusterRadius: 50,
-                spiderfyOnMaxZoom: true,
-                showCoverageOnHover: false,
-                zoomToBoundsOnClick: true,
-                disableClusteringAtZoom: 16,
-                iconCreateFunction: function(cluster) {
-                    const count = cluster.getChildCount();
-                    let size = 'small';
-                    let icon = '🍴';
-                    if (count > 100) {
-                        size = 'large';
-                        icon = '🍽️';
-                    } else if (count > 50) {
-                        size = 'large';
-                        icon = '🔪';
-                    } else if (count > 30) {
-                        size = 'medium';
-                        icon = '🥄';
-                    } else if (count > 15) {
-                        size = 'medium';
-                        icon = '🍳';
-                    } else if (count > 8) {
-                        size = 'small';
-                        icon = '🥢';
-                    }
-                    return L.divIcon({
-                        html: '<div>' + icon + '</div>',
-                        className: 'marker-cluster marker-cluster-' + size,
-                        iconSize: L.point(46, 46)
-                    });
+        // Use clustering to reduce visual clutter
+        let markersLayer = L.markerClusterGroup({
+            maxClusterRadius: isMobile ? 50 : 40,
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: false,
+            zoomToBoundsOnClick: true,
+            disableClusteringAtZoom: isMobile ? 16 : 15,
+            iconCreateFunction: function(cluster) {
+                const count = cluster.getChildCount();
+                let size = 'small';
+                let icon = '🍴';
+                if (count > 100) {
+                    size = 'large';
+                    icon = '🍽️';
+                } else if (count > 50) {
+                    size = 'large';
+                    icon = '🔪';
+                } else if (count > 30) {
+                    size = 'medium';
+                    icon = '🥄';
+                } else if (count > 15) {
+                    size = 'medium';
+                    icon = '🍳';
+                } else if (count > 8) {
+                    size = 'small';
+                    icon = '🥢';
                 }
-            }).addTo(map)
-            : L.layerGroup().addTo(map);
+                return L.divIcon({
+                    html: '<div>' + icon + '</div>',
+                    className: 'marker-cluster marker-cluster-' + size,
+                    iconSize: L.point(46, 46)
+                });
+            }
+        }).addTo(map);
         let hexagonsLayer = L.layerGroup();
         let communeLabelsLayer = L.layerGroup().addTo(map);
 
