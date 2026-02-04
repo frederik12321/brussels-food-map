@@ -295,6 +295,35 @@ Brussels is 75% foreign-origin population. Street-level diaspora hubs:
 
 ---
 
+## Data Quality Filtering
+
+### Sentiment Analysis Pipeline
+
+We implemented a sentiment-based quality control system to clean the restaurant dataset:
+
+#### Stage 1: Structural Filtering
+Automatically flagged and removed non-restaurants and low-quality entries:
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| **Non-restaurants** | 194 | Hotels, grocery stores, nightclubs, catering services |
+| **Low-rated places** | 46 | Restaurants with <3.0★ and 10+ reviews |
+| **Suspicious names** | 13 | Entries with "hotel" in name |
+
+#### Stage 2: Sentiment Validation
+Scraped Google Maps reviews and validated sentiment analysis accuracy:
+
+- **TextBlob sentiment polarity** correlated with star ratings at **92.9% accuracy**
+- Keyword-based flagging for "closed", "terrible", "racist" mentions
+- Manual review of flagged entries to catch false positives
+
+#### Results
+- **239 entries removed** from original dataset
+- **4,435 clean restaurants** in production
+- False positive detection for edge cases (e.g., "scam" in "scampi", references to other closed restaurants)
+
+---
+
 ## Inspiration & Credits
 
 **Original Inspiration**: [Lauren Leek's London Food Dashboard](https://laurenleek.substack.com/p/how-google-maps-quietly-allocates) - The insight that ML residuals can identify undervalued restaurants.
