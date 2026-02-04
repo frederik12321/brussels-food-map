@@ -1,0 +1,109 @@
+[
+  {
+    "name": "La Truffe Noire",
+    "issues": [
+      "TERRIBLE REVIEWS: keywords ['awful', 'rat']",
+      "HIGH NEGATIVE RATIO: 3/10 reviews are 1-2★"
+    ],
+    "avg_rating": 3.9,
+    "avg_sentiment": 0.31,
+    "review_count": 10,
+    "in_filtered_list": true,
+    "sample_negative": [
+      {
+        "text": "Disappointing experience. The hype doesn't match the reality.",
+        "sentiment": -0.6,
+        "rating": 2
+      }
+    ]
+  },
+  {
+    "name": "Eliane",
+    "issues": [
+      "POSSIBLY CLOSED: keywords ['closed']"
+    ],
+    "avg_rating": 4.9,
+    "avg_sentiment": 0.45,
+    "review_count": 42,
+    "in_filtered_list": true,
+    "sample_negative": []
+  },
+  {
+    "name": "L'Express",
+    "issues": [
+      "TERRIBLE REVIEWS: keywords ['terrible', 'racist']"
+    ],
+    "avg_rating": 4.8,
+    "avg_sentiment": 0.43,
+    "review_count": 50,
+    "in_filtered_list": false,
+    "sample_negative": [
+      {
+        "text": "Came with high expectations and they were exceeded. The chicken durum is perfection. That white garlic sauce should be bottled and sold!",
+        "sentiment": -0.15,
+        "rating": 5
+      },
+      {
+        "text": "Terrible service. Waited 1 hour and then they forgot our order. When we complained, the staff was rude. Food was cold. Avoid.",
+        "sentiment": -0.55,
+        "rating": 1
+      }
+    ]
+  },
+  {
+    "name": "My Tannour - Saint-Gilles",
+    "issues": [
+      "NEGATIVE SENTIMENT: avg=-0.06"
+    ],
+    "avg_rating": 2.0,
+    "avg_sentiment": -0.06,
+    "review_count": 3,
+    "in_filtered_list": true,
+    "sample_negative": [
+      {
+        "text": "Came by in the middle of the afternoon for a late lunch. Ordered one of the menus with 2 bread sandwiches and some fries.",
+        "sentiment": -0.15,
+        "rating": 4
+      },
+      {
+        "text": "Very disappointing experience. The sandwiches were completely cold and mostly filled with salad, with only a tiny amount of meat. There was so much sa",
+        "sentiment": -0.13,
+        "rating": 1
+      }
+    ]
+  },
+  {
+    "name": "Le Wine Bar des Marolles",
+    "issues": [
+      "TERRIBLE REVIEWS: keywords ['terrible', 'rat']"
+    ],
+    "avg_rating": 4.4,
+    "avg_sentiment": 0.46,
+    "review_count": 50,
+    "in_filtered_list": false,
+    "sample_negative": [
+      {
+        "text": "Terrible experience. The staff was unfriendly and the service was incredibly slow. The food was cold when it arrived. Avoid this place.",
+        "sentiment": -0.63,
+        "rating": 1
+      }
+    ]
+  },
+  {
+    "name": "Hanoi Station (Merode)",
+    "issues": [
+      "TERRIBLE REVIEWS: keywords ['scam', 'rat']"
+    ],
+    "avg_rating": 4.5,
+    "avg_sentiment": 0.44,
+    "review_count": 50,
+    "in_filtered_list": true,
+    "sample_negative": [
+      {
+        "text": "Tasty Vietnamese cuisine in a casual setting. The staff is helpful with recommendations.",
+        "sentiment": -0.5,
+        "rating": 4
+      }
+    ]
+  }
+]

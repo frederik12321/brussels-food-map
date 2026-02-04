@@ -1,0 +1,1259 @@
+[
+  {
+    "name": "Chez mon ex",
+    "search_query": "Chez mon ex Saint-Gilles Rue de Roumanie 2",
+    "scraped_at": "2026-02-04T11:28:30.322300",
+    "metadata": {
+      "price": null,
+      "rating": "4.8",
+      "review_count": 332,
+      "address": "Rue de Roumanie 2, 1060 Saint-Gilles"
+    },
+    "reviews": [],
+    "years_open": "unknown",
+    "reviewer_quality": {
+      "quality": "unknown",
+      "local_guides_pct": 0,
+      "avg_reviews": 0
+    },
+    "error": null
+  },
+  {
+    "name": "PIÑA Taqueria - Bar à Tacos",
+    "search_query": "PIÑA Taqueria - Bar à Tacos Saint-Gilles Chau. de Waterloo 270",
+    "scraped_at": "2026-02-04T11:12:57.145815",
+    "metadata": {
+      "price": null,
+      "rating": "4.7",
+      "review_count": null,
+      "address": "Chau. de Waterloo 270, 1060 Saint-Gilles"
+    },
+    "reviews": [],
+    "years_open": "unknown",
+    "reviewer_quality": {},
+    "error": "Could not open reviews panel"
+  },
+  {
+    "name": "Cokoa",
+    "search_query": "Cokoa Ixelles Chau. de Boondael 66",
+    "scraped_at": "2026-02-04T11:19:42.920794",
+    "metadata": {
+      "price": null,
+      "rating": "4.8",
+      "review_count": null,
+      "address": "Chau. de Boondael 66, 1050 Ixelles"
+    },
+    "reviews": [],
+    "years_open": "unknown",
+    "reviewer_quality": {},
+    "error": "Could not open reviews panel"
+  },
+  {
+    "name": "Creamy Food",
+    "search_query": "Creamy Food Saint-Gilles Chau. d'Alsemberg 62",
+    "scraped_at": "2026-02-04T11:32:06.712827",
+    "metadata": {
+      "price": null,
+      "rating": "5.0",
+      "review_count": 58,
+      "address": "Chau. d'Alsemberg 62, 1060 Saint-Gilles"
+    },
+    "reviews": [],
+    "years_open": "unknown",
+    "reviewer_quality": {
+      "quality": "unknown",
+      "local_guides_pct": 0,
+      "avg_reviews": 0
+    },
+    "error": null
+  },
+  {
+    "name": "PANAM KEBAB Châtelain",
+    "search_query": "PANAM KEBAB Châtelain Ixelles Rue du Page 5",
+    "scraped_at": "2026-02-04T10:47:28.420368",
+    "metadata": {
+      "price": null,
+      "rating": "4.8",
+      "review_count": 80,
+      "address": "Rue du Page 5, 1050 Ixelles"
+    },
+    "reviews": [
+      {
+        "text": "What a fantastic find at Paname Kebab! Honestly, we loved it from start to finish.\n\nYou can immediately tell that everything is homemade, from the spit-roasted meat to the falafels and even the fries. It really makes all the difference, and you can taste it from the very first bite. The ingredients are delicious, fresh, and prepared with great care.\n\nA huge plus is the service: the team is super friendly, welcoming, and makes you feel right at home. It's a great place to be, and it makes the experience even better.\n\nDefinitely a place we highly recommend if you're looking for a quality kebab. We'll definitely be back!",
+        "rating": 5,
+        "date": "15 hours ago",
+        "reviewer_name": "Madison Hainaut",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Absolutely delicious! The fries are excellent, by the way!\nThe staff are so friendly and professional, it makes you want to come back! 🤩",
+        "rating": 4,
+        "date": "16 hours ago",
+        "reviewer_name": "Delphine Durre",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "amazing !",
+        "rating": 5,
+        "date": "2 days ago",
+        "reviewer_name": "oriane freund",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Thanks Lina🥰 …",
+        "rating": 5,
+        "date": "2 days ago",
+        "reviewer_name": "Lina Kamana",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "It's a shame you didn't enjoy the food.\n\nThank you nonetheless for the rating regarding the service!",
+        "rating": 2,
+        "date": "4 days ago",
+        "reviewer_name": "rielleti",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Came hungry. Left happy. 10/10 would get sauce on my shirt again!",
+        "rating": 5,
+        "date": "a week ago",
+        "reviewer_name": "tristan Bia",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Simpy delicious !",
+        "rating": 5,
+        "date": "a week ago",
+        "reviewer_name": "Santiago Torres",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Wonderful Charlotte...\n\nWe received a warm welcome.\n\nTop-notch service.\n\nThank you so much, Charlotte.",
+        "rating": 5,
+        "date": "a week ago",
+        "reviewer_name": "Jose Eduardo PALACIOS",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The food, the staff, the atmosphere were all great.",
+        "rating": 5,
+        "date": "2 weeks ago",
+        "reviewer_name": "Tom Parmentier",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Ouh 😍 Benin barcha!!",
+        "rating": 5,
+        "date": "2 weeks ago",
+        "reviewer_name": "Haroun LT",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Great place, great food, great staff & lots of sauce, all one can wish for.",
+        "rating": 5,
+        "date": "2 weeks ago",
+        "reviewer_name": "Wilson De Vroey",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Panam is definitely a must-stop when I'm in Brussels! It's fresh, delicious, and generous 😋 a real treat, and the atmosphere is just as great 👊🏽",
+        "rating": 5,
+        "date": "2 weeks ago",
+        "reviewer_name": "Antoine Lambilliotte",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Simply the best in town!",
+        "rating": 5,
+        "date": "3 weeks ago",
+        "reviewer_name": "nelson hermans",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best place to eat at place du Chatelain!",
+        "rating": 5,
+        "date": "3 weeks ago",
+        "reviewer_name": "Matthieu De Clercq",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "By far the best kebab in Brussels (and even in Belgium).\nThe spit-roasted meat is truly homemade and the vegetables are incredibly fresh.\nYou go there to try it out and you keep going back again and again.",
+        "rating": 5,
+        "date": "3 weeks ago",
+        "reviewer_name": "Brice Feron",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Really great döner for being outside of Germany! Great veggie options and a cool atmosphere",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Anne Bartus",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "I highly recommend it! Great place, delicious kebab with quality ingredients and friendly staff. Thank you so much for the experience.",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Maroussia Geûens",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "It was excellent!!!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Sanya Georgopoulos",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Absolutely amazing!!! A great menu, a warm and welcoming atmosphere, and top-notch staff and service!\n\nI had a fantastic time with my daughter.",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Faysal",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Delicious, fresh products and top-notch service! I highly recommend it.",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Brieuc de Streel",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Amazing place",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "John-Antoine Poncelet",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Absolutely delicious and incredibly satisfying!! The marinated chicken skewer is a real treat. It feels just like home!!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Brice Verola",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Delicious kebabs that are a nice change from the usual! We enjoyed them from start to finish, and we especially loved the chicken. I highly recommend them :)",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Duponchelle Victoire",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Thank you Anastasia 😊 …",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Anastasia Jakubovich",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Excellent kebab/doner! Amazing fries, homemade bread and sauces :-) and a great playlist to top it all off. Very welcoming staff too!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Andreia D.",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "A delicious treat! And what service! Thank you for this wonderful experience, I will gladly return!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Maroussia De Bergeyck",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Second place that confirms the success of the first! What a treat!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Matthieu Wouters",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Top quality! And super delicious. ✨🔥",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Maya Benovitch",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Wow!\nTheir homemade broccoli rabe is simply incredible! The team is amazing, thank you to Nasser and Charlotte for the service!\nWell done, team!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Charles Dirckx",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Incredible experience at Panam!\n\nWe were missing this kind of place at Châtelain.",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Hans Paalman",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Incredible! They opened at Fernand Coq a while ago, and I always wondered when they'd open a second Panam because it's absolutely delicious 😋 Well, they did!! Well done, team 👑",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Achille Falisse",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Great place in a lovely neighborhood! Excellent service and delicious food, I highly recommend it.",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Corentin de ghellinck",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Chicken Berliner durum with extra halloumi! So good!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Marc Grd",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Cosy Kebab!!\n\nI enjoy having a good kebab in a qualitative place.\n\nHalloumi as a side is crazy good.\n\nI reccomend.",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "victor buisseret",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Excellent kebab, fresh ingredients. Bakery-style doner, homemade sauce, spit-roasted meat, and condiments. A real treat. I highly recommend it for a quality kebab.",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Bourgl",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      }
+    ],
+    "years_open": "<2y",
+    "reviewer_quality": {
+      "quality": "Low",
+      "local_guides_pct": 0,
+      "avg_reviews": 0
+    },
+    "error": null
+  },
+  {
+    "name": "Diyar Restaurant",
+    "search_query": "Diyar Restaurant Saint-Josse-ten-Noode Chau. de Haecht 91",
+    "scraped_at": "2026-02-04T11:30:21.393718",
+    "metadata": {
+      "price": null,
+      "rating": "4.9",
+      "review_count": 147,
+      "address": "Chau. de Haecht 91, 1030 Schaerbeek"
+    },
+    "reviews": [],
+    "years_open": "unknown",
+    "reviewer_quality": {
+      "quality": "unknown",
+      "local_guides_pct": 0,
+      "avg_reviews": 0
+    },
+    "error": null
+  },
+  {
+    "name": "Ornina Châtelain",
+    "search_query": "Ornina Châtelain Ixelles Rue du Page 24",
+    "scraped_at": "2026-02-04T10:45:53.146284",
+    "metadata": {
+      "price": null,
+      "rating": "5.0",
+      "review_count": 89,
+      "address": "Rue du Page 24, 1050 Ixelles"
+    },
+    "reviews": [
+      {
+        "text": "Saturday night, and our lack of planning had us in tricky spot. We luckily ended up here and had an absolutely incredible meal. Delicious food, incredible flavors, warm service. Even our pickiest child was reaching about it.\n\nWe all agreed: it was lucky our original dinner plans fell through so we could end up here.",
+        "rating": 5,
+        "date": "3 months ago",
+        "reviewer_name": "Ryan Millar",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Delicious food! Both sweet and savory. If you're looking for a vegan-friendly place in Bailli to grab a quick bite, this is the spot! Best Syrian sandwich I ever had!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Valentin Debouche",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Delicious sweets. My preference is anything with pistachio. We had a chance to taste before choosing which was great. Extremely welcoming and helpful staff.",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "JP LH",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "They have amazing desserts to share with friends. Also the balance in sweetness is perfect and not dripping of sugar. Also my vegan friends were delighted to taste some of their creations.",
+        "rating": 5,
+        "date": "Edited 2 years ago",
+        "reviewer_name": "Willem Jansen",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Delicious Syrian treats and home goods! Incredible quality and entirely handmade. Costly for portion size but a great way to support artisanal.",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "catalina cipri",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The best Syrian sweet in Europe! Top quality\nOriginal test!\nLow-sugar and vegan options are available\nMust visit and try",
+        "rating": 5,
+        "date": "3 years ago",
+        "reviewer_name": "Ammar Al Nakeeb",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Damascus-style sweets with no added sugar!\n\nLove how the flavor of the nuts and fruits come through, instead of a heavy sweetness. Great for kid’s collation/snacks as well.\n\nKind owner. Try the ice cream!",
+        "rating": 5,
+        "date": "6 months ago",
+        "reviewer_name": "Sun",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "I am syrian and I confirm that this is the best syrian sweets in Europe! You can taste the balance between the nuts and sweets. They have gluten-free and sugar-free choices also... don't forget the gift ideas that you can find too 😉",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Ham Alt",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Excellent ! The owner is super nice and their food is simply delicious! Also really nice music",
+        "rating": 5,
+        "date": "4 months ago",
+        "reviewer_name": "Jonathan Jag",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The sweets are the tastiest I've ever had! They don't add a lot of sugar, and the varieties with nuts are very creative. Everything tastes good and looks good as well! The decoration is simple and cozy. The presentation of the products is in and of itself a work of art! The employees are very friendly and generous! The overall quality to price ratio is excellent! I'll definitely be back there again!",
+        "rating": 5,
+        "date": "3 years ago",
+        "reviewer_name": "Yazan Doubal",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Delicious food, the woman at the counter is very friendly and the atmosphere is amazing. All products are home made, I took salt snack and they were very, very good! Will come back more often now.",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Dedo Scalera",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The best sweet ever, elegant test, high quality and not too sugary. Highly recommended",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Angela Alsouliman",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Excellent sweets with of fresh delicious pistachios",
+        "rating": 5,
+        "date": "10 months ago",
+        "reviewer_name": "Karen Melchior",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "I think it's normal for you to buy sweets, but to find memories that take you back to childhood is an amazing thing... especially if you are a vegetarian... or follow a diet... or reduce sugar... and there are options of unique nuts... you can You can learn more about it by visiting. Thank you, Ornina",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "abed hassoun",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Many sugar-free and gluten free options",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Sadek Omari",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Wonderful atmosphere, the owner is super nice and welcoming. Not to mention the sweets, very good and fresh!!",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Ahmed Omran",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "\"Ornina Sweets offers an authentic and creatively crafted culinary experience rooted in a centuries-old heritage within the confectionery industry. If you seek delectable sweets with a truly golden touch, Ornina Sweets is a must-try.\"",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Eyas AlMokdad",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The quality of the delights is superb. The owner is radiating kindness and hospitality. If you need a little gift or a small delight for yourself made with love, search no further.",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Daria Vladimirova",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Food is absolutely delicious and staff super friendly",
+        "rating": 5,
+        "date": "6 months ago",
+        "reviewer_name": "A. L",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Salty and sweet very tasty! Good also for vegan sugar free and gluten free",
+        "rating": 5,
+        "date": "9 months ago",
+        "reviewer_name": "Francesco Semino",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Incredibly nice service. Lots of vegan options that are marked as such. And the interior design is incredibly beautiful.",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "m",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Wonderful shop and the best middle East Bahklawa.  Full of nuts and taste - and low calories 🙃.  Very friendly staff ! Thank you Ornina Chatelain ! 🤩🤩🤩 …",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Gudrun VAN CALBERGH",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Amazing deserts, highly recommend",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "C T",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The sweets are amazing and so is the girl at the counter. Lovely spot all around",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Chiara Tomasi",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Yummy cake, lots of gluten free and sugar options.\nWorker gave me a free sample without asking very nice of him",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Lapras Vivillon",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best Syrian sweets in Brussels, very nice location, beautiful shop and friendly staff. Highly recommended.",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Sara Van der Valk",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Delicious baklava and more. Fantastic gluten free, lactose free and vegan options.",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Evan Green",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Exceptional and amazing authentic Syrian sweets. What a luxury in brussels.",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Bianca Baumler",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Such a good idea :) sweet with gluten-free and vegan 😘😘\nI love it\nI highly recommended it …",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "medhat aldaabal",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best Syrian/Lebanese sweets in all Brussels! Highly recommended!",
+        "rating": 5,
+        "date": "3 years ago",
+        "reviewer_name": "Rima Fayad",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "I love this place! It is the best sweets in Europ",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "konstantin bashar",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Very high quality products, welcoming service and the place itself is very beautiful and pleasant.",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Francisco Sousa",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Great place, nice vibe and quality food.",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Javier Espinoza",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "We are happy and proud of Ornina.. yes it's the best.. go ahead..",
+        "rating": 5,
+        "date": "3 years ago",
+        "reviewer_name": "Nesreen Kassem",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "best Syrian sweets in Brussels!",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Francesca Tiberio",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "lovely and friendly place",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Zinovia Verikokidi",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Must-see and must-eat!",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Joe Tanner",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Unique",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "florent bremond",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "What a wonderful sweet and savory culinary experience! A warm and genuine welcome. A wide range of delicious organic dishes, prepared with love. I highly recommend it.",
+        "rating": 5,
+        "date": "6 months ago",
+        "reviewer_name": "thierry lallia",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Whether it's for a sweet treat or a quick lunch, the quality is guaranteed! Savor every bite; it's a true delight for the taste buds. Raw, unfussy flavors at a more than reasonable price. The service is extremely friendly and welcoming. A truly wonderful discovery.",
+        "rating": 5,
+        "date": "6 months ago",
+        "reviewer_name": "Vanille",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Exquisite sweet and savory delights. The pistachio pastries are irresistible, and the welcome is warm! Thank you.",
+        "rating": 5,
+        "date": "4 months ago",
+        "reviewer_name": "Leila Ben Guirat",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "super cool place and the owner makes you a custom sandwich. In short, delicious!",
+        "rating": 5,
+        "date": "3 months ago",
+        "reviewer_name": "Maelys Anbergen",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The reviews are so positive, I don't dare to lower the stars too much. BUT I came this weekend for the first time. We tried the orange blossom cake, and unfortunately, my grandmother and I were quite disappointed. It lacked flavor, and we didn't taste the orange blossom. We also tried the Mutabal, which wasn't bad, but we expected a stronger flavor.\nBased on other reviews, next time we should try the almond and pistachio pastries, which looked very good.\nThe staff was very friendly and welcoming :)",
+        "rating": 4,
+        "date": "10 months ago",
+        "reviewer_name": "Olivia “Olivia PAF!” D",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Delicious and very kind. Really nice!",
+        "rating": 5,
+        "date": "a week ago",
+        "reviewer_name": "Ana Claudia Rueda Nery",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Excellent, generous products and taste 🫶\nAnd a wonderful welcome too …",
+        "rating": 5,
+        "date": "4 months ago",
+        "reviewer_name": "Emmeline Isaia",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "A very pretty shop, almost like a jewelry store where the jewelry is made up of typical Syrian pastries. The service is friendly and welcoming. The pastries aren't too sweet and are definitely worth trying. I would gladly return.",
+        "rating": 5,
+        "date": "2 years ago",
+        "reviewer_name": "Valérie De Herdt",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Tastes absolutely ORIGINAL 🤩.\nYou can immediately tell that this pastry was made with love.\nAbsolutely fantastic 👌\nThe owner and staff are very friendly and personable.\nThe location is very elegant.\nI highly recommend this shop.",
+        "rating": 5,
+        "date": "3 years ago",
+        "reviewer_name": "Abdelhady Harash",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Delicious without sugar, and the price is affordable considering the quality.\n\nI highly recommend it.",
+        "rating": 5,
+        "date": "8 months ago",
+        "reviewer_name": "Rainer Gomez",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The welcome was very friendly and the desserts were delicious. I highly recommend it.",
+        "rating": 5,
+        "date": "8 months ago",
+        "reviewer_name": "Vals MM",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "A very nice, welcoming place with delicious pastries. This is the best Syrian pastry shop I've found in Brussels so far. Artisanal and homemade products, not too sweet and very varied. I recommend it!",
+        "rating": 5,
+        "date": "3 years ago",
+        "reviewer_name": "Charlene Saulde",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      }
+    ],
+    "years_open": "2-5y",
+    "reviewer_quality": {
+      "quality": "Low",
+      "local_guides_pct": 0,
+      "avg_reviews": 0
+    },
+    "error": null
+  },
+  {
+    "name": "Eliane",
+    "search_query": "Eliane Bruxelles Rue Saint-Laurent 36",
+    "scraped_at": "2026-02-04T11:17:49.236665",
+    "metadata": {
+      "price": null,
+      "rating": "5.0",
+      "review_count": null,
+      "address": "Rue Saint-Laurent 36, 1000 Bruxelles"
+    },
+    "reviews": [],
+    "years_open": "unknown",
+    "reviewer_quality": {},
+    "error": "Could not open reviews panel"
+  },
+  {
+    "name": "Snack Frite Dorée",
+    "search_query": "Snack Frite Dorée Jette Rue Léon Theodor 187",
+    "scraped_at": "2026-02-04T10:49:54.367668",
+    "metadata": {
+      "price": null,
+      "rating": "4.8",
+      "review_count": 298,
+      "address": "Rue Léon Theodor 187, 1090 Jette"
+    },
+    "reviews": [
+      {
+        "text": "Magnificent, as always 🤗",
+        "rating": 5,
+        "date": "3 days ago",
+        "reviewer_name": "Fahim Halim",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best snack bar around!!\n\nThe owner is incredibly kind and friendly, he remembers all orders, their fries are amazing, and their portions are generous!!\n\nI highly recommend going there.",
+        "rating": 5,
+        "date": "2 weeks ago",
+        "reviewer_name": "m.mnstrl",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The quality is worth the trip! Although it's not exactly close to home, we go back regularly. Simply put, we've rarely eaten such good durums and pitas. The selection of meats and sauces is impressive, the vegetables are incredibly fresh, and the portions are particularly generous. Add to that crispy fries and impeccable service... An unpretentious place with exceptional quality.",
+        "rating": 5,
+        "date": "3 weeks ago",
+        "reviewer_name": "Nath Alie",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Excellent snack bar, very friendly and welcoming owners, lean meat. The place is clean and everything is very fresh.",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Cécile Clément",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Very clean and welcoming. It’s delicious",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Geo Ibrahim",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Very good food, staff and the atmosphere is amazing!! Very clean and is placed in the city correct! Would love to go there again and again",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Vildan Koycu",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The staff were extremely friendly, attentive, and professional. We felt very welcome. The service was quick, and they were helpful in every way. The food was truly excellent and delicious.\n\nWe will definitely return and wholeheartedly recommend this place to everyone.",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Nur Koy",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Excellent snack bar! The food is fresh and delicious, and the service is fast. The staff is welcoming and always smiling. I highly recommend it!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Eroll Abdulov",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Top service!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "drilon beqiraj",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "A truly top-notch snack! 👌 The fries are perfectly golden, crispy on the outside and fluffy on the inside. The portion is generous, beautifully presented, with flavorful, perfectly grilled meat. A simple yet delicious meal, perfect for a treat! 🔥",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Nureddin Aktas",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Excellent durum and kapsalon. Friendly and welcoming staff.",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Saqri",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "I don't know of a snack bar where the food is so good and where you have the pleasure of chatting with the staff and passersby. It doesn't get more welcoming than this!",
+        "rating": 5,
+        "date": "a month ago",
+        "reviewer_name": "Jean-Luc Moerenhout",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best snack in Brussels\nDelicious and very clean",
+        "rating": 5,
+        "date": "2 months ago",
+        "reviewer_name": "Fatih Gurlek",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Clean, very friendly and smiling, fast service.",
+        "rating": 5,
+        "date": "2 months ago",
+        "reviewer_name": "pestieau patrick",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Really good durum man",
+        "rating": 5,
+        "date": "2 months ago",
+        "reviewer_name": "Arnaud Vandeputte",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best snack in Brussels",
+        "rating": 5,
+        "date": "2 months ago",
+        "reviewer_name": "mirnes celikovic",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "A real gem!\nA warm and attentive welcome, impeccable cleanliness, and fast, efficient service. You really feel at home there; everything is perfect from start to finish! Well done to the whole team at La Frite Dorée Bruxelles, we'll definitely be back!",
+        "rating": 5,
+        "date": "2 months ago",
+        "reviewer_name": "anais francci",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "It's a very good snack, we eat very well",
+        "rating": 5,
+        "date": "3 months ago",
+        "reviewer_name": "Redouan Seka",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Good shi after dance",
+        "rating": 5,
+        "date": "3 months ago",
+        "reviewer_name": "Lily Vanderhaeghen",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Thank you so much ",
+        "rating": 4,
+        "date": "4 months ago",
+        "reviewer_name": "Mustapha E",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best Snack on the go! Delicious pitta meat, everything is fresh! Super friendly owner who listens to his customers.",
+        "rating": 5,
+        "date": "4 months ago",
+        "reviewer_name": "Dimi Dimi",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best snack in the world, I've never tasted a pitta better than the one from Frites Dorée and the fries are also delicious.",
+        "rating": 5,
+        "date": "4 months ago",
+        "reviewer_name": "Keren Mbamba Na Yesu",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Warm welcome and good food, thank you!",
+        "rating": 5,
+        "date": "5 months ago",
+        "reviewer_name": "Dominique Chasseur",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Great snack bar, the best in the area without a doubt, and the owner is very respectful.",
+        "rating": 4,
+        "date": "7 months ago",
+        "reviewer_name": "Geo Geo",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Thank you so much ",
+        "rating": 4,
+        "date": "8 months ago",
+        "reviewer_name": "Armand Roelandts",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Very good, I recommend it.",
+        "rating": 5,
+        "date": "8 months ago",
+        "reviewer_name": "Nathan Vonneche",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The food is very good, it is very clean and the owner is very friendly and smiling.",
+        "rating": 5,
+        "date": "8 months ago",
+        "reviewer_name": "le regic",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The best Sınac I can liquidate is a friendly boss and very clean",
+        "rating": 5,
+        "date": "8 months ago",
+        "reviewer_name": "Mehmet Ciyer",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Thank you so much ",
+        "rating": 5,
+        "date": "8 months ago",
+        "reviewer_name": "Alain De Coster",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Very good and very clean, the owner welcomes you with a smile and takes great care of his customers. Rare in a snack bar! +5",
+        "rating": 5,
+        "date": "Edited 8 months ago",
+        "reviewer_name": "Jonathan B.",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best snack in Brussels",
+        "rating": 5,
+        "date": "8 months ago",
+        "reviewer_name": "Luka Tatishvili",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best kebab with excellent pitta sauce and a great snack I've had in a long time. A pure delight with a very wide selection of fresh ingredients.\nThe owner is very pleasant, kind, and always smiling. The restaurant is very …",
+        "rating": 5,
+        "date": "9 months ago",
+        "reviewer_name": "Maggy Ansart",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Thank you so much ",
+        "rating": 5,
+        "date": "10 months ago",
+        "reviewer_name": "Yusuf Aziz",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Friendly, nice and tidy",
+        "rating": 5,
+        "date": "10 months ago",
+        "reviewer_name": "David Olbrechts",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Friendly and welcoming!",
+        "rating": 5,
+        "date": "11 months ago",
+        "reviewer_name": "Ella Van Craen",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "I came by yesterday after 19 years with my two children and frankly we had a great time! Nothing to say, the food is great and very well served! The welcome is always so friendly! A word of advice if you pass by, stop by and you won't regret it 😉👍 …",
+        "rating": 5,
+        "date": "11 months ago",
+        "reviewer_name": "Alexis Roosens",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The owner is very friendly and enthusiastic and the food is very good, I recommend it.",
+        "rating": 5,
+        "date": "11 months ago",
+        "reviewer_name": "SoraFade",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best chip shop in Jette. Crispy fries, friendly staff, and fast. Highly recommended!",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Michel Kuklinski",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The best snack bar on Jette, definitely good food, top-notch service and a great atmosphere for a good time.",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Samuel Oliveira Santos",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Best snack bar in town, in my opinion. Always greeted with a smile, impeccable hygiene, and above all: the food is amazing! Kudos to the owner for preparing my order in under 30 seconds so I could catch my train on time – probably a world record!",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Vincenzo Cubeddu",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Thank you so much ",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "pascal dath",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "A truly great boss, honestly. His smile, his welcome, his kindness, his respect for the customer—you can tell he's passionate about his work and does it with heart. It's always spotless, the meat is superb. For me, the best snack bar in Jette. But a special mention goes to the owner's hospitality.",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Ahmed Ait Slimane",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "One of the best snack bars in Brussels, everything is fresh and super tasty (very good kefta), super clean and their service is a 10/10. They are very welcoming.",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "IZI squad",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Wonderful service and very clean place. I highly recommend everyone to go here and enjoy good meat and fresh vegetables!",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Chai A.",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Thank you so much ",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Damien Rasson",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Great snack bar, the owner is super friendly, spotlessly clean, makes customers feel comfortable and has a bit of a sense of humor, we'll be back!",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "mahmoudi youssef",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "By far one of the best snacks, too bad it's not on Uber Eats!",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Samuel V.A.",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Thank you so much ",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "Jean-Claude Canale",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "Thank you so much ",
+        "rating": 3,
+        "date": "a year ago",
+        "reviewer_name": "Victor Fouriaud",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      },
+      {
+        "text": "The owner was super friendly, thank you for the welcome!",
+        "rating": 5,
+        "date": "a year ago",
+        "reviewer_name": "katsucath",
+        "is_local_guide": false,
+        "reviewer_review_count": null
+      }
+    ],
+    "years_open": "<2y",
+    "reviewer_quality": {
+      "quality": "Low",
+      "local_guides_pct": 0,
+      "avg_reviews": 0
+    },
+    "error": null
+  },
+  {
+    "name": "BAD BUN",
+    "search_query": "BAD BUN Ixelles Chau. de Boondael 54",
+    "scraped_at": "2026-02-04T11:14:08.620343",
+    "metadata": {
+      "price": null,
+      "rating": "4.7",
+      "review_count": null,
+      "address": "Chau. de Boondael 54, 1050 Ixelles"
+    },
+    "reviews": [],
+    "years_open": "unknown",
+    "reviewer_quality": {},
+    "error": "Could not open reviews panel"
+  }
+]

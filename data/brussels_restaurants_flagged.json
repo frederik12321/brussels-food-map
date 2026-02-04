@@ -1,0 +1,2167 @@
+[
+  {
+    "name": "Kip Eat' Naturel",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.9,
+    "review_count": 145,
+    "primary_type": "butcher_shop"
+  },
+  {
+    "name": "The Modern Alchemist",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.8,
+    "review_count": 339,
+    "primary_type": "bar"
+  },
+  {
+    "name": "gàstra",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 5.0,
+    "review_count": 152,
+    "primary_type": "catering_service"
+  },
+  {
+    "name": "Bomb Squad",
+    "reasons": [
+      "non_restaurant:amusement_center"
+    ],
+    "rating": 4.9,
+    "review_count": 860,
+    "primary_type": "amusement_center"
+  },
+  {
+    "name": "La Senne Guesthouse & Café",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:guesthouse"
+    ],
+    "rating": 5.0,
+    "review_count": 61,
+    "primary_type": "bed_and_breakfast"
+  },
+  {
+    "name": "Darwin",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 5.0,
+    "review_count": 175,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Share & Fun",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.6,
+    "review_count": 82,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Spek & Boonen",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.8,
+    "review_count": 125,
+    "primary_type": "butcher_shop"
+  },
+  {
+    "name": "Meat n’ stuff",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.9,
+    "review_count": 87,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "The Beauty Club Dilbeek",
+    "reasons": [
+      "non_restaurant:beauty_salon"
+    ],
+    "rating": 5.0,
+    "review_count": 41,
+    "primary_type": "body_art_service"
+  },
+  {
+    "name": "Aloha bar brussels",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.7,
+    "review_count": 91,
+    "primary_type": "bar"
+  },
+  {
+    "name": "ANASTASIA",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.9,
+    "review_count": 104,
+    "primary_type": "sandwich_shop"
+  },
+  {
+    "name": "KaraFun Brussel",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.9,
+    "review_count": 6532,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Asturias",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.5,
+    "review_count": 811,
+    "primary_type": "spanish_restaurant"
+  },
+  {
+    "name": "Tortue",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.7,
+    "review_count": 198,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Wine Fever",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.8,
+    "review_count": 197,
+    "primary_type": "liquor_store"
+  },
+  {
+    "name": "Bella Pizza & Alimentari",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.8,
+    "review_count": 200,
+    "primary_type": "pizza_restaurant"
+  },
+  {
+    "name": "Made in Catherine Hotel",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.8,
+    "review_count": 180,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Madox Lounge",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 5.0,
+    "review_count": 18,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Grazie Mille",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.7,
+    "review_count": 178,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Beer Mania",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.7,
+    "review_count": 849,
+    "primary_type": "liquor_store"
+  },
+  {
+    "name": "FORCADO DANSAERT",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.8,
+    "review_count": 96,
+    "primary_type": "bakery"
+  },
+  {
+    "name": "Le Transvaal-°Comptoir°-",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.7,
+    "review_count": 258,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "IL Salvatore - Sint-Pieters-Leeuw",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.8,
+    "review_count": 227,
+    "primary_type": "deli"
+  },
+  {
+    "name": "Dynamo - Bar de Soif",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.7,
+    "review_count": 555,
+    "primary_type": "bar"
+  },
+  {
+    "name": "GODJO MERKATO",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.7,
+    "review_count": 220,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Latté - Pilate & Coffee",
+    "reasons": [
+      "non_restaurant:gym"
+    ],
+    "rating": 4.6,
+    "review_count": 337,
+    "primary_type": "coffee_shop"
+  },
+  {
+    "name": "Le Paon D’or",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.7,
+    "review_count": 114,
+    "primary_type": "bar"
+  },
+  {
+    "name": "La Tana",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.6,
+    "review_count": 286,
+    "primary_type": "italian_restaurant"
+  },
+  {
+    "name": "Moeder Lambic Original",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.6,
+    "review_count": 1479,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Jardin des Olives",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.7,
+    "review_count": 661,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "De Ketelhoeve",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.5,
+    "review_count": 97,
+    "primary_type": ""
+  },
+  {
+    "name": "Harmon House",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.6,
+    "review_count": 1142,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Dans La Forêt | Traiteur - Table d'Hôtes",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.7,
+    "review_count": 73,
+    "primary_type": "catering_service"
+  },
+  {
+    "name": "Arkose Canal",
+    "reasons": [
+      "non_restaurant:gym"
+    ],
+    "rating": 4.4,
+    "review_count": 499,
+    "primary_type": ""
+  },
+  {
+    "name": "BOA Karaoké Room",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.7,
+    "review_count": 787,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Jazz Station",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.6,
+    "review_count": 444,
+    "primary_type": "event_venue"
+  },
+  {
+    "name": "Forcado Pastelaria (Saint-Gilles)",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.6,
+    "review_count": 885,
+    "primary_type": "bakery"
+  },
+  {
+    "name": "Les Comptoirs des Davids",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.7,
+    "review_count": 59,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Doctor Beer",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.8,
+    "review_count": 64,
+    "primary_type": "liquor_store"
+  },
+  {
+    "name": "Toots Jazz Club",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.7,
+    "review_count": 111,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Corinthia Grand Hotel Astoria Brussels",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.5,
+    "review_count": 202,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Forcado Pastelaria (Uccle)",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.6,
+    "review_count": 107,
+    "primary_type": "bakery"
+  },
+  {
+    "name": "Hispania Brussels",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.5,
+    "review_count": 425,
+    "primary_type": "spanish_restaurant"
+  },
+  {
+    "name": "Sentro - À Table Avec Vincent Masson",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.6,
+    "review_count": 169,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Vybes Lounge & Restaurant",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.5,
+    "review_count": 74,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Chicha BAO",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.7,
+    "review_count": 250,
+    "primary_type": ""
+  },
+  {
+    "name": "OENOTK",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.5,
+    "review_count": 228,
+    "primary_type": "wine_bar"
+  },
+  {
+    "name": "Le Slot",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.3,
+    "review_count": 208,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Animo Studios - Louise",
+    "reasons": [
+      "non_restaurant:gym"
+    ],
+    "rating": 4.7,
+    "review_count": 87,
+    "primary_type": "gym"
+  },
+  {
+    "name": "Ghost",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.8,
+    "review_count": 6,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Titulus Cave à vins et Bar à vins",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.5,
+    "review_count": 324,
+    "primary_type": "wine_bar"
+  },
+  {
+    "name": "Sounds",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.5,
+    "review_count": 638,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Tchin-Tchin EAT DRINK AND SING",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.6,
+    "review_count": 690,
+    "primary_type": "vietnamese_restaurant"
+  },
+  {
+    "name": "The Hoxton, Brussels",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.5,
+    "review_count": 902,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "La Ferme du Hameau du Roy",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.4,
+    "review_count": 244,
+    "primary_type": "bakery"
+  },
+  {
+    "name": "La Cueva de Castilla",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.5,
+    "review_count": 622,
+    "primary_type": "spanish_restaurant"
+  },
+  {
+    "name": "Bautier",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.6,
+    "review_count": 41,
+    "primary_type": "furniture_store"
+  },
+  {
+    "name": "Cabaret Mademoiselle",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.6,
+    "review_count": 525,
+    "primary_type": "night_club"
+  },
+  {
+    "name": "Le Cent Quatorze (Epicerie & Cantine)",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.6,
+    "review_count": 38,
+    "primary_type": "catering_service"
+  },
+  {
+    "name": "Brüt by Färm Tenbosch",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.6,
+    "review_count": 134,
+    "primary_type": "store"
+  },
+  {
+    "name": "Camping 58",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 3.9,
+    "review_count": 147,
+    "primary_type": "campground"
+  },
+  {
+    "name": "Fondation Universitaire",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.6,
+    "review_count": 37,
+    "primary_type": ""
+  },
+  {
+    "name": "Vénus Café",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.6,
+    "review_count": 55,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "À l'Ombre de la Ville",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.4,
+    "review_count": 426,
+    "primary_type": "mediterranean_restaurant"
+  },
+  {
+    "name": "Oxford Bar Lounge",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.6,
+    "review_count": 28,
+    "primary_type": "bar"
+  },
+  {
+    "name": "EL FONTAN",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.5,
+    "review_count": 821,
+    "primary_type": "spanish_restaurant"
+  },
+  {
+    "name": "Kamea Bar, Cocktails & Lounge",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.5,
+    "review_count": 149,
+    "primary_type": "event_venue"
+  },
+  {
+    "name": "Thon Hotel Bristol Stephanie",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.5,
+    "review_count": 1626,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Swadish",
+    "reasons": [
+      "non_restaurant:convenience_store"
+    ],
+    "rating": 4.8,
+    "review_count": 21,
+    "primary_type": "meal_takeaway"
+  },
+  {
+    "name": "Sazz N Jazz",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.8,
+    "review_count": 4,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Le Seventy-five",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.5,
+    "review_count": 341,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Akai",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.4,
+    "review_count": 1322,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Big Festa",
+    "reasons": [
+      "non_restaurant:home_goods_store"
+    ],
+    "rating": 4.5,
+    "review_count": 85,
+    "primary_type": "home_goods_store"
+  },
+  {
+    "name": "Juliana Hotel Brussels, an SLH Hotel",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.5,
+    "review_count": 387,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Minty Brussels",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.5,
+    "review_count": 53,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Terracotta Pizze & Tapas",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.4,
+    "review_count": 570,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Vidya.",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.5,
+    "review_count": 134,
+    "primary_type": "store"
+  },
+  {
+    "name": "Nightshop",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.4,
+    "review_count": 455,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Historic Marine Aviation Tea Room Antic Shop",
+    "reasons": [
+      "non_restaurant:home_goods_store"
+    ],
+    "rating": 4.4,
+    "review_count": 67,
+    "primary_type": "home_goods_store"
+  },
+  {
+    "name": "Hotel - Thermen Dilbeek",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.4,
+    "review_count": 1900,
+    "primary_type": "sauna"
+  },
+  {
+    "name": "INVICTUS BAR-LUNCH",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.4,
+    "review_count": 84,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "The Music Village",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.6,
+    "review_count": 1374,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Hotel Le Plaza Brussels",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.3,
+    "review_count": 3471,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Le Relais Saint-Job",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.2,
+    "review_count": 1104,
+    "primary_type": "french_restaurant"
+  },
+  {
+    "name": "La Marina Brussels",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.3,
+    "review_count": 126,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Centro Cabraliego",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.4,
+    "review_count": 587,
+    "primary_type": "bar"
+  },
+  {
+    "name": "L'arganier",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 5.0,
+    "review_count": 1,
+    "primary_type": "spa"
+  },
+  {
+    "name": "D'or Platine",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.5,
+    "review_count": 98,
+    "primary_type": ""
+  },
+  {
+    "name": "Novotel Brussels City Centre",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.3,
+    "review_count": 3665,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Odette En Ville",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.4,
+    "review_count": 844,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "La Capitale",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.3,
+    "review_count": 48,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Le Louise Hotel Brussels",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.5,
+    "review_count": 2473,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "The Dominican",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.4,
+    "review_count": 2368,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "SKY Z PARK",
+    "reasons": [
+      "non_restaurant:amusement_center"
+    ],
+    "rating": 4.3,
+    "review_count": 659,
+    "primary_type": "amusement_park"
+  },
+  {
+    "name": "Los Chiringuitos",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.4,
+    "review_count": 724,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "The Chemin des Vignes",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.4,
+    "review_count": 78,
+    "primary_type": "liquor_store"
+  },
+  {
+    "name": "Penta Hotel Brussels City Centre",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.3,
+    "review_count": 4013,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "DUKES Lounge Bar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.9,
+    "review_count": 15,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Brasserie Royal atomium",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.2,
+    "review_count": 278,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "El Gusto Iberico",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.3,
+    "review_count": 244,
+    "primary_type": "spanish_restaurant"
+  },
+  {
+    "name": "Vicci",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.5,
+    "review_count": 28,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Paolo's Idea",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.3,
+    "review_count": 1151,
+    "primary_type": "pizza_restaurant"
+  },
+  {
+    "name": "La Perle (Lasperlas )",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.3,
+    "review_count": 183,
+    "primary_type": "coffee_shop"
+  },
+  {
+    "name": "Le Malte Bruxelles",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.3,
+    "review_count": 359,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Breakpoint Ukkel",
+    "reasons": [
+      "non_restaurant:gas_station"
+    ],
+    "rating": 4.4,
+    "review_count": 46,
+    "primary_type": "sandwich_shop"
+  },
+  {
+    "name": "argos centre for audiovisual arts",
+    "reasons": [
+      "non_restaurant:museum"
+    ],
+    "rating": 4.2,
+    "review_count": 91,
+    "primary_type": ""
+  },
+  {
+    "name": "Au Mouton Bleu",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 221,
+    "primary_type": "pub"
+  },
+  {
+    "name": "Cultuur Bar-Bar Wemmel",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.4,
+    "review_count": 81,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "13 Degrés",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.2,
+    "review_count": 387,
+    "primary_type": "wine_bar"
+  },
+  {
+    "name": "La Fabriek",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.4,
+    "review_count": 49,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Breakpoint Wemmel",
+    "reasons": [
+      "non_restaurant:gas_station"
+    ],
+    "rating": 4.8,
+    "review_count": 15,
+    "primary_type": "sandwich_shop"
+  },
+  {
+    "name": "Che Habana Café",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.4,
+    "review_count": 368,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Destiny Afro Lounge Brussels Nigerian / African/ Latino Restaurant, TAPAS and bar Bruxelles Belgium",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.3,
+    "review_count": 26,
+    "primary_type": "african_restaurant"
+  },
+  {
+    "name": "Delitraiteur",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.2,
+    "review_count": 335,
+    "primary_type": "catering_service"
+  },
+  {
+    "name": "Tapas Locas",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.3,
+    "review_count": 918,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Barabar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 955,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Café Central.",
+    "reasons": [
+      "non_restaurant:movie_theater"
+    ],
+    "rating": 4.2,
+    "review_count": 860,
+    "primary_type": "cafe"
+  },
+  {
+    "name": "L'Archiduc",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.2,
+    "review_count": 1715,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Kombi Bar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.2,
+    "review_count": 1090,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Lulu Home Interior & Café - Ixelles",
+    "reasons": [
+      "non_restaurant:home_goods_store"
+    ],
+    "rating": 4.2,
+    "review_count": 520,
+    "primary_type": "furniture_store"
+  },
+  {
+    "name": "TotalEnergies",
+    "reasons": [
+      "non_restaurant:gas_station"
+    ],
+    "rating": 4.3,
+    "review_count": 121,
+    "primary_type": "gas_station"
+  },
+  {
+    "name": "Le Qg lounge",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.5,
+    "review_count": 22,
+    "primary_type": "bar"
+  },
+  {
+    "name": "SERRA Brussels",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.2,
+    "review_count": 715,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Koezio Brussel",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.4,
+    "review_count": 2932,
+    "primary_type": "amusement_center"
+  },
+  {
+    "name": "ibis Brussels Centre Gare Midi",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.1,
+    "review_count": 4486,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "The Big Game Brussels Sports Bar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.2,
+    "review_count": 3046,
+    "primary_type": "bar"
+  },
+  {
+    "name": "The Purple Rose",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.3,
+    "review_count": 679,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Elvira Palace",
+    "reasons": [
+      "non_restaurant:movie_theater"
+    ],
+    "rating": 4.3,
+    "review_count": 146,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Bar Tapas 177 - Restaurant Espagnol & Taverne Authentique",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.2,
+    "review_count": 541,
+    "primary_type": "spanish_restaurant"
+  },
+  {
+    "name": "Le Monarque",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 425,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Dali’s Bar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.3,
+    "review_count": 202,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Equinoxe",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 4.1,
+    "review_count": 211,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "TotalEnergies Shop MultiTower",
+    "reasons": [
+      "non_restaurant:gas_station"
+    ],
+    "rating": 4.1,
+    "review_count": 9,
+    "primary_type": "gas_station"
+  },
+  {
+    "name": "Stammbar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.2,
+    "review_count": 522,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Hôtel Espérance",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.2,
+    "review_count": 528,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Nice Bar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 57,
+    "primary_type": "cafe"
+  },
+  {
+    "name": "Hotel Marivaux",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.1,
+    "review_count": 2152,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Delitraiteur Wemmel",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.2,
+    "review_count": 519,
+    "primary_type": "catering_service"
+  },
+  {
+    "name": "Snap Karaoke",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 261,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Serenitea Room",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 562,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Scenario club",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.7,
+    "review_count": 47,
+    "primary_type": "night_club"
+  },
+  {
+    "name": "Novotel Brussels off Grand Place",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.3,
+    "review_count": 2685,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Esso Fort-Jaco Uccle",
+    "reasons": [
+      "non_restaurant:gas_station"
+    ],
+    "rating": 4.2,
+    "review_count": 127,
+    "primary_type": "sandwich_shop"
+  },
+  {
+    "name": "Cocina Châtelain",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.1,
+    "review_count": 1585,
+    "primary_type": "italian_restaurant"
+  },
+  {
+    "name": "Baden Baden Brussels",
+    "reasons": [
+      "non_restaurant:home_goods_store"
+    ],
+    "rating": 4.3,
+    "review_count": 23,
+    "primary_type": "furniture_store"
+  },
+  {
+    "name": "Imanza Shicha Lounge Bar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 384,
+    "primary_type": ""
+  },
+  {
+    "name": "Celtica",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 3640,
+    "primary_type": "pub"
+  },
+  {
+    "name": "dadalys.lounge",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 39,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Café Maison du Peuple",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 2097,
+    "primary_type": "coffee_shop"
+  },
+  {
+    "name": "Grand Casino Brussels VIAGE",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.9,
+    "review_count": 1806,
+    "primary_type": "casino"
+  },
+  {
+    "name": "JAM Hotel Brussels",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.0,
+    "review_count": 2045,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "Delitraiteur Woluwé-Saint-Lambert",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.0,
+    "review_count": 345,
+    "primary_type": "catering_service"
+  },
+  {
+    "name": "The Lodge",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.0,
+    "review_count": 595,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "LADRESSE BAR By Arobiz",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 5.0,
+    "review_count": 2,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Delitraiteur Ganshoren",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.0,
+    "review_count": 461,
+    "primary_type": "catering_service"
+  },
+  {
+    "name": "Down Town - Bruxelles 🇱🇾",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.1,
+    "review_count": 389,
+    "primary_type": "lebanese_restaurant"
+  },
+  {
+    "name": "Ô-Chinoise-Riz",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 4.1,
+    "review_count": 167,
+    "primary_type": "asian_grocery_store"
+  },
+  {
+    "name": "Pink Buddah",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.0,
+    "review_count": 240,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Uhoo Playground & NY Apocalypse Laser Tag",
+    "reasons": [
+      "non_restaurant:amusement_center"
+    ],
+    "rating": 4.0,
+    "review_count": 297,
+    "primary_type": "amusement_center"
+  },
+  {
+    "name": "Ginger bar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.0,
+    "review_count": 123,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Karaoke Bar Sablon",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.9,
+    "review_count": 471,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Royale Layalina",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.7,
+    "review_count": 116,
+    "primary_type": "night_club"
+  },
+  {
+    "name": "O'tacos Cora",
+    "reasons": [
+      "low_rating:2.7★"
+    ],
+    "rating": 2.7,
+    "review_count": 529,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Loui Cocktail Bar & Restaurant",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.9,
+    "review_count": 230,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Living Tomorrow Brussels",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 4.0,
+    "review_count": 69,
+    "primary_type": "corporate_office"
+  },
+  {
+    "name": "Plein Publiek BXL",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.8,
+    "review_count": 1147,
+    "primary_type": "event_venue"
+  },
+  {
+    "name": "Clubhouse Wahis",
+    "reasons": [
+      "non_restaurant:liquor_store"
+    ],
+    "rating": 3.9,
+    "review_count": 68,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Jalousy Bar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.9,
+    "review_count": 332,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Eurovolley Center",
+    "reasons": [
+      "non_restaurant:gym"
+    ],
+    "rating": 3.9,
+    "review_count": 418,
+    "primary_type": "sports_complex"
+  },
+  {
+    "name": "Black Pearl",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 4.0,
+    "review_count": 6,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Shell",
+    "reasons": [
+      "non_restaurant:convenience_store"
+    ],
+    "rating": 3.1,
+    "review_count": 43,
+    "primary_type": "gas_station"
+  },
+  {
+    "name": "Wazawok Cora Anderlecht",
+    "reasons": [
+      "low_rating:2.6★"
+    ],
+    "rating": 2.6,
+    "review_count": 64,
+    "primary_type": "asian_restaurant"
+  },
+  {
+    "name": "La Diligence",
+    "reasons": [
+      "non_restaurant:night_club",
+      "low_rating:2.8★"
+    ],
+    "rating": 2.8,
+    "review_count": 424,
+    "primary_type": "bar"
+  },
+  {
+    "name": "CLUB SELECT",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 3.8,
+    "review_count": 66,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Madame Moustache",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.8,
+    "review_count": 1337,
+    "primary_type": "night_club"
+  },
+  {
+    "name": "GO Fish Docks",
+    "reasons": [
+      "low_rating:2.8★"
+    ],
+    "rating": 2.8,
+    "review_count": 33,
+    "primary_type": "fast_food_restaurant"
+  },
+  {
+    "name": "El Calino",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.7,
+    "review_count": 169,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Le Bar à Tapas",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 3.7,
+    "review_count": 952,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Swan Bar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.7,
+    "review_count": 502,
+    "primary_type": "bar"
+  },
+  {
+    "name": "nua party bar",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.7,
+    "review_count": 1126,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Bedford Hotel & Congress Centre",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 4.0,
+    "review_count": 9302,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "SNOB",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.4,
+    "review_count": 79,
+    "primary_type": "night_club"
+  },
+  {
+    "name": "fu bao",
+    "reasons": [
+      "non_restaurant:convenience_store"
+    ],
+    "rating": 3.4,
+    "review_count": 178,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "KFC",
+    "reasons": [
+      "low_rating:2.9★"
+    ],
+    "rating": 2.9,
+    "review_count": 913,
+    "primary_type": "fast_food_restaurant"
+  },
+  {
+    "name": "Wok City",
+    "reasons": [
+      "low_rating:2.9★"
+    ],
+    "rating": 2.9,
+    "review_count": 25,
+    "primary_type": "chinese_restaurant"
+  },
+  {
+    "name": "YouWok Bruxelles Docks",
+    "reasons": [
+      "low_rating:2.7★"
+    ],
+    "rating": 2.7,
+    "review_count": 327,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "LA PIÈCE",
+    "reasons": [
+      "non_restaurant:lodging"
+    ],
+    "rating": 3.5,
+    "review_count": 312,
+    "primary_type": "food"
+  },
+  {
+    "name": "Chamas Tacos Forest",
+    "reasons": [
+      "low_rating:2.9★"
+    ],
+    "rating": 2.9,
+    "review_count": 563,
+    "primary_type": "fast_food_restaurant"
+  },
+  {
+    "name": "O'Tacos Uccle",
+    "reasons": [
+      "low_rating:2.9★"
+    ],
+    "rating": 2.9,
+    "review_count": 524,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Sunset Club",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.4,
+    "review_count": 228,
+    "primary_type": "night_club"
+  },
+  {
+    "name": "Society",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.2,
+    "review_count": 215,
+    "primary_type": "night_club"
+  },
+  {
+    "name": "YouWok Bruxelles Anderlecht",
+    "reasons": [
+      "low_rating:2.8★"
+    ],
+    "rating": 2.8,
+    "review_count": 239,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "GOOD",
+    "reasons": [
+      "low_rating:2.4★"
+    ],
+    "rating": 2.4,
+    "review_count": 12,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Delitraiteur Eat & Go Brussels-Central station",
+    "reasons": [
+      "non_restaurant:grocery_store"
+    ],
+    "rating": 3.3,
+    "review_count": 128,
+    "primary_type": "catering_service"
+  },
+  {
+    "name": "O'tacos Docks",
+    "reasons": [
+      "low_rating:2.6★"
+    ],
+    "rating": 2.6,
+    "review_count": 756,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Belchicken",
+    "reasons": [
+      "low_rating:2.9★"
+    ],
+    "rating": 2.9,
+    "review_count": 83,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "O'tacos Westland Shopping",
+    "reasons": [
+      "low_rating:2.3★"
+    ],
+    "rating": 2.3,
+    "review_count": 298,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Express Food",
+    "reasons": [
+      "low_rating:2.9★"
+    ],
+    "rating": 2.9,
+    "review_count": 25,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "BUNNY",
+    "reasons": [
+      "low_rating:2.4★"
+    ],
+    "rating": 2.4,
+    "review_count": 146,
+    "primary_type": "fast_food_restaurant"
+  },
+  {
+    "name": "Chez Maman",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.8,
+    "review_count": 144,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Friterie Laurens",
+    "reasons": [
+      "low_rating:2.4★"
+    ],
+    "rating": 2.4,
+    "review_count": 35,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "O'Tacos Jette",
+    "reasons": [
+      "low_rating:2.1★"
+    ],
+    "rating": 2.1,
+    "review_count": 629,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "The 65",
+    "reasons": [
+      "low_rating:2.3★"
+    ],
+    "rating": 2.3,
+    "review_count": 36,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Saveur Elissa",
+    "reasons": [
+      "low_rating:2.0★"
+    ],
+    "rating": 2.0,
+    "review_count": 78,
+    "primary_type": "mediterranean_restaurant"
+  },
+  {
+    "name": "Hau Wang Lai",
+    "reasons": [
+      "low_rating:2.8★"
+    ],
+    "rating": 2.8,
+    "review_count": 12,
+    "primary_type": "chinese_restaurant"
+  },
+  {
+    "name": "Altra Corte 🇮🇹",
+    "reasons": [
+      "low_rating:2.9★"
+    ],
+    "rating": 2.9,
+    "review_count": 106,
+    "primary_type": "italian_restaurant"
+  },
+  {
+    "name": "BIRDY Brussel",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.2,
+    "review_count": 264,
+    "primary_type": "bar"
+  },
+  {
+    "name": "JFK Burger",
+    "reasons": [
+      "low_rating:2.2★"
+    ],
+    "rating": 2.2,
+    "review_count": 29,
+    "primary_type": "hamburger_restaurant"
+  },
+  {
+    "name": "Chicago burger",
+    "reasons": [
+      "low_rating:1.3★"
+    ],
+    "rating": 1.3,
+    "review_count": 156,
+    "primary_type": "turkish_restaurant"
+  },
+  {
+    "name": "Bij Pa",
+    "reasons": [
+      "non_restaurant:spa"
+    ],
+    "rating": 4.0,
+    "review_count": 4,
+    "primary_type": "spanish_restaurant"
+  },
+  {
+    "name": "Mini-Europe self service restaurant",
+    "reasons": [
+      "low_rating:1.5★"
+    ],
+    "rating": 1.5,
+    "review_count": 67,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Hotel Mozart",
+    "reasons": [
+      "non_restaurant:lodging",
+      "suspicious_name:hotel"
+    ],
+    "rating": 3.1,
+    "review_count": 1725,
+    "primary_type": "hotel"
+  },
+  {
+    "name": "La Luna De Venezia",
+    "reasons": [
+      "low_rating:2.3★"
+    ],
+    "rating": 2.3,
+    "review_count": 338,
+    "primary_type": "italian_restaurant"
+  },
+  {
+    "name": "Die Belg'Epoche",
+    "reasons": [
+      "low_rating:2.4★"
+    ],
+    "rating": 2.4,
+    "review_count": 37,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Chez Remy",
+    "reasons": [
+      "low_rating:2.6★"
+    ],
+    "rating": 2.6,
+    "review_count": 563,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "The Little Belly",
+    "reasons": [
+      "low_rating:2.6★"
+    ],
+    "rating": 2.6,
+    "review_count": 110,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "La Saveur du Pain",
+    "reasons": [
+      "low_rating:2.6★"
+    ],
+    "rating": 2.6,
+    "review_count": 10,
+    "primary_type": "bakery"
+  },
+  {
+    "name": "SUKI JAPANESE FRIED CHICKEN",
+    "reasons": [
+      "low_rating:2.5★"
+    ],
+    "rating": 2.5,
+    "review_count": 11,
+    "primary_type": "meal_takeaway"
+  },
+  {
+    "name": "The funny Horse Club",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.1,
+    "review_count": 15,
+    "primary_type": "night_club"
+  },
+  {
+    "name": "La crèperie du funambule",
+    "reasons": [
+      "low_rating:2.2★"
+    ],
+    "rating": 2.2,
+    "review_count": 107,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Funambule SRPL",
+    "reasons": [
+      "low_rating:1.9★"
+    ],
+    "rating": 1.9,
+    "review_count": 92,
+    "primary_type": "coffee_shop"
+  },
+  {
+    "name": "Papa",
+    "reasons": [
+      "low_rating:2.4★"
+    ],
+    "rating": 2.4,
+    "review_count": 34,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "new new chopsticks",
+    "reasons": [
+      "low_rating:2.5★"
+    ],
+    "rating": 2.5,
+    "review_count": 10,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Kazoku XL",
+    "reasons": [
+      "low_rating:2.5★"
+    ],
+    "rating": 2.5,
+    "review_count": 18,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Wazawok",
+    "reasons": [
+      "low_rating:2.3★"
+    ],
+    "rating": 2.3,
+    "review_count": 229,
+    "primary_type": "asian_restaurant"
+  },
+  {
+    "name": "Panos City Brussel (Rogier)",
+    "reasons": [
+      "low_rating:2.4★"
+    ],
+    "rating": 2.4,
+    "review_count": 90,
+    "primary_type": "sandwich_shop"
+  },
+  {
+    "name": "Breughel Belgian Speciality Seafood",
+    "reasons": [
+      "low_rating:1.7★"
+    ],
+    "rating": 1.7,
+    "review_count": 77,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Sugito prestige",
+    "reasons": [
+      "low_rating:2.4★"
+    ],
+    "rating": 2.4,
+    "review_count": 17,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Primus",
+    "reasons": [
+      "low_rating:2.8★"
+    ],
+    "rating": 2.8,
+    "review_count": 25,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Le Compositeur",
+    "reasons": [
+      "low_rating:1.6★"
+    ],
+    "rating": 1.6,
+    "review_count": 444,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "YouWok Ixelles",
+    "reasons": [
+      "low_rating:1.9★"
+    ],
+    "rating": 1.9,
+    "review_count": 145,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "De Kuiper",
+    "reasons": [
+      "low_rating:2.5★"
+    ],
+    "rating": 2.5,
+    "review_count": 11,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Bruxelles Je T'Aime",
+    "reasons": [
+      "low_rating:2.2★"
+    ],
+    "rating": 2.2,
+    "review_count": 10,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "Strip tease et massage erotique Le Lotus Club",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.0,
+    "review_count": 2,
+    "primary_type": ""
+  },
+  {
+    "name": "Tasty & Co.",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 3.0,
+    "review_count": 2,
+    "primary_type": "restaurant"
+  },
+  {
+    "name": "HOTEL TRENDY",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 2.5,
+    "review_count": 4,
+    "primary_type": "bar"
+  },
+  {
+    "name": "Ssp Belgium PANOS",
+    "reasons": [
+      "low_rating:1.9★"
+    ],
+    "rating": 1.9,
+    "review_count": 20,
+    "primary_type": "bakery"
+  },
+  {
+    "name": "Comptoir Royal",
+    "reasons": [
+      "non_restaurant:night_club"
+    ],
+    "rating": 2.0,
+    "review_count": 1,
+    "primary_type": "bar"
+  }
+]
