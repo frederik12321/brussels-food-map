@@ -2962,8 +2962,24 @@
         const gpsBtn = document.getElementById('gps-btn');
         let userLocationMarker = null;
         let userLocationCircle = null;
+        let gpsActive = false;
 
         gpsBtn.addEventListener('click', () => {
+            // If GPS is active, deactivate it
+            if (gpsActive) {
+                if (userLocationMarker) {
+                    map.removeLayer(userLocationMarker);
+                    userLocationMarker = null;
+                }
+                if (userLocationCircle) {
+                    map.removeLayer(userLocationCircle);
+                    userLocationCircle = null;
+                }
+                gpsBtn.classList.remove('active');
+                gpsActive = false;
+                return;
+            }
+
             if (!navigator.geolocation) {
                 alert('Geolocation is not supported by your browser');
                 return;
@@ -3013,10 +3029,12 @@
                     gpsBtn.classList.remove('locating');
                     gpsBtn.classList.add('active');
                     gpsBtn.innerHTML = '📍';
+                    gpsActive = true;
                 },
                 (error) => {
                     gpsBtn.classList.remove('locating');
                     gpsBtn.innerHTML = '📍';
+                    gpsActive = false;
 
                     let message = 'Unable to get your location';
                     switch(error.code) {

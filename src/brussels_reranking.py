@@ -26,7 +26,7 @@ from brussels_context import (
     haversine_distance, is_on_local_street,
     has_michelin_recognition, has_gault_millau, has_bib_gourmand,
     get_cuisine_specificity_bonus, is_non_restaurant_shop,
-    is_chain_restaurant
+    is_chain_restaurant, get_authenticity_markers
 )
 from afsca_hygiene import get_afsca_score, match_restaurant
 
@@ -1015,8 +1015,11 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
 
     diaspora_bonus = 0.07 * diaspora_score
 
-    # 5. Independent restaurant bonus (10% weight)
+    # 5. Independent restaurant bonus (10% weight) + Chain penalty
+    # Chains lose the 10% independent bonus AND get a 10% penalty
+    # This ensures chains like Bavet, Exki, etc. don't rank as "Kitchen Approved"
     independent_bonus = 0.10 * (0 if is_chain else 1)
+    chain_penalty = -0.10 if is_chain else 0
 
     # 6. Cuisine rarity bonus (1% weight)
     # Small but noticeable - rewards rare cuisines in Brussels
@@ -1179,6 +1182,7 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         tourist_penalty +
         diaspora_bonus +
         independent_bonus +
+        chain_penalty +
         rarity_bonus +
         eu_penalty +
         price_quality_penalty +
@@ -1197,15 +1201,18 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     total = max(0.0, min(1.0, total))
 
     # Determine restaurant quality tier based on score (Kitchen Confidential theme)
-    # Thresholds calibrated for ~15% Chef's Kiss, ~20% Kitchen Approved
-    if total >= 0.60:
+    # Thresholds: ~10% Chef's Kiss, ~15% Kitchen Approved, ~25% Workable, ~50% Line Cook Shrug
+    if total >= 0.70:
         restaurant_tier = "Chef's Kiss"
-    elif total >= 0.50:
+    elif total >= 0.55:
         restaurant_tier = "Kitchen Approved"
-    elif total >= 0.40:
+    elif total >= 0.35:
         restaurant_tier = "Workable"
     else:
         restaurant_tier = "Line Cook Shrug"
+
+    # Get authenticity markers from restaurant name
+    auth_markers = get_authenticity_markers(name)
 
     # Return score and component breakdown
     return {
@@ -1230,6 +1237,11 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         "family_pattern": family_pattern,  # Type of pattern matched
         "scarcity_components": scarcity_components,  # Detailed breakdown
         "diaspora_context": diaspora_context,  # Diaspora geography info (for UI display)
+        # Authenticity markers (auto-detected from name)
+        "has_diacritics": auth_markers["has_diacritics"],
+        "has_flag_emoji": auth_markers["has_flag"],
+        "diacritics_cuisine": auth_markers["diacritics_cuisine"],
+        "flag_cuisine": auth_markers["flag_cuisine"],
         "components": {
             "review_adjustment": review_adjustment,  # Saturation curve
             "base_quality": base_quality,  # 35% weight
@@ -1309,6 +1321,12 @@ def rerank_restaurants(df):
     df["reddit_mentions"] = [r["reddit_mentions"] for r in results]
     df["has_afsca_smiley"] = [r["has_afsca_smiley"] for r in results]
     df["diaspora_context"] = [r["diaspora_context"] for r in results]
+
+    # Add authenticity marker columns
+    df["has_diacritics"] = [r["has_diacritics"] for r in results]
+    df["has_flag_emoji"] = [r["has_flag_emoji"] for r in results]
+    df["diacritics_cuisine"] = [r["diacritics_cuisine"] for r in results]
+    df["flag_cuisine"] = [r["flag_cuisine"] for r in results]
 
     # Add component columns for debugging/transparency
     for component in ["review_adjustment", "tourist_penalty", "scarcity_bonus", "diaspora_bonus", "low_review_penalty"]:
