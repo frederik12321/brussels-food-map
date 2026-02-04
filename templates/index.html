@@ -3005,8 +3005,9 @@
                         weight: 1
                     }).addTo(map);
 
-                    // Fly to location
-                    map.flyTo([latitude, longitude], 15);
+                    // Fly to location - zoom closer on mobile for better restaurant discovery
+                    const gpsZoom = isMobile ? 17 : 16;
+                    map.flyTo([latitude, longitude], gpsZoom);
 
                     // Update button state
                     gpsBtn.classList.remove('locating');
