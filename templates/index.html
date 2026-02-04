@@ -1747,7 +1747,8 @@
                 <div class="legend-item" title="Score 55+: Exceptional quality, must visit">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#FFD700"/>
-                        <circle cx="9" cy="9" r="6" fill="#FFF8DC" opacity="0.3"/>
+                        <path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/>
+                        <rect x="5" y="12" width="8" height="1.5" rx="0.5" fill="white"/>
                     </svg>
                     <span style="color: #B8860B; font-weight: 600;">Gold</span>
                     <span style="color: var(--text-muted); font-size: 10px; margin-left: 2px;">Chef's Kiss</span>
@@ -1755,7 +1756,7 @@
                 <div class="legend-item" title="Score 48-54: Highly recommended">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#C0C0C0"/>
-                        <circle cx="9" cy="9" r="6" fill="#FFFFFF" opacity="0.3"/>
+                        <path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/>
                     </svg>
                     <span style="color: #6B7280; font-weight: 600;">Silver</span>
                     <span style="color: var(--text-muted); font-size: 10px; margin-left: 2px;">Approved</span>
@@ -1763,7 +1764,7 @@
                 <div class="legend-item" title="Score 30-47: Solid choice, above average">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#CD7F32"/>
-                        <circle cx="9" cy="9" r="6" fill="#FFDAB9" opacity="0.3"/>
+                        <path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/>
                     </svg>
                     <span style="color: #8B4513; font-weight: 600;">Bronze</span>
                     <span style="color: var(--text-muted); font-size: 10px; margin-left: 2px;">Workable</span>
@@ -1771,14 +1772,11 @@
                 <div class="legend-item" title="Score below 30: Standard, nothing special">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <circle cx="9" cy="9" r="8.5" fill="#95A5A6"/>
+                        <circle cx="9" cy="9" r="2.5" fill="white"/>
                     </svg>
                     <span style="color: #6B7280;">Unranked</span>
                 </div>
                 <div class="legend-hint" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-subtle); font-size: 10px; color: var(--text-muted);">
-                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                        <span style="font-size: 14px;">🍴</span>
-                        <span>= clustered restaurants</span>
-                    </div>
                     <div style="display: flex; align-items: center; gap: 6px;">
                         <span style="font-size: 11px;">👆</span>
                         <span>Tap clusters or zoom in</span>
@@ -2496,12 +2494,12 @@
         function createPinIcon(color, isSelected = false, tier = 'average') {
             const size = 18;
 
-            // Professional tier colors - optimized for map visibility
+            // Gold/Silver/Bronze tier colors
             const tierColors = {
-                'must_try': '#FFD700',      // Gold - highest quality
-                'recommended': '#2ECC71',   // Emerald Green - positive action
-                'above_average': '#3498DB', // Bright Blue - above norm
-                'average': '#95A5A6'        // Concrete Gray - minimal noise
+                'must_try': '#FFD700',      // Gold - Chef's Kiss
+                'recommended': '#C0C0C0',   // Silver - Approved
+                'above_average': '#CD7F32', // Bronze - Workable
+                'average': '#95A5A6'        // Gray - Unranked
             };
 
             const iconColor = tierColors[tier] || tierColors['average'];
