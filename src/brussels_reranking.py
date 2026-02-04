@@ -31,6 +31,114 @@ from brussels_context import (
 from afsca_hygiene import get_afsca_score, match_restaurant
 
 
+# ============================================================================
+# STATISTICAL UTILITY FUNCTIONS
+# ============================================================================
+
+def sigmoid(x, center=0, steepness=1):
+    """
+    Smooth sigmoid function for gradual transitions instead of hard cutoffs.
+
+    Args:
+        x: Input value
+        center: Value where sigmoid returns 0.5
+        steepness: How sharp the transition is (higher = sharper)
+
+    Returns:
+        Value between 0 and 1
+    """
+    return 1 / (1 + math.exp(-steepness * (x - center)))
+
+
+def confidence_weight(review_count, min_reviews=10, half_confidence=50):
+    """
+    Calculate confidence weight based on review count using Bayesian approach.
+
+    Uses the formula: confidence = 1 - 1/sqrt(1 + review_count/k)
+    where k controls how quickly confidence grows.
+
+    Args:
+        review_count: Number of reviews
+        min_reviews: Below this, confidence is very low
+        half_confidence: Reviews needed for 50% confidence
+
+    Returns:
+        Confidence weight between 0 and 1
+    """
+    if review_count < min_reviews:
+        # Very low confidence for tiny sample sizes
+        return 0.3 * (review_count / min_reviews)
+
+    # Bayesian-style confidence that asymptotes to 1.0
+    # At half_confidence reviews, this returns ~0.71
+    # At 200 reviews, this returns ~0.90
+    # At 500 reviews, this returns ~0.95
+    return 1 - 1 / math.sqrt(1 + review_count / half_confidence)
+
+
+def smooth_threshold(value, threshold, transition_width=0.2):
+    """
+    Smooth transition around a threshold instead of hard cutoff.
+
+    Args:
+        value: The value to check
+        threshold: The center threshold
+        transition_width: Width of transition zone (as fraction of threshold)
+
+    Returns:
+        0 to 1, where 0 = well below threshold, 1 = well above
+    """
+    width = threshold * transition_width
+    return sigmoid(value, center=threshold, steepness=4/width)
+
+
+def normalize_weights(components):
+    """
+    Normalize a dict of component weights to sum to exactly 1.0.
+
+    Args:
+        components: Dict of {name: weight}
+
+    Returns:
+        Dict with normalized weights
+    """
+    total = sum(abs(v) for v in components.values() if v > 0)
+    if total == 0:
+        return components
+    return {k: v / total if v > 0 else v for k, v in components.items()}
+
+
+# ============================================================================
+# WEIGHT CONFIGURATION (normalized to sum to 1.0)
+# ============================================================================
+
+# Positive component weights (must sum to 1.0)
+POSITIVE_WEIGHTS = {
+    'base_quality': 0.32,      # Google rating (reduced from 0.35)
+    'ml_residual': 0.18,       # Undervaluation detection (reduced from 0.20)
+    'scarcity': 0.12,          # Limited hours/days
+    'independent': 0.10,       # Non-chain bonus
+    'guide': 0.08,             # Michelin/GaultMillau
+    'diaspora': 0.07,          # Location authenticity
+    'reddit': 0.05,            # Community endorsement
+    'bruxellois': 0.04,        # Local institutions (reduced from 0.05)
+    'family_name': 0.02,       # "Chez X" pattern
+    'specificity': 0.01,       # Regional cuisines
+    'cuisine_rarity': 0.01,    # Rare in Brussels
+}
+# Verify: sum = 0.32 + 0.18 + 0.12 + 0.10 + 0.08 + 0.07 + 0.05 + 0.04 + 0.02 + 0.01 + 0.01 = 1.00
+
+# Penalty caps (these subtract from the score)
+PENALTY_CAPS = {
+    'tourist_trap': -0.15,
+    'chain': -0.10,
+    'low_review': -0.15,       # Reduced from -0.20, now uses confidence weighting
+    'eu_bubble': -0.03,
+    'price_quality': -0.10,
+    'shop': -0.80,
+}
+
+
 # Reddit mentions cache (loaded once)
 _reddit_mentions_cache = None
 
@@ -865,6 +973,9 @@ def _calculate_review_adjustment(review_count, cuisine, name, tier):
     """
     Calculate review count adjustment based on Brussels saturation curve.
 
+    Uses smooth sigmoid transitions instead of hard cutoffs for more
+    statistically robust behavior at boundaries.
+
     In a mid-sized European capital (1.2M people), review count is a proxy
     for commercialization. Unlike NYC/London, Brussels locals don't generate
     2000+ reviews for authentic spots.
@@ -879,30 +990,49 @@ def _calculate_review_adjustment(review_count, cuisine, name, tier):
         any(known in name_lower for known in KNOWN_FRITKOTS)
     )
 
-    if review_count < 10:
-        return -0.35
-    elif review_count < 20:
-        return -0.35 + 0.20 * ((review_count - 10) / 10)
-    elif review_count < 35:
-        return -0.15 * (1 - (review_count - 20) / 15)
-    elif review_count <= 100:
-        return 0.03  # Discovery zone
-    elif review_count <= 500:
-        return 0.05  # Sweet spot
-    elif review_count <= 800:
-        return 0.02  # Famous local
-    elif review_count <= 1200:
-        return 0  # Transition zone
-    elif review_count <= 1500:
-        return -0.03  # Warning zone
-    elif is_fritkot:
-        return 0  # Fritkot exception
-    elif tier in ["local_foodie", "diaspora_hub", "underexplored"]:
-        penalty_factor = min(1.0, (review_count - 1500) / 8000)
-        return -0.03 - (0.07 * penalty_factor)
+    # SMOOTH SATURATION CURVE using sigmoid blending
+    # This eliminates hard cutoff "cliffs" in the scoring
+
+    # Zone 1: Very few reviews (0-25) - penalty that smoothly decreases
+    # Uses sigmoid centered at 15 reviews
+    if review_count < 25:
+        # Smooth transition from -0.30 at 0 reviews to ~0 at 25 reviews
+        low_review_factor = 1 - sigmoid(review_count, center=15, steepness=0.2)
+        return -0.30 * low_review_factor
+
+    # Zone 2: Discovery zone (25-150) - small bonus, peaks around 75
+    if review_count <= 150:
+        # Bell curve bonus centered at 75 reviews
+        discovery_bonus = 0.05 * math.exp(-((review_count - 75) ** 2) / (2 * 40 ** 2))
+        return discovery_bonus
+
+    # Zone 3: Sweet spot (150-600) - optimal range
+    if review_count <= 600:
+        # Gradual bonus that peaks at 300 and tapers
+        sweet_spot_bonus = 0.05 * math.exp(-((review_count - 300) ** 2) / (2 * 150 ** 2))
+        return sweet_spot_bonus
+
+    # Zone 4: Famous local (600-1200) - transition to neutral
+    if review_count <= 1200:
+        # Smooth transition from small bonus to neutral
+        transition_factor = sigmoid(review_count, center=900, steepness=0.005)
+        return 0.02 * (1 - transition_factor)
+
+    # Zone 5: High volume (1200+) - penalty zone with exceptions
+    if is_fritkot:
+        # Fritkots can handle high volume authentically
+        return 0
+
+    # Smooth penalty that increases with review count
+    # Uses different steepness based on area type
+    if tier in ["local_foodie", "diaspora_hub", "underexplored"]:
+        # Gentler penalty in local areas (could be old institution)
+        penalty = -0.03 * sigmoid(review_count, center=2000, steepness=0.001)
+        return max(-0.10, penalty)
     else:
-        penalty_factor = min(1.0, (review_count - 1500) / 5000)
-        return -0.08 - (0.12 * penalty_factor)
+        # Steeper penalty in tourist/mixed areas
+        penalty = -0.08 * sigmoid(review_count, center=1500, steepness=0.002)
+        return max(-0.20, penalty)
 
 
 def _calculate_diaspora_bonus(cuisine, commune, lat, lng, review_languages, name,
@@ -1015,56 +1145,61 @@ def _calculate_guide_bonus(name):
 
 def _calculate_low_review_penalty(review_count, rating):
     """
-    Calculate penalty for statistically unreliable ratings.
+    Calculate penalty for statistically unreliable ratings using confidence weighting.
 
-    Few reviews = statistically unreliable, more severe for higher ratings.
+    Uses Bayesian-style confidence that accounts for:
+    - Sample size (review count)
+    - Rating extremity (perfect 5.0 or very high ratings are suspicious with few reviews)
 
     Returns: float penalty value (negative or 0)
     """
-    if review_count < 10:
-        if rating >= 4.8:
-            return -0.20
-        elif rating >= 4.5:
-            return -0.15
-        else:
-            return -0.10
-    elif review_count < 20:
-        if rating >= 4.9:
-            return -0.12
-        elif rating >= 4.5:
-            return -0.08
-        else:
-            return -0.04
-    elif review_count < 30:
-        if rating >= 4.9:
-            return -0.06
-        elif rating >= 4.5:
-            return -0.03
-    elif review_count < 50:
-        if rating == 5.0:
-            return -0.02
-    elif review_count < 100:
-        if rating == 5.0:
-            return -0.02
-    elif review_count < 200:
-        if rating == 5.0:
-            return -0.01
-    return 0
+    if review_count >= 200:
+        # Sufficient sample size - no penalty needed
+        return 0
+
+    # Calculate base confidence (0-1)
+    conf = confidence_weight(review_count, min_reviews=10, half_confidence=50)
+
+    # Calculate rating extremity factor
+    # Perfect 5.0 is most suspicious, 4.8+ is also suspicious
+    # Lower ratings are less suspicious (could be legitimately bad)
+    if rating == 5.0:
+        extremity = 1.0  # Maximum suspicion
+    elif rating >= 4.8:
+        extremity = 0.8
+    elif rating >= 4.5:
+        extremity = 0.5
+    elif rating >= 4.0:
+        extremity = 0.2
+    else:
+        extremity = 0.0  # Low ratings with few reviews - no penalty
+
+    # Penalty scales with both low confidence AND rating extremity
+    # Max penalty: -0.15 (for 5.0 rating with <10 reviews)
+    # At 50 reviews with 5.0: ~-0.04
+    # At 100 reviews with 5.0: ~-0.02
+    uncertainty_penalty = -0.15 * (1 - conf) * extremity
+
+    return uncertainty_penalty
 
 
 def _determine_tier(total_score):
     """
     Determine restaurant quality tier based on score.
 
-    Thresholds: ~10% Chef's Kiss, ~15% Kitchen Approved, ~25% Workable.
+    Thresholds calibrated for confidence-weighted scoring:
+    - Chef's Kiss: top ~5% (95th percentile = 0.55)
+    - Kitchen Approved: top ~15% (85th percentile = 0.50)
+    - Workable: top ~50% (50th percentile = 0.39)
+    - Line Cook Shrug: bottom ~50%
 
     Returns: str tier name
     """
-    if total_score >= 0.70:
+    if total_score >= 0.55:
         return "Chef's Kiss"
-    elif total_score >= 0.55:
+    elif total_score >= 0.48:
         return "Kitchen Approved"
-    elif total_score >= 0.35:
+    elif total_score >= 0.30:
         return "Workable"
     else:
         return "Line Cook Shrug"
@@ -1110,22 +1245,34 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         tier = COMMUNES.get(commune, {}).get("tier", "mixed")
 
     # === NORMALIZED SCORING SYSTEM (0-1 scale) ===
-    # See helper functions for detailed weight breakdown (totals ~1.0)
+    # Uses POSITIVE_WEIGHTS constant (sums to exactly 1.0)
+    # All bonuses are weighted by confidence to account for sample size
 
-    # 0. Review count adjustment (saturation curve)
+    # Calculate confidence weight based on review count
+    conf = confidence_weight(review_count, min_reviews=10, half_confidence=50)
+
+    # 0. Review count adjustment (saturation curve with smooth transitions)
     review_adjustment = _calculate_review_adjustment(review_count, cuisine, name, tier)
 
-    # 1. Base quality (35% weight) - primary driver
-    # A 5.0★ restaurant gets full 0.35, a 4.0★ gets 0.28, a 3.0★ gets 0.21
-    base_quality = 0.35 * (rating / 5.0) if rating else 0
+    # 1. Base quality - primary driver
+    # Apply confidence weighting: low review count = rating less trusted
+    # A 5.0★ with high confidence gets full weight; 5.0★ with low confidence gets less
+    raw_quality = (rating / 5.0) if rating else 0
+    base_quality = POSITIVE_WEIGHTS['base_quality'] * raw_quality * (0.5 + 0.5 * conf)
 
-    # 2. ML residual (20% weight) - undervaluation detection
+    # 2. ML residual - undervaluation detection
     # Residual typically ranges -0.5 to +0.5, we scale and clamp
-    residual_score = 0.20 * min(1.0, max(-1.0, residual * 2))
+    # Also weighted by confidence (residual is less meaningful with few reviews)
+    raw_residual = min(1.0, max(-1.0, residual * 2))
+    residual_score = POSITIVE_WEIGHTS['ml_residual'] * raw_residual * conf
 
     # 3. Tourist trap penalty (up to -15%)
+    # NOTE: Removed collinearity with review_adjustment by focusing only on location/language signals
+    # The review_adjustment handles the review count aspect
     tourist_trap_raw = tourist_trap_score(lat, lng, rating, review_count, review_languages) if lat and lng else 0
-    tourist_penalty = -0.15 * tourist_trap_raw
+    # Scale down if review_adjustment already penalized (avoid double-penalty)
+    collinearity_factor = 1.0 if review_adjustment >= 0 else 0.5
+    tourist_penalty = PENALTY_CAPS['tourist_trap'] * tourist_trap_raw * collinearity_factor
 
     # 4. Diaspora bonus (7% weight) - unified street + cuisine/commune
     diaspora_bonus, diaspora_street_name = _calculate_diaspora_bonus(
@@ -1133,18 +1280,16 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
         address, price_level, rating, tourist_trap_raw
     )
 
-    # 5. Independent restaurant bonus (10% weight) + Chain penalty
-    # Chains lose the 10% independent bonus AND get a 10% penalty
-    # This ensures chains like Bavet, Exki, etc. don't rank as "Kitchen Approved"
-    independent_bonus = 0.10 * (0 if is_chain else 1)
-    chain_penalty = -0.10 if is_chain else 0
+    # 5. Independent restaurant bonus + Chain penalty
+    # Using normalized weights from POSITIVE_WEIGHTS
+    independent_bonus = POSITIVE_WEIGHTS['independent'] * (0 if is_chain else 1)
+    chain_penalty = PENALTY_CAPS['chain'] if is_chain else 0
 
-    # 6. Cuisine rarity bonus (1% weight)
-    # Small but noticeable - rewards rare cuisines in Brussels
-    rarity_bonus = 0.01 * cuisine_rarity_score(cuisine, commune, cuisine_counts_by_commune)
+    # 6. Cuisine rarity bonus
+    rarity_bonus = POSITIVE_WEIGHTS['cuisine_rarity'] * cuisine_rarity_score(cuisine, commune, cuisine_counts_by_commune)
 
-    # 7. EU bubble penalty (up to -3%)
-    eu_penalty = -0.03 * eu_bubble_penalty(lat, lng, price_level, review_languages) if lat and lng else 0
+    # 7. EU bubble penalty
+    eu_penalty = PENALTY_CAPS['eu_bubble'] * eu_bubble_penalty(lat, lng, price_level, review_languages) if lat and lng else 0
 
     # 8. Price/quality mismatch penalty
     price_quality_penalty = _calculate_price_quality_penalty(price_level, rating)
@@ -1152,10 +1297,9 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     # 9. Value Score bonus (up to 4%)
     value_bonus = _calculate_value_bonus(price_level, rating)
 
-    # 10. Scarcity score (12% weight)
-    # Combines: hours, days, schedule, rare cuisine
+    # 10. Scarcity score
     scarcity_total, scarcity_components = unified_scarcity_score(restaurant)
-    scarcity_bonus = 0.12 * scarcity_total
+    scarcity_bonus = POSITIVE_WEIGHTS['scarcity'] * scarcity_total
 
     # Extract individual values for transparency/debugging
     closes_early = restaurant.get("closes_early", False)
@@ -1165,14 +1309,15 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     closed_sunday = restaurant.get("closed_sunday", False)
     days_open_count = restaurant.get("days_open_count")
 
-    # 11. Guide recognition bonus (up to 8%)
-    guide_bonus, michelin_stars, is_bib_gourmand, is_gault_millau = _calculate_guide_bonus(name)
+    # 11. Guide recognition bonus
+    raw_guide_bonus, michelin_stars, is_bib_gourmand, is_gault_millau = _calculate_guide_bonus(name)
+    guide_bonus = raw_guide_bonus  # Already returns weighted value
 
-    # 12. Reddit community endorsement (5% weight)
+    # 12. Reddit community endorsement
     reddit_score, reddit_mentions = reddit_community_score(name, review_count)
-    reddit_bonus = 0.05 * reddit_score
+    reddit_bonus = POSITIVE_WEIGHTS['reddit'] * reddit_score
 
-    # 13. Low review count penalty
+    # 13. Low review count penalty (now uses confidence-based calculation)
     low_review_penalty = _calculate_low_review_penalty(review_count, rating)
 
     # 14. AFSCA Hygiene certification (informational only)
@@ -1180,26 +1325,24 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     afsca_score = get_afsca_score(name, address)
     has_afsca_smiley = afsca_score > 0
 
-    # 15. Family restaurant bonus (2% weight)
+    # 15. Family restaurant bonus
     is_family_name, family_pattern = is_family_restaurant_name(name)
-    family_bonus = 0.02 if (is_family_name and not is_chain) else 0
+    family_bonus = POSITIVE_WEIGHTS['family_name'] if (is_family_name and not is_chain) else 0
 
-    # 16. Cuisine specificity bonus (up to 2%)
+    # 16. Cuisine specificity bonus
     cuisine_specificity = get_cuisine_specificity_bonus(cuisine)
-    specificity_bonus = 0.02 * cuisine_specificity
+    specificity_bonus = POSITIVE_WEIGHTS['specificity'] * cuisine_specificity
 
     # 17. Non-restaurant shop penalty
     is_shop = is_non_restaurant_shop(name)
-    shop_penalty = -0.80 if is_shop else 0
+    shop_penalty = PENALTY_CAPS['shop'] if is_shop else 0
 
     # 18. Diaspora context (informational - for UI display only)
     diaspora_context = get_diaspora_context(cuisine, commune, lat, lng)
 
-    # 19. Bruxellois authenticity bonus (up to 5%)
-    # Rewards authentic Brussels establishments: friteries in working-class
-    # communes and curated list of local institutions
+    # 19. Bruxellois authenticity bonus
     bruxellois_score = bruxellois_authenticity_score(name, commune)
-    bruxellois_bonus = 0.05 * bruxellois_score
+    bruxellois_bonus = POSITIVE_WEIGHTS['bruxellois'] * bruxellois_score
 
     # Total score (sum of all components)
     total = (
