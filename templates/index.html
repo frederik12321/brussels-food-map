@@ -1198,6 +1198,12 @@
             pointer-events: auto;
         }
 
+        /* Floating animation for clusters */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+        }
+
         /* Marker cluster styling - modern glassmorphism design */
         .marker-cluster {
             background: rgba(255, 255, 255, 0.95);
@@ -1205,10 +1211,11 @@
             -webkit-backdrop-filter: blur(8px);
             border-radius: 50%;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(255, 255, 255, 0.8);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: float 3s ease-in-out infinite;
         }
 
         .marker-cluster:hover {
+            animation-play-state: paused;
             transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.9);
         }
@@ -1221,6 +1228,11 @@
             justify-content: center;
             line-height: 1;
         }
+
+        /* Stagger the animation for variety */
+        .marker-cluster:nth-child(odd) { animation-delay: -1.5s; }
+        .marker-cluster:nth-child(3n) { animation-duration: 3.5s; }
+        .marker-cluster:nth-child(5n) { animation-duration: 2.5s; }
 
         .marker-cluster-small {
             background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.25) 100%);
