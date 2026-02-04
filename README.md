@@ -321,7 +321,7 @@ Scraped Google Maps reviews and validated sentiment analysis accuracy:
 - Keyword-based flagging for "closed", "terrible", "racist" mentions
 - Manual review of flagged entries to catch false positives
 
-> **Note:** Sentiment analysis was performed on a limited sample (~600 reviews from ~50 restaurants) due to Google Maps scraping constraints. It was used for quality control flagging rather than scoring.
+> **Note:** Due to limited scraping, sentiment analysis was used for quality control flagging rather than scoring.
 
 #### Results
 - **239 entries removed** from original dataset
