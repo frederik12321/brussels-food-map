@@ -761,6 +761,13 @@ NON_RESTAURANT_SHOPS = [
     r"^q8$", r"^gulf$", r"\btankstation\b",
 ]
 
+# Permanently closed restaurants - manually curated list
+# These should be filtered out even if they appear in Google Maps data
+PERMANENTLY_CLOSED = [
+    "la canne en ville",
+    "canne en ville",
+]
+
 
 def is_non_restaurant_shop(name):
     """Check if a place is a retail shop rather than a restaurant."""

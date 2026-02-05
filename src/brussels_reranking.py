@@ -21,7 +21,7 @@ from brussels_context import (
     COMMUNES, NEIGHBORHOODS, TIER_WEIGHTS,
     DIASPORA_AUTHENTICITY, BELGIAN_AUTHENTICITY,
     FRITERIE_AUTHENTICITY, BRUXELLOIS_INSTITUTIONS,
-    DIASPORA_STREETS, LOCAL_FOOD_STREETS,
+    DIASPORA_STREETS, LOCAL_FOOD_STREETS, PERMANENTLY_CLOSED,
     get_commune, get_neighborhood, get_diaspora_context,
     distance_to_grand_place, distance_to_eu_quarter,
     haversine_distance, is_on_local_street,
@@ -1564,6 +1564,15 @@ def rerank_restaurants(df):
                 print(f"  - {name}")
             if len(non_food_removed) > 10:
                 print(f"  ... and {len(non_food_removed) - 10} more")
+
+    # Filter out permanently closed restaurants
+    closed_mask = df["name"].str.lower().isin(PERMANENTLY_CLOSED)
+    closed_removed = df[closed_mask]["name"].tolist()
+    df = df[~closed_mask]
+    if closed_removed:
+        print(f"\nRemoved {len(closed_removed)} permanently closed restaurants:")
+        for name in closed_removed:
+            print(f"  - {name}")
 
     # Sort by Brussels score
     df = df.sort_values("brussels_score", ascending=False)
