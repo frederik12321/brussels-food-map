@@ -321,42 +321,6 @@
             border-color: var(--accent-primary);
         }
 
-        .surprise-btn {
-            width: 100%;
-            margin-top: 12px;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: var(--radius-lg);
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition-normal);
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .surprise-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .surprise-btn:active {
-            transform: translateY(0);
-        }
-
-        .surprise-btn.spinning {
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-4px) rotate(-2deg); }
-            40% { transform: translateX(4px) rotate(2deg); }
-            60% { transform: translateX(-4px) rotate(-1deg); }
-            80% { transform: translateX(4px) rotate(1deg); }
-        }
-
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
             50% { box-shadow: 0 0 0 8px rgba(102, 126, 234, 0); }
@@ -1816,9 +1780,6 @@
                     </div>
                 </div>
 
-                <button class="surprise-btn" id="surprise-btn" title="Pick a random top-rated restaurant for you">
-                    🎲 Surprise Me!
-                </button>
             </div>
 
             <div class="results">
@@ -3294,53 +3255,6 @@
         document.getElementById('show-all').addEventListener('click', () => setFilter('all'));
         document.getElementById('show-brussels-gems').addEventListener('click', () => setFilter('brussels_gems'));
         document.getElementById('show-open-now').addEventListener('click', () => setFilter('open_now'));
-
-        // Surprise Me button - picks a random top restaurant
-        document.getElementById('surprise-btn').addEventListener('click', async () => {
-            const btn = document.getElementById('surprise-btn');
-            btn.classList.add('spinning');
-
-            // Get top restaurants (score >= 0.48 = silver tier or better)
-            const topRestaurants = restaurants.filter(r => r.brussels_score >= 0.48);
-
-            if (topRestaurants.length === 0) {
-                btn.classList.remove('spinning');
-                alert('No top restaurants found with current filters. Try removing some filters!');
-                return;
-            }
-
-            // Pick a random one
-            const randomRestaurant = topRestaurants[Math.floor(Math.random() * topRestaurants.length)];
-
-            // Wait for animation
-            setTimeout(() => {
-                btn.classList.remove('spinning');
-
-                // Zoom to restaurant on map
-                if (randomRestaurant.lat && randomRestaurant.lng) {
-                    map.setView([randomRestaurant.lat, randomRestaurant.lng], 17);
-
-                    // Find and open the marker popup
-                    markersLayer.eachLayer(layer => {
-                        if (layer.restaurantId === randomRestaurant.id) {
-                            layer.openPopup();
-                        }
-                    });
-                }
-
-                // Switch to map tab on mobile
-                if (window.innerWidth <= 768) {
-                    switchTab('map');
-                }
-
-                // Scroll to restaurant in list on desktop
-                const card = document.querySelector(`[data-restaurant-id="${randomRestaurant.id}"]`);
-                if (card) {
-                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    card.style.animation = 'pulse 0.5s ease-in-out 2';
-                }
-            }, 500);
-        });
 
         // Add touch feedback for mobile
         document.querySelectorAll('.toggle-btn').forEach(btn => {
