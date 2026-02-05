@@ -3249,13 +3249,15 @@
             });
         });
 
-        // Swipe gesture navigation for mobile
+        // Swipe gesture navigation for mobile - only from screen edges
         let touchStartX = 0;
         let touchStartY = 0;
         let touchEndX = 0;
         let touchEndY = 0;
-        const swipeThreshold = 50; // minimum swipe distance
-        const swipeRestraint = 100; // maximum vertical movement allowed
+        let isEdgeSwipe = false;
+        const swipeThreshold = 100; // minimum swipe distance (increased)
+        const swipeRestraint = 50; // maximum vertical movement allowed (stricter)
+        const edgeZone = 30; // pixels from screen edge to trigger edge swipe
         const tabs = ['map', 'search']; // available tabs in order
 
         function getCurrentTabIndex() {
@@ -3264,6 +3266,9 @@
         }
 
         function handleSwipeGesture() {
+            // Only process edge swipes to avoid interfering with map panning
+            if (!isEdgeSwipe) return;
+
             const deltaX = touchEndX - touchStartX;
             const deltaY = Math.abs(touchEndY - touchStartY);
 
@@ -3290,12 +3295,16 @@
             container.addEventListener('touchstart', (e) => {
                 touchStartX = e.changedTouches[0].screenX;
                 touchStartY = e.changedTouches[0].screenY;
+                // Only register as edge swipe if started near screen edge
+                const screenWidth = window.innerWidth;
+                isEdgeSwipe = touchStartX < edgeZone || touchStartX > screenWidth - edgeZone;
             }, { passive: true });
 
             container.addEventListener('touchend', (e) => {
                 touchEndX = e.changedTouches[0].screenX;
                 touchEndY = e.changedTouches[0].screenY;
                 handleSwipeGesture();
+                isEdgeSwipe = false;
             }, { passive: true });
         }
 
