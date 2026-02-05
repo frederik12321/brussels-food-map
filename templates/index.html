@@ -1680,14 +1680,6 @@
                             <option value="Bakery">Bakeries</option>
                         </select>
                     </div>
-                    <div class="filter-group">
-                        <label class="filter-label" for="sort-filter">Sort By</label>
-                        <select id="sort-filter">
-                            <option value="brussels_score">Brussels Score</option>
-                            <option value="rating">Rating</option>
-                            <option value="residual">Undervalued</option>
-                        </select>
-                    </div>
                 </div>
 
                 <!-- Toggle for advanced filters -->
@@ -2932,7 +2924,6 @@
             const cuisine = document.getElementById('cuisine-filter').value;
             const minRating = document.getElementById('rating-filter').value;
             const priceLevel = document.getElementById('price-filter').value;
-            const sortBy = document.getElementById('sort-filter').value;
             const venueType = document.getElementById('venue-filter').value;
             const guideFilter = document.getElementById('guide-filter').value;
             const dayFilter = document.getElementById('day-filter').value;
@@ -2946,7 +2937,6 @@
             if (venueType !== 'all') params.append('venue_type', venueType);
             if (guideFilter) params.append('guide', guideFilter);
             if (dayFilter) params.append('open_day', dayFilter);
-            params.append('sort_by', sortBy);
 
             if (currentFilter === 'brussels_gems') params.append('brussels_gems', 'true');
             if (currentFilter === 'diaspora') params.append('diaspora_only', 'true');
@@ -3187,7 +3177,6 @@
         document.getElementById('venue-filter').addEventListener('change', loadRestaurants);
         document.getElementById('rating-filter').addEventListener('change', loadRestaurants);
         document.getElementById('price-filter').addEventListener('change', loadRestaurants);
-        document.getElementById('sort-filter').addEventListener('change', loadRestaurants);
         document.getElementById('guide-filter').addEventListener('change', loadRestaurants);
         document.getElementById('day-filter').addEventListener('change', loadRestaurants);
         document.getElementById('time-filter').addEventListener('change', loadRestaurants);
