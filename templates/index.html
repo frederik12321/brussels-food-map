@@ -321,6 +321,47 @@
             border-color: var(--accent-primary);
         }
 
+        .surprise-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: var(--radius-lg);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .surprise-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .surprise-btn:active {
+            transform: translateY(0);
+        }
+
+        .surprise-btn.spinning {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-4px) rotate(-2deg); }
+            40% { transform: translateX(4px) rotate(2deg); }
+            60% { transform: translateX(-4px) rotate(-1deg); }
+            80% { transform: translateX(4px) rotate(1deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(102, 126, 234, 0); }
+        }
+
         .results {
             flex: 1 1 auto;
             overflow-y: auto;
@@ -1753,6 +1794,16 @@
                                 <option value="reddit">r/brussels Approved</option>
                             </select>
                         </div>
+                        <div class="filter-group">
+                            <label class="filter-label" for="distance-filter">Max Distance 📍</label>
+                            <select id="distance-filter" title="Enable GPS first to use this filter">
+                                <option value="">Any</option>
+                                <option value="500">5 min walk (500m)</option>
+                                <option value="1000">10 min walk (1km)</option>
+                                <option value="2000">20 min walk (2km)</option>
+                                <option value="5000">Nearby (5km)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -1761,8 +1812,13 @@
                     <div class="toggle-group" role="group" aria-label="Filter mode">
                         <button class="toggle-btn active" id="show-all" title="Show all restaurants matching your filters">All</button>
                         <button class="toggle-btn" id="show-brussels-gems" title="Top 100 overall: combines quality, local appeal, scarcity & guide recognition">🏆 Top 100</button>
+                        <button class="toggle-btn" id="show-open-now" title="Only show restaurants that are currently open">🟢 Open Now</button>
                     </div>
                 </div>
+
+                <button class="surprise-btn" id="surprise-btn" title="Pick a random top-rated restaurant for you">
+                    🎲 Surprise Me!
+                </button>
             </div>
 
             <div class="results">
@@ -2851,6 +2907,15 @@
             }
         });
 
+        // Helper function to check if restaurant is open RIGHT NOW
+        function isOpenNow(openingHours) {
+            const now = new Date();
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const currentDay = days[now.getDay()];
+            const currentHour = now.getHours();
+            return isOpenAtTime(openingHours, currentDay, currentHour);
+        }
+
         // Helper function to check if restaurant is open on a specific day
         function isOpenOnDay(openingHours, day) {
             if (!openingHours || openingHours.length === 0) return true; // Include unknowns
@@ -2954,6 +3019,25 @@
                         // Filter by day only (any time that day)
                         data = data.filter(r => isOpenOnDay(r.opening_hours, dayFilter));
                     }
+                }
+
+                // Filter for "Open Now" if selected
+                if (currentFilter === 'open_now') {
+                    data = data.filter(r => isOpenNow(r.opening_hours));
+                }
+
+                // Distance filter (only if GPS is active)
+                const distanceFilter = document.getElementById('distance-filter').value;
+                if (distanceFilter && userLat && userLng) {
+                    const maxDistance = parseInt(distanceFilter);
+                    data = data.filter(r => {
+                        if (!r.lat || !r.lng) return false;
+                        const distance = getDistanceMeters(userLat, userLng, r.lat, r.lng);
+                        r.distance = distance; // Store for display
+                        return distance <= maxDistance;
+                    });
+                    // Sort by distance when filter is active
+                    data.sort((a, b) => (a.distance || 0) - (b.distance || 0));
                 }
 
                 restaurants = data;
@@ -3061,7 +3145,7 @@
 
                 const isMobileView = window.innerWidth <= 768;
                 return `
-                    <div class="restaurant-card" onclick="${isMobileView ? 'flyToMobile' : 'flyTo'}(${r.lat}, ${r.lng})">
+                    <div class="restaurant-card" data-restaurant-id="${r.id}" onclick="${isMobileView ? 'flyToMobile' : 'flyTo'}(${r.lat}, ${r.lng})">
                         <div class="restaurant-header">
                             <div class="restaurant-name">${escapeHtml(r.name)}</div>
                             <div class="restaurant-badges">
@@ -3180,6 +3264,15 @@
         document.getElementById('guide-filter').addEventListener('change', loadRestaurants);
         document.getElementById('day-filter').addEventListener('change', loadRestaurants);
         document.getElementById('time-filter').addEventListener('change', loadRestaurants);
+        document.getElementById('distance-filter').addEventListener('change', () => {
+            const distanceFilter = document.getElementById('distance-filter').value;
+            if (distanceFilter && !userLat) {
+                alert('📍 Enable GPS first by clicking the location button on the map!');
+                document.getElementById('distance-filter').value = '';
+                return;
+            }
+            loadRestaurants();
+        });
 
         // Advanced filters toggle
         const filtersToggle = document.getElementById('filters-toggle');
@@ -3200,6 +3293,54 @@
 
         document.getElementById('show-all').addEventListener('click', () => setFilter('all'));
         document.getElementById('show-brussels-gems').addEventListener('click', () => setFilter('brussels_gems'));
+        document.getElementById('show-open-now').addEventListener('click', () => setFilter('open_now'));
+
+        // Surprise Me button - picks a random top restaurant
+        document.getElementById('surprise-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('surprise-btn');
+            btn.classList.add('spinning');
+
+            // Get top restaurants (score >= 0.48 = silver tier or better)
+            const topRestaurants = restaurants.filter(r => r.brussels_score >= 0.48);
+
+            if (topRestaurants.length === 0) {
+                btn.classList.remove('spinning');
+                alert('No top restaurants found with current filters. Try removing some filters!');
+                return;
+            }
+
+            // Pick a random one
+            const randomRestaurant = topRestaurants[Math.floor(Math.random() * topRestaurants.length)];
+
+            // Wait for animation
+            setTimeout(() => {
+                btn.classList.remove('spinning');
+
+                // Zoom to restaurant on map
+                if (randomRestaurant.lat && randomRestaurant.lng) {
+                    map.setView([randomRestaurant.lat, randomRestaurant.lng], 17);
+
+                    // Find and open the marker popup
+                    markersLayer.eachLayer(layer => {
+                        if (layer.restaurantId === randomRestaurant.id) {
+                            layer.openPopup();
+                        }
+                    });
+                }
+
+                // Switch to map tab on mobile
+                if (window.innerWidth <= 768) {
+                    switchTab('map');
+                }
+
+                // Scroll to restaurant in list on desktop
+                const card = document.querySelector(`[data-restaurant-id="${randomRestaurant.id}"]`);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.style.animation = 'pulse 0.5s ease-in-out 2';
+                }
+            }, 500);
+        });
 
         // Add touch feedback for mobile
         document.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -3348,6 +3489,20 @@
         let userLocationMarker = null;
         let userLocationCircle = null;
         let gpsActive = false;
+        let userLat = null;
+        let userLng = null;
+
+        // Calculate distance between two points in meters (Haversine formula)
+        function getDistanceMeters(lat1, lng1, lat2, lng2) {
+            const R = 6371000; // Earth radius in meters
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
 
         gpsBtn.addEventListener('click', () => {
             // If GPS is active, deactivate it
@@ -3376,6 +3531,10 @@
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude, accuracy } = position.coords;
+
+                    // Store user location for distance filtering
+                    userLat = latitude;
+                    userLng = longitude;
 
                     // Remove previous markers
                     if (userLocationMarker) {
