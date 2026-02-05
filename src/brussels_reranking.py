@@ -1551,7 +1551,8 @@ def rerank_restaurants(df):
         "hair_salon", "wellness_center", "massage", "public_bath",
         "furniture_store", "home_goods_store", "home_improvement_store",
         "clothing_store", "shopping_mall", "department_store",
-        "movie_theater", "night_club", "casino"
+        "movie_theater", "night_club", "casino",
+        "gas_station", "fuel_station", "petrol_station"  # Tankstations
     ]
     if "primary_type" in df.columns:
         non_food_mask = df["primary_type"].isin(NON_FOOD_TYPES)

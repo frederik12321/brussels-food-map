@@ -756,6 +756,9 @@ NON_RESTAURANT_SHOPS = [
     r"\bchocolatier\b", r"\bchocolate shop\b", r"\bpralines\b",
     # Butcher shops / slagerijen
     r"\bspek\s*[&n]\s*boonen\b",
+    # Gas stations / tankstations (filter by name in case primary_type is wrong)
+    r"^shell$", r"^totalenergies\b", r"^esso\b", r"^lukoil\b", r"^texaco\b",
+    r"^q8\b", r"^gulf\b", r"\btankstation\b",
 ]
 
 
