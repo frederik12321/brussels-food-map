@@ -2443,6 +2443,29 @@
                 });
             }
 
+            if (restaurant.horseshoe_bonus && restaurant.horseshoe_bonus > 0.5) {
+                const typeLabel = restaurant.horseshoe_type === 'owl' ? 'Late-night spot' : 'Early bird';
+                factors.push({
+                    label: typeLabel,
+                    value: restaurant.horseshoe_bonus * 0.03,  // Scale to actual score impact
+                    max: 0.03,
+                    description: restaurant.horseshoe_type === 'owl'
+                        ? 'Open late — harder to fake quality at 2 AM'
+                        : 'Opens early — serving the morning crowd',
+                    highlight: true
+                });
+            }
+
+            if (restaurant.score_local_street_bonus && restaurant.score_local_street_bonus > 0.01) {
+                factors.push({
+                    label: 'Food street',
+                    value: restaurant.score_local_street_bonus,
+                    max: 0.06,
+                    description: 'Located on a known local food corridor',
+                    highlight: true
+                });
+            }
+
             return factors;
         }
 
