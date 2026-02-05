@@ -743,6 +743,8 @@ CHAIN_PATTERNS = [
     r"\bfritland\b",  # Fritland is a specific chain with multiple locations
     # Açaí/smoothie bowl chains
     r"oakberry",
+    # Belgian chicken rotisserie chain
+    r"poule\s*[&e]\s*poulette",
 ]
 
 # Non-restaurant retail shops that shouldn't rank as restaurants
