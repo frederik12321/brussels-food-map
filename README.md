@@ -87,20 +87,20 @@ In Brussels (1.2M people), review count tells you who's eating there:
 
 ## The Tier System
 
-Restaurants are sorted into four tiers (Kitchen Confidential inspired):
+Restaurants are sorted into four tiers displayed with colored markers:
 
-| Tier | Score | Icon | What It Means |
-|------|-------|------|---------------|
-| **Chef's Kiss** | 55%+ | 👑 | Exceptional - the real deal |
-| **Kitchen Approved** | 48-55% | ❤️ | Would eat here off-shift |
-| **Workable** | 30-48% | 🍴 | Solid, feeds you right |
-| **Line Cook Shrug** | <30% | ● | Skip it |
+| Tier | Score | Color | What It Means |
+|------|-------|-------|---------------|
+| **Gold** | 55%+ | 🟡 Amber | Must try - exceptional quality |
+| **Silver** | 48-55% | ⚪ Gray | Great choice - highly recommended |
+| **Bronze** | 30-48% | 🟤 Brown | Solid - decent option |
+| **Unranked** | <30% | ⚫ Slate | Skip it |
 
 Current distribution:
-- Chef's Kiss: 264 restaurants (5.7%)
-- Kitchen Approved: 695 (15%)
-- Workable: 2,175 (47%)
-- Line Cook Shrug: 1,506 (32%)
+- Gold: ~6% of restaurants
+- Silver: ~15%
+- Bronze: ~47%
+- Unranked: ~32%
 
 ---
 
