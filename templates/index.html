@@ -534,6 +534,30 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.1);
         }
 
+        @media (max-width: 768px) {
+            .map-legend {
+                bottom: 70px;
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                padding: 6px 14px;
+                gap: 12px;
+            }
+
+            .legend-dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            .legend-label {
+                font-size: 10px;
+            }
+
+            .legend-hint {
+                display: none;
+            }
+        }
+
         .legend-item {
             display: flex;
             align-items: center;
@@ -1419,7 +1443,7 @@
             }
         }
 
-        /* Mobile tab navigation */
+        /* Mobile tab navigation - compact */
         .mobile-tabs {
             display: none;
             position: fixed;
@@ -1427,30 +1451,31 @@
             left: 0;
             right: 0;
             z-index: 1100;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.97);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-top: 1px solid var(--border-subtle);
-            padding: 8px 0;
-            padding-bottom: max(8px, env(safe-area-inset-bottom));
+            padding: 6px 0;
+            padding-bottom: max(4px, env(safe-area-inset-bottom));
         }
 
         .mobile-tabs-inner {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 40px;
             align-items: center;
         }
 
         .mobile-tab {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            gap: 4px;
-            padding: 8px 16px;
+            gap: 6px;
+            padding: 6px 12px;
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             transition: color var(--transition-fast);
@@ -1461,16 +1486,12 @@
         }
 
         .mobile-tab-icon {
-            font-size: 20px;
+            font-size: 16px;
         }
 
-        /* Swipe indicator dots */
+        /* Swipe indicator dots - hidden for cleaner look */
         .swipe-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            padding-top: 6px;
-            margin-top: 4px;
+            display: none;
         }
 
         .swipe-dot {
