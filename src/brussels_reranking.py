@@ -29,6 +29,7 @@ from brussels_context import (
     get_cuisine_specificity_bonus, is_non_restaurant_shop,
     is_chain_restaurant, get_authenticity_markers
 )
+from features import extract_cuisine
 from afsca_hygiene import get_afsca_score, match_restaurant
 
 
@@ -1474,6 +1475,28 @@ def rerank_restaurants(df):
         print(f"\nFlagged {new_chains} chains (was {original_chains}):")
         for chain in newly_flagged[:10]:
             print(f"  - {chain}")
+
+    # Re-extract cuisine (allows updating cuisine detection without re-running full pipeline)
+    # This fixes issues like poke restaurants being misclassified as American
+    import ast
+    def safe_parse_types(types_str):
+        if pd.isna(types_str):
+            return []
+        if isinstance(types_str, list):
+            return types_str
+        try:
+            return ast.literal_eval(types_str)
+        except:
+            return []
+
+    df["cuisine"] = df.apply(
+        lambda r: extract_cuisine(
+            safe_parse_types(r.get("types", [])),
+            r.get("primary_type"),
+            r.get("name")
+        ),
+        axis=1
+    )
 
     commune_review_totals = df.groupby("commune")["review_count"].sum().to_dict()
 

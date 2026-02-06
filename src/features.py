@@ -129,6 +129,18 @@ def extract_cuisine(types, primary_type, name=None):
         "breakfast_restaurant": "Breakfast",
     }
 
+    # Priority name-based detection: Override Google's incorrect classifications
+    # Poke restaurants are Hawaiian, not American (Google often misclassifies these)
+    if name:
+        name_lower = name.lower()
+        poke_patterns = ["poké", "poke bowl", "poke bar", "poke house", "hawaiian poke", "açaí bowl", "acai bowl", "pokebowl", "mypoke", "pokevie"]
+        for pattern in poke_patterns:
+            if pattern in name_lower:
+                return "Hawaiian"
+        # Also check for just "poke" but only if it's a word boundary (catches "Kameha Poke", "Poke & More")
+        if " poke " in f" {name_lower} " or name_lower.startswith("poke ") or name_lower.endswith(" poke") or " poke" in name_lower:
+            return "Hawaiian"
+
     # Check primary type first
     if primary_type and primary_type in cuisine_map:
         return cuisine_map[primary_type]
