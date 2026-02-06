@@ -261,7 +261,7 @@
         <div class="factor-card">
             <div class="factor-header">
                 <span class="factor-name">Base Quality</span>
-                <span class="factor-weight">32% weight</span>
+                <span class="factor-weight">35% weight</span>
             </div>
             <p class="factor-description">The Google rating weighted by confidence. A 4.5★ with 400 reviews often outranks a 4.9★ with 25 reviews because we can trust the data more.</p>
             <div class="example">
@@ -277,9 +277,9 @@
         <div class="factor-card">
             <div class="factor-header">
                 <span class="factor-name">ML Undervaluation</span>
-                <span class="factor-weight positive">+18% max</span>
+                <span class="factor-weight positive">+25% max</span>
             </div>
-            <p class="factor-description">Our machine learning model predicts what rating a restaurant "should" have based on its cuisine, price, and location. If the actual rating is higher than expected, that's a strong signal of quality.</p>
+            <p class="factor-description">Our machine learning model predicts what rating a restaurant "should" have based on its cuisine, price, and location. If the actual rating is higher than expected, that's a strong signal of quality. This is our key differentiator for finding hidden gems.</p>
             <div class="example">
                 <div class="example-label">Example:</div>
                 A Vietnamese restaurant in Ixelles has 4.6 stars. Similar restaurants in the area average 4.2. That's <strong>+0.4 stars above expected</strong> &mdash; it's doing something special.
@@ -306,32 +306,15 @@
         <div class="factor-card">
             <div class="factor-header">
                 <span class="factor-name">Independent Restaurant</span>
-                <span class="factor-weight positive">+10% max</span>
+                <span class="factor-weight positive">+12% max</span>
             </div>
             <p class="factor-description">Non-chain restaurants get a bonus. We want to surface unique local spots, not franchises you can find anywhere.</p>
         </div>
 
         <div class="factor-card">
             <div class="factor-header">
-                <span class="factor-name">Guide Recognition</span>
-                <span class="factor-weight positive">+8% max</span>
-            </div>
-            <p class="factor-description">Michelin stars, Bib Gourmand, and Gault&Millau recognition. These guides send trained inspectors who evaluate restaurants anonymously.</p>
-            <div class="example">
-                <div class="example-label">Bonus breakdown:</div>
-                <ul style="margin: 8px 0 0 0; padding-left: 20px;">
-                    <li>Michelin 2-star: +8%</li>
-                    <li>Michelin 1-star: +6%</li>
-                    <li>Bib Gourmand: +4%</li>
-                    <li>Gault&Millau 15+: +3%</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="factor-card">
-            <div class="factor-header">
                 <span class="factor-name">Diaspora Authenticity</span>
-                <span class="factor-weight positive">+7% max</span>
+                <span class="factor-weight positive">+8% max</span>
             </div>
             <p class="factor-description">Restaurants from immigrant communities get a bonus when located in their community's traditional neighborhood. A Turkish restaurant in Saint-Josse is more likely to be authentic than one near Grand Place.</p>
             <div class="example">
@@ -347,16 +330,8 @@
 
         <div class="factor-card">
             <div class="factor-header">
-                <span class="factor-name">Reddit Endorsed</span>
-                <span class="factor-weight positive">+5% max</span>
-            </div>
-            <p class="factor-description">Restaurants mentioned positively on r/brussels when locals ask "where should I eat?" Real community recommendations.</p>
-        </div>
-
-        <div class="factor-card">
-            <div class="factor-header">
                 <span class="factor-name">Brussels Institution</span>
-                <span class="factor-weight positive">+4% max</span>
+                <span class="factor-weight positive">+5% max</span>
             </div>
             <p class="factor-description">Iconic Brussels establishments like Fin de Si&egrave;cle, Potverdoemmeke, and other legendary spots that define the city's food culture.</p>
         </div>
@@ -364,9 +339,21 @@
         <div class="factor-card">
             <div class="factor-header">
                 <span class="factor-name">Other Bonuses</span>
-                <span class="factor-weight positive">+4% max</span>
+                <span class="factor-weight positive">+3% max</span>
             </div>
-            <p class="factor-description">Small bonuses for: "Chez [Name]" family restaurants (+2%), specific regional cuisines like "Sichuan" vs generic "Chinese" (+1%), rare cuisines in Brussels (+1%).</p>
+            <p class="factor-description">Small bonuses for: "Chez [Name]" family restaurants (+2%), specific regional cuisines like "Sichuan" vs generic "Chinese" (+1%).</p>
+        </div>
+
+        <div class="factor-card" style="background: #fef3c7; border-color: #f59e0b;">
+            <div class="factor-header">
+                <span class="factor-name">Guide Recognition & Reddit</span>
+                <span class="factor-weight" style="background: #f59e0b; color: #fff;">Informational only</span>
+            </div>
+            <p class="factor-description">We track Michelin stars, Bib Gourmand, Gault&Millau, and Reddit mentions — but they <strong>don't affect rankings</strong>. These are shown as badges in the UI for reference.</p>
+            <div class="example">
+                <div class="example-label">Why?</div>
+                Our goal is to discover hidden gems through data analysis — not validate existing guides. If we boosted Michelin restaurants, we'd just be recreating the Michelin guide with extra steps.
+            </div>
         </div>
 
         <div class="divider"></div>

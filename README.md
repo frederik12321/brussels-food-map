@@ -35,16 +35,16 @@ Brussels Score = Quality Signals + Local Bonuses - Tourist Penalties
 
 | Signal | Weight | How It Works |
 |--------|--------|--------------|
-| **Base Rating** | 32% | Google rating (4.5★ = 90% of weight) |
-| **ML Undervaluation** | 18% | Is the rating higher than expected for this type of place? |
+| **Base Rating** | 35% | Google rating (4.5★ = 90% of weight) |
+| **ML Undervaluation** | 25% | Is the rating higher than expected for this type of place? |
 | **Scarcity** | 12% | Limited hours or days = locals know about it |
-| **Independent** | 10% | Not a chain restaurant |
-| **Guide Recognition** | 8% | Michelin stars, Bib Gourmand, Gault&Millau |
-| **Diaspora Authenticity** | 7% | Turkish restaurant in Saint-Josse > Turkish restaurant near Grand Place |
-| **Reddit Endorsed** | 5% | Mentioned positively on r/brussels |
-| **Brussels Institution** | 4% | Potverdoemmeke, Fin de Siècle, etc. |
+| **Independent** | 12% | Not a chain restaurant |
+| **Diaspora Authenticity** | 8% | Turkish restaurant in Saint-Josse > Turkish restaurant near Grand Place |
+| **Brussels Institution** | 5% | Potverdoemmeke, Fin de Siècle, etc. |
 | **Family Name** | 2% | "Chez Marie" pattern |
-| **Cuisine Specificity** | 2% | "Sichuan" > "Chinese" |
+| **Cuisine Specificity** | 1% | "Sichuan" > "Chinese" |
+
+> **Note:** We deliberately exclude Michelin/GaultMillau and Reddit mentions from the ranking formula. These are shown as badges in the UI, but don't influence scores. Our goal is to find hidden gems through data analysis - not validate existing guides.
 
 ### Tourist Trap Penalties (What Lowers the Score)
 
@@ -124,15 +124,11 @@ Brussels is 75% foreign-origin population. We reward restaurants that match thei
 - **Moroccan in Molenbeek** → Maximum bonus
 - **Turkish near Grand Place** → No bonus (probably tourist-facing)
 
-### Guide Recognition
+### Guide Recognition (Informational Only)
 
-| Guide | Bonus |
-|-------|-------|
-| Michelin 2-star | +8% |
-| Michelin 1-star | +6% |
-| Bib Gourmand | +4% |
-| Gault&Millau 15+ | +3% |
-| r/brussels mentions | +5% |
+Michelin stars, Bib Gourmand, Gault&Millau, and Reddit mentions are tracked and displayed as badges, but **do not affect rankings**.
+
+Why? Our goal is discovering hidden gems that traditional guides miss. If we boosted Michelin restaurants, we'd just be recreating the Michelin guide with extra steps.
 
 ---
 

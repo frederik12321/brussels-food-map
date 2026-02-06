@@ -116,19 +116,19 @@ def normalize_weights(components):
 
 # Positive component weights (must sum to 1.0)
 POSITIVE_WEIGHTS = {
-    'base_quality': 0.32,      # Google rating (reduced from 0.35)
-    'ml_residual': 0.18,       # Undervaluation detection (reduced from 0.20)
+    'base_quality': 0.35,      # Google rating
+    'ml_residual': 0.25,       # Undervaluation detection (key differentiator)
     'scarcity': 0.12,          # Limited hours/days
-    'independent': 0.10,       # Non-chain bonus
-    'guide': 0.08,             # Michelin/GaultMillau
-    'diaspora': 0.07,          # Location authenticity
-    'reddit': 0.05,            # Community endorsement
-    'bruxellois': 0.04,        # Local institutions (reduced from 0.05)
+    'independent': 0.12,       # Non-chain bonus
+    'diaspora': 0.08,          # Location authenticity
+    'bruxellois': 0.05,        # Local institutions
     'family_name': 0.02,       # "Chez X" pattern
     'specificity': 0.01,       # Regional cuisines
-    'cuisine_rarity': 0.01,    # Rare in Brussels
+    # NOTE: Guide recognition (Michelin/GaultMillau) and Reddit mentions removed
+    # We track them for display but don't boost rankings - our goal is finding
+    # hidden gems through data, not validating external recommendations
 }
-# Verify: sum = 0.32 + 0.18 + 0.12 + 0.10 + 0.08 + 0.07 + 0.05 + 0.04 + 0.02 + 0.01 + 0.01 = 1.00
+# Verify: sum = 0.35 + 0.25 + 0.12 + 0.12 + 0.08 + 0.05 + 0.02 + 0.01 = 1.00
 
 # Penalty caps (these subtract from the score)
 PENALTY_CAPS = {
@@ -1314,8 +1314,8 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     independent_bonus = POSITIVE_WEIGHTS['independent'] * (0 if is_chain else 1)
     chain_penalty = PENALTY_CAPS['chain'] if is_chain else 0
 
-    # 6. Cuisine rarity bonus
-    rarity_bonus = POSITIVE_WEIGHTS['cuisine_rarity'] * cuisine_rarity_score(cuisine, commune, cuisine_counts_by_commune)
+    # 6. Cuisine rarity bonus (minimal weight, folded into specificity)
+    rarity_bonus = 0  # Removed - rare cuisines already get specificity bonus
 
     # 7. EU bubble penalty
     eu_penalty = PENALTY_CAPS['eu_bubble'] * eu_bubble_penalty(lat, lng, price_level, review_languages) if lat and lng else 0
@@ -1338,13 +1338,15 @@ def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_b
     closed_sunday = restaurant.get("closed_sunday", False)
     days_open_count = restaurant.get("days_open_count")
 
-    # 11. Guide recognition bonus
+    # 11. Guide recognition (tracked for display, NOT used in ranking)
+    # We show Michelin/GaultMillau badges but don't boost scores - our goal is finding hidden gems
     raw_guide_bonus, michelin_stars, is_bib_gourmand, is_gault_millau = _calculate_guide_bonus(name)
-    guide_bonus = raw_guide_bonus  # Already returns weighted value
+    guide_bonus = 0  # Disabled - tracked for informational display only
 
-    # 12. Reddit community endorsement
+    # 12. Reddit community endorsement (tracked for display, NOT used in ranking)
+    # Same reasoning - we find gems through data analysis, not external recommendations
     reddit_score, reddit_mentions = reddit_community_score(name, review_count)
-    reddit_bonus = POSITIVE_WEIGHTS['reddit'] * reddit_score
+    reddit_bonus = 0  # Disabled - tracked for informational display only
 
     # 13. Low review count penalty (now uses confidence-based calculation)
     low_review_penalty = _calculate_low_review_penalty(review_count, rating)
