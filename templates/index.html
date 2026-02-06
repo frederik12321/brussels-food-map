@@ -2654,25 +2654,25 @@
 
             const iconColor = tierColors[tier] || tierColors['average'];
 
-            // Clean icons with appropriate symbols per tier (Kitchen Confidential theme)
+            // Tier icons with symbols
             const tierIcons = {
-                // Crown icon (Chef's Kiss) - gold with crown symbol
+                // Crown icon - Gold tier
                 'must_try': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
                     <path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/>
                     <rect x="5" y="12" width="8" height="1.5" rx="0.5" fill="white"/>
                 `,
-                // Heart icon (Kitchen Approved) - green with heart
+                // Heart icon - Silver tier
                 'recommended': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
                     <path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/>
                 `,
-                // Fork & knife (Workable) - blue with utensils
+                // Fork & knife icon - Bronze tier
                 'above_average': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
                     <path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/>
                 `,
-                // Simple dot (Line Cook Shrug) - gray with minimal marker
+                // Simple dot - Unranked tier
                 'average': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
                     <circle cx="9" cy="9" r="2.5" fill="white"/>
@@ -2721,12 +2721,12 @@
 
         // Get tier from brussels_score
         // Thresholds matching backend (brussels_reranking.py _determine_tier)
-        // Chef's Kiss: ~6%, Kitchen Approved: ~16%, Workable: ~52%, Line Cook Shrug: ~26%
+        // Gold: ~6%, Silver: ~15%, Bronze: ~47%, Unranked: ~32%
         function getTierFromScore(score) {
-            if (score >= 0.55) return 'must_try';      // Chef's Kiss (gold)
-            if (score >= 0.48) return 'recommended';   // Kitchen Approved (green)
-            if (score >= 0.30) return 'above_average'; // Workable (blue)
-            return 'average';                          // Line Cook Shrug (gray)
+            if (score >= 0.55) return 'must_try';      // Gold
+            if (score >= 0.48) return 'recommended';   // Silver
+            if (score >= 0.30) return 'above_average'; // Bronze
+            return 'average';                          // Unranked
         }
 
         let selectedMarker = null;

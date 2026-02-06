@@ -1216,21 +1216,21 @@ def _determine_tier(total_score):
     Determine restaurant quality tier based on score.
 
     Thresholds calibrated for confidence-weighted scoring:
-    - Chef's Kiss: top ~5% (95th percentile = 0.55)
-    - Kitchen Approved: top ~15% (85th percentile = 0.50)
-    - Workable: top ~50% (50th percentile = 0.39)
-    - Line Cook Shrug: bottom ~50%
+    - Gold: top ~6% (score >= 0.55)
+    - Silver: top ~15% (score >= 0.48)
+    - Bronze: top ~47% (score >= 0.30)
+    - Unranked: bottom ~32%
 
     Returns: str tier name
     """
     if total_score >= 0.55:
-        return "Chef's Kiss"
+        return "Gold"
     elif total_score >= 0.48:
-        return "Kitchen Approved"
+        return "Silver"
     elif total_score >= 0.30:
-        return "Workable"
+        return "Bronze"
     else:
-        return "Line Cook Shrug"
+        return "Unranked"
 
 
 def calculate_brussels_score(restaurant, commune_review_totals, cuisine_counts_by_commune):
@@ -1497,7 +1497,7 @@ def rerank_restaurants(df):
     df["brussels_score"] = [r["brussels_score"] for r in results]
     df["neighborhood"] = [r["neighborhood"] for r in results]
     df["diaspora_street"] = [r["diaspora_street"] for r in results]
-    df["tier"] = [r["tier"] for r in results]  # Restaurant quality tier (Chef's Kiss, etc.)
+    df["tier"] = [r["tier"] for r in results]  # Restaurant quality tier (Gold, Silver, Bronze, Unranked)
     df["commune_tier"] = [r["commune_tier"] for r in results]  # Commune/neighborhood type
     df["closes_early"] = [r["closes_early"] for r in results]
     df["typical_close_hour"] = [r["typical_close_hour"] for r in results]
