@@ -1959,7 +1959,7 @@
         // Use clustering to reduce visual clutter
         let markersLayer = L.markerClusterGroup({
             maxClusterRadius: isMobile ? 50 : 40,
-            spiderfyOnMaxZoom: true,
+            spiderfyOnMaxZoom: false,
             showCoverageOnHover: false,
             zoomToBoundsOnClick: true,
             disableClusteringAtZoom: isMobile ? 16 : 15,
