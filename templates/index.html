@@ -1523,12 +1523,12 @@
             }
 
             .container.tab-map .map-container {
-                height: calc(100vh - 70px);
-                height: calc(100dvh - 70px);
+                height: calc(100vh - 50px);
+                height: calc(100dvh - 50px);
             }
 
             .container.tab-map .map-legend {
-                bottom: 80px;
+                bottom: 60px;
             }
 
             /* Tab: Search */
@@ -1537,35 +1537,47 @@
             }
 
             .container.tab-search .sidebar {
-                display: block !important;
+                display: flex !important;
+                flex-direction: column !important;
                 position: absolute !important;
                 top: 0 !important;
                 left: 0 !important;
                 right: 0 !important;
-                bottom: 70px !important;
+                bottom: 50px !important;
                 width: 100% !important;
                 max-width: 100% !important;
                 height: auto !important;
                 max-height: none !important;
-                overflow-y: scroll !important;
+                overflow-y: auto !important;
                 overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch;
-                background: #FDF6E3 !important;
+                background: var(--bg-primary) !important;
                 border: none !important;
             }
 
             .container.tab-search .header {
                 display: block !important;
-                padding: 16px !important;
+                padding: 20px 16px !important;
+                text-align: center !important;
+            }
+
+            .container.tab-search .header-content {
+                flex-direction: column !important;
+                gap: 12px !important;
             }
 
             .container.tab-search .header-logo {
-                width: 100px !important;
-                height: 66px !important;
+                width: 120px !important;
+                height: 80px !important;
+                margin: 0 auto !important;
+            }
+
+            .container.tab-search .header-text {
+                text-align: center !important;
             }
 
             .container.tab-search .header-text h1 {
-                font-size: 22px !important;
+                font-size: 24px !important;
             }
 
             .container.tab-search .stats {
@@ -1574,11 +1586,13 @@
 
             .container.tab-search .filters {
                 display: block !important;
-                padding: 12px 16px;
-                padding-bottom: 40px;
+                padding: 16px 20px !important;
+                padding-bottom: 24px !important;
                 overflow: visible !important;
                 max-height: none !important;
                 border: none !important;
+                max-width: 400px !important;
+                margin: 0 auto !important;
             }
 
             .container.tab-search .filters .filter-row {
@@ -1590,7 +1604,7 @@
                 display: none !important;
             }
 
-            /* Tab: Results */
+            /* Tab: Results - keeping for backwards compatibility */
             .container.tab-results .map-container {
                 display: none !important;
             }
@@ -1601,7 +1615,7 @@
                 top: 0 !important;
                 left: 0 !important;
                 right: 0 !important;
-                bottom: 70px !important;
+                bottom: 50px !important;
                 width: 100% !important;
                 max-width: 100% !important;
                 height: auto !important;
@@ -1609,7 +1623,7 @@
                 overflow-y: scroll !important;
                 overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch;
-                background: #EDE0D4 !important;
+                background: var(--bg-primary) !important;
                 border: none !important;
             }
 
