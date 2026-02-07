@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brussels Food Map - Hidden Gems</title>
-    <!-- Favicon - fork and knife emoji -->
+    <!-- Favicon and PWA -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍴</text></svg>">
+    <link rel="apple-touch-icon" href="/static/icon-192.png">
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#18181b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BXL Food">
     <!-- Preconnect for faster resource loading -->
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="preconnect" href="https://cartodb-basemaps-a.global.ssl.fastly.net" crossorigin>
@@ -686,6 +692,41 @@
             border-color: var(--accent-blue);
         }
 
+        /* Share button */
+        .share-btn {
+            position: absolute;
+            top: 190px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 18px;
+            color: var(--text-primary);
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-normal);
+        }
+
+        .share-btn:hover {
+            background: var(--accent-green);
+            color: white;
+            border-color: var(--accent-green);
+        }
+
+        .share-btn.copied {
+            background: var(--accent-green);
+            color: white;
+            border-color: var(--accent-green);
+        }
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.05); opacity: 0.8; }
@@ -1229,6 +1270,15 @@
 
         .pin-selected svg {
             transform-origin: bottom center;
+        }
+
+        /* Hide unranked markers until zoomed in - CSS handles visibility for performance */
+        .pin-unranked {
+            display: none;
+        }
+
+        body.zoom-detailed .pin-unranked {
+            display: block;
         }
 
         .commune-label div {
@@ -1888,6 +1938,13 @@
         </div>
         <button class="info-btn" id="info-btn" title="About the Brussels Score ranking system" aria-label="Information about ranking">i</button>
         <button class="gps-btn" id="gps-btn" title="Find restaurants near my location" aria-label="Use my location">📍</button>
+        <button class="share-btn" id="share-btn" title="Share or add to home screen" aria-label="Share">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <polyline points="16 6 12 2 8 6"/>
+                <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+        </button>
         <div class="map-legend" id="legend-markers">
             <div class="legend-item" title="Score 55+: Go there first">
                 <span class="legend-dot legend-go-first"></span>
@@ -1897,7 +1954,7 @@
                 <span class="legend-dot legend-go-there"></span>
                 <span class="legend-label legend-label-go-there"><span class="legend-full">Go there</span><span class="legend-short">Go there</span></span>
             </div>
-            <span class="legend-hint">👆 Zoom in</span>
+            <span class="legend-hint">Zoom for unranked</span>
         </div>
     </div>
 
@@ -1919,11 +1976,10 @@
                 </ul>
             </div>
 
-            <div style="font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px;">Quality tiers</div>
-            <div class="info-icons">
-                <span><svg width="16" height="16" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#F59E0B"/><path d="M9 4l1.5 3 3.5.5-2.5 2.5.5 3.5L9 12l-3 1.5.5-3.5L4 7.5 7.5 7 9 4z" fill="white"/></svg> <b style="color:#D97706">Go first</b> Top picks</span>
-                <span><svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#10B981"/><path d="M6 9l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> <b style="color:#059669">Go there</b> Recommended</span>
-                <span><svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#94A3B8"/><circle cx="9" cy="9" r="2.5" fill="white"/></svg> <b style="color:#64748B">Unranked</b></span>
+            <div class="info-icons" style="gap: 12px;">
+                <span><svg width="16" height="16" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#F59E0B"/><path d="M9 4l1.5 3 3.5.5-2.5 2.5.5 3.5L9 12l-3 1.5.5-3.5L4 7.5 7.5 7 9 4z" fill="white"/></svg> Go there first</span>
+                <span><svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#10B981"/><path d="M6 9l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> Go there</span>
+                <span style="color: #94A3B8;"><svg width="12" height="12" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#94A3B8"/><circle cx="9" cy="9" r="2.5" fill="white"/></svg> Unranked (zoom in)</span>
             </div>
 
             <a href="/methodology" target="_blank" style="display: block; text-align: center; color: #2563eb; font-size: 13px; margin-top: 16px; text-decoration: none;">How we rank restaurants &rarr;</a>
@@ -1973,6 +2029,11 @@
         }
         map.on('moveend', saveMapState);
         map.on('zoomend', saveMapState);
+
+        // Set initial zoom-detailed state (unranked markers only visible when zoomed in)
+        if (initialZoom >= 15) {
+            document.body.classList.add('zoom-detailed');
+        }
 
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
@@ -2073,9 +2134,11 @@
             });
         }
 
-        // Show/hide labels based on zoom level
+        // Show/hide labels and unranked markers based on zoom level
         map.on('zoomend', function() {
             const zoom = map.getZoom();
+
+            // Commune labels: show between zoom 12-15
             if (zoom >= 12 && zoom <= 15) {
                 if (!map.hasLayer(communeLabelsLayer)) {
                     communeLabelsLayer.addTo(map);
@@ -2084,6 +2147,13 @@
                 if (map.hasLayer(communeLabelsLayer)) {
                     map.removeLayer(communeLabelsLayer);
                 }
+            }
+
+            // Unranked markers: only show when zoomed in (zoom >= 15)
+            if (zoom >= 15) {
+                document.body.classList.add('zoom-detailed');
+            } else {
+                document.body.classList.remove('zoom-detailed');
             }
         });
 
@@ -3500,6 +3570,46 @@
                 infoOverlay.classList.add('active');
             }, 500); // Small delay to let the map load first
         }
+
+        // Share button functionality
+        const shareBtn = document.getElementById('share-btn');
+        shareBtn.addEventListener('click', async () => {
+            const shareData = {
+                title: 'Brussels Food Map',
+                text: 'Find restaurants Brussels locals actually eat at',
+                url: window.location.href
+            };
+
+            // Try native share first (mobile)
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                } catch (err) {
+                    // User cancelled or error - fall back to copy
+                    if (err.name !== 'AbortError') {
+                        copyToClipboard();
+                    }
+                }
+            } else {
+                // Desktop: copy to clipboard
+                copyToClipboard();
+            }
+
+            function copyToClipboard() {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    shareBtn.classList.add('copied');
+                    shareBtn.innerHTML = '✓';
+                    setTimeout(() => {
+                        shareBtn.classList.remove('copied');
+                        shareBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                            <polyline points="16 6 12 2 8 6"/>
+                            <line x1="12" y1="2" x2="12" y2="15"/>
+                        </svg>`;
+                    }, 2000);
+                });
+            }
+        });
 
         // GPS Location functionality
         const gpsBtn = document.getElementById('gps-btn');
