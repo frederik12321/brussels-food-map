@@ -540,8 +540,8 @@
                 left: 50%;
                 right: auto;
                 transform: translateX(-50%);
-                padding: 6px 14px;
-                gap: 12px;
+                padding: 6px 12px;
+                gap: 10px;
             }
 
             .legend-dot {
@@ -553,9 +553,30 @@
                 font-size: 10px;
             }
 
+            .legend-full {
+                display: none;
+            }
+
+            .legend-short {
+                display: inline;
+            }
+
+            .legend-unranked-item {
+                display: none; /* Hide unranked on mobile legend - cleaner */
+            }
+
             .legend-hint {
                 display: none;
             }
+        }
+
+        /* Desktop: show full labels, hide short */
+        .legend-short {
+            display: none;
+        }
+
+        .legend-full {
+            display: inline;
         }
 
         .legend-item {
@@ -1874,17 +1895,17 @@
         <div class="map-legend" id="legend-markers">
             <div class="legend-item" title="Score 55+: Go there first">
                 <span class="legend-dot legend-go-first"></span>
-                <span class="legend-label legend-label-go-first">Go first</span>
+                <span class="legend-label legend-label-go-first"><span class="legend-full">Go there first</span><span class="legend-short">Go first</span></span>
             </div>
             <div class="legend-item" title="Score 48-54: Go there">
                 <span class="legend-dot legend-go-there"></span>
-                <span class="legend-label legend-label-go-there">Go there</span>
+                <span class="legend-label legend-label-go-there"><span class="legend-full">Go there</span><span class="legend-short">Go there</span></span>
             </div>
-            <div class="legend-item" title="Score below 48: Unranked">
+            <div class="legend-item legend-unranked-item" title="Score below 48: Unranked (zoom in to see)">
                 <span class="legend-dot legend-unranked"></span>
-                <span class="legend-label legend-label-unranked">Unranked</span>
+                <span class="legend-label legend-label-unranked">Other</span>
             </div>
-            <span class="legend-hint">👆 Zoom in</span>
+            <span class="legend-hint">👆 Zoom for more</span>
         </div>
     </div>
 
@@ -3055,8 +3076,20 @@
         function updateMarkers() {
             markersLayer.clearLayers();
 
+            const currentZoom = map.getZoom();
+            const showUnranked = currentZoom >= 15; // Only show unranked when zoomed in
+
+            // Filter out unranked if not zoomed in enough
+            let filtered = restaurants;
+            if (!showUnranked) {
+                filtered = restaurants.filter(r => {
+                    const tier = getTierFromScore(r.brussels_score || 0);
+                    return tier !== 'unranked';
+                });
+            }
+
             // Sort by score ascending so higher-scored restaurants are rendered last (on top)
-            const sorted = [...restaurants].sort((a, b) =>
+            const sorted = [...filtered].sort((a, b) =>
                 (a.brussels_score || 0) - (b.brussels_score || 0)
             );
 
@@ -3089,6 +3122,11 @@
                 });
             }
         }
+
+        // Update markers when zoom changes (to show/hide unranked)
+        map.on('zoomend', function() {
+            updateMarkers();
+        });
 
         function updateList() {
             const listEl = document.getElementById('restaurant-list');
