@@ -561,10 +561,6 @@
                 display: inline;
             }
 
-            .legend-unranked-item {
-                display: none; /* Hide unranked on mobile legend - cleaner */
-            }
-
             .legend-hint {
                 display: none;
             }
@@ -1901,11 +1897,7 @@
                 <span class="legend-dot legend-go-there"></span>
                 <span class="legend-label legend-label-go-there"><span class="legend-full">Go there</span><span class="legend-short">Go there</span></span>
             </div>
-            <div class="legend-item legend-unranked-item" title="Score below 48: Unranked (zoom in to see)">
-                <span class="legend-dot legend-unranked"></span>
-                <span class="legend-label legend-label-unranked">Other</span>
-            </div>
-            <span class="legend-hint">👆 Zoom for more</span>
+            <span class="legend-hint">👆 Zoom in</span>
         </div>
     </div>
 
@@ -2725,13 +2717,24 @@
                     popupAnchor: [0, -pinSize / 2]
                 });
             } else {
-                // Go first tier: larger (22px) with glow effect
-                // Other tiers: 18px
+                // Size hierarchy: Go first (22px) > Go there (18px) > Unranked (12px)
                 const isTopTier = tier === 'go_first';
-                const markerSize = isTopTier ? 22 : size;
-                const shadowStyle = isTopTier
-                    ? 'filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.6)) drop-shadow(0 2px 3px rgba(0,0,0,0.25));'
-                    : 'filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));';
+                const isGoThere = tier === 'go_there';
+                const isUnranked = tier === 'unranked';
+
+                let markerSize;
+                let shadowStyle;
+
+                if (isTopTier) {
+                    markerSize = 22;
+                    shadowStyle = 'filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.6)) drop-shadow(0 2px 3px rgba(0,0,0,0.25));';
+                } else if (isGoThere) {
+                    markerSize = 18;
+                    shadowStyle = 'filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));';
+                } else {
+                    markerSize = 12; // Smaller for unranked
+                    shadowStyle = 'filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15)); opacity: 0.7;';
+                }
 
                 const svg = `
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="${markerSize}" height="${markerSize}" style="${shadowStyle}">
@@ -2739,7 +2742,7 @@
                     </svg>
                 `;
                 return L.divIcon({
-                    className: 'pin-marker pin-dot' + (isTopTier ? ' pin-top-tier' : ''),
+                    className: 'pin-marker pin-dot' + (isTopTier ? ' pin-top-tier' : '') + (isUnranked ? ' pin-unranked' : ''),
                     html: svg,
                     iconSize: [markerSize, markerSize],
                     iconAnchor: [markerSize / 2, markerSize / 2],
@@ -3076,20 +3079,8 @@
         function updateMarkers() {
             markersLayer.clearLayers();
 
-            const currentZoom = map.getZoom();
-            const showUnranked = currentZoom >= 15; // Only show unranked when zoomed in
-
-            // Filter out unranked if not zoomed in enough
-            let filtered = restaurants;
-            if (!showUnranked) {
-                filtered = restaurants.filter(r => {
-                    const tier = getTierFromScore(r.brussels_score || 0);
-                    return tier !== 'unranked';
-                });
-            }
-
             // Sort by score ascending so higher-scored restaurants are rendered last (on top)
-            const sorted = [...filtered].sort((a, b) =>
+            const sorted = [...restaurants].sort((a, b) =>
                 (a.brussels_score || 0) - (b.brussels_score || 0)
             );
 
@@ -3122,11 +3113,6 @@
                 });
             }
         }
-
-        // Update markers when zoom changes (to show/hide unranked)
-        map.on('zoomend', function() {
-            updateMarkers();
-        });
 
         function updateList() {
             const listEl = document.getElementById('restaurant-list');
