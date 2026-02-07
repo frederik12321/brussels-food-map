@@ -3573,43 +3573,39 @@
 
         // Share button functionality
         const shareBtn = document.getElementById('share-btn');
-        shareBtn.addEventListener('click', async () => {
-            const shareData = {
-                title: 'Brussels Food Map',
-                text: 'Find restaurants Brussels locals actually eat at',
-                url: window.location.href
-            };
+        if (shareBtn) {
+            shareBtn.addEventListener('click', function() {
+                var shareData = {
+                    title: 'Brussels Food Map',
+                    text: 'Find restaurants Brussels locals actually eat at',
+                    url: window.location.href
+                };
 
-            // Try native share first (mobile)
-            if (navigator.share) {
-                try {
-                    await navigator.share(shareData);
-                } catch (err) {
-                    // User cancelled or error - fall back to copy
-                    if (err.name !== 'AbortError') {
-                        copyToClipboard();
+                function copyToClipboard() {
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(window.location.href).then(function() {
+                            shareBtn.classList.add('copied');
+                            shareBtn.innerHTML = '✓';
+                            setTimeout(function() {
+                                shareBtn.classList.remove('copied');
+                                shareBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>';
+                            }, 2000);
+                        });
                     }
                 }
-            } else {
-                // Desktop: copy to clipboard
-                copyToClipboard();
-            }
 
-            function copyToClipboard() {
-                navigator.clipboard.writeText(window.location.href).then(() => {
-                    shareBtn.classList.add('copied');
-                    shareBtn.innerHTML = '✓';
-                    setTimeout(() => {
-                        shareBtn.classList.remove('copied');
-                        shareBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                            <polyline points="16 6 12 2 8 6"/>
-                            <line x1="12" y1="2" x2="12" y2="15"/>
-                        </svg>`;
-                    }, 2000);
-                });
-            }
-        });
+                // Try native share first (mobile)
+                if (navigator.share) {
+                    navigator.share(shareData).catch(function(err) {
+                        if (err.name !== 'AbortError') {
+                            copyToClipboard();
+                        }
+                    });
+                } else {
+                    copyToClipboard();
+                }
+            });
+        }
 
         // GPS Location functionality
         const gpsBtn = document.getElementById('gps-btn');
