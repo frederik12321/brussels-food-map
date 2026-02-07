@@ -570,17 +570,17 @@
             border-radius: 50%;
         }
 
-        .legend-gold {
+        .legend-go-first {
             background: #F59E0B;
             box-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
         }
 
-        .legend-silver {
-            background: #9CA3AF;
+        .legend-go-there {
+            background: #10B981;
         }
 
-        .legend-bronze {
-            background: #B45309;
+        .legend-unranked {
+            background: #94A3B8;
         }
 
         .legend-label {
@@ -588,9 +588,9 @@
             font-weight: 600;
         }
 
-        .legend-label-gold { color: #D97706; }
-        .legend-label-silver { color: #6B7280; }
-        .legend-label-bronze { color: #92400E; }
+        .legend-label-go-first { color: #D97706; }
+        .legend-label-go-there { color: #059669; }
+        .legend-label-unranked { color: #64748B; }
 
         .legend-hint {
             font-size: 10px;
@@ -1872,17 +1872,17 @@
         <button class="info-btn" id="info-btn" title="About the Brussels Score ranking system" aria-label="Information about ranking">i</button>
         <button class="gps-btn" id="gps-btn" title="Find restaurants near my location" aria-label="Use my location">📍</button>
         <div class="map-legend" id="legend-markers">
-            <div class="legend-item" title="Score 55+: Must try">
-                <span class="legend-dot legend-gold"></span>
-                <span class="legend-label legend-label-gold">Gold</span>
+            <div class="legend-item" title="Score 55+: Go there first">
+                <span class="legend-dot legend-go-first"></span>
+                <span class="legend-label legend-label-go-first">Go first</span>
             </div>
-            <div class="legend-item" title="Score 48-54: Great choice">
-                <span class="legend-dot legend-silver"></span>
-                <span class="legend-label legend-label-silver">Silver</span>
+            <div class="legend-item" title="Score 48-54: Go there">
+                <span class="legend-dot legend-go-there"></span>
+                <span class="legend-label legend-label-go-there">Go there</span>
             </div>
-            <div class="legend-item" title="Score 30-47: Solid">
-                <span class="legend-dot legend-bronze"></span>
-                <span class="legend-label legend-label-bronze">Bronze</span>
+            <div class="legend-item" title="Score below 48: Unranked">
+                <span class="legend-dot legend-unranked"></span>
+                <span class="legend-label legend-label-unranked">Unranked</span>
             </div>
             <span class="legend-hint">👆 Zoom in</span>
         </div>
@@ -1908,9 +1908,9 @@
 
             <div style="font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px;">Quality tiers</div>
             <div class="info-icons">
-                <span><svg width="16" height="16" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#F59E0B"/><path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/><rect x="5" y="12" width="8" height="1.5" rx="0.5" fill="white"/></svg> <b style="color:#D97706">Gold</b> Must try</span>
-                <span><svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#9CA3AF"/><path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/></svg> <b style="color:#6B7280">Silver</b> Great choice</span>
-                <span><svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#B45309"/><path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/></svg> <b style="color:#92400E">Bronze</b> Solid</span>
+                <span><svg width="16" height="16" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#F59E0B"/><path d="M9 4l1.5 3 3.5.5-2.5 2.5.5 3.5L9 12l-3 1.5.5-3.5L4 7.5 7.5 7 9 4z" fill="white"/></svg> <b style="color:#D97706">Go first</b> Top picks</span>
+                <span><svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#10B981"/><path d="M6 9l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> <b style="color:#059669">Go there</b> Recommended</span>
+                <span><svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8.5" fill="#94A3B8"/><circle cx="9" cy="9" r="2.5" fill="white"/></svg> <b style="color:#64748B">Unranked</b></span>
             </div>
 
             <a href="/methodology" target="_blank" style="display: block; text-align: center; color: #2563eb; font-size: 13px; margin-top: 16px; text-decoration: none;">How we rank restaurants &rarr;</a>
@@ -2191,10 +2191,9 @@
 
         function getMarkerColor(restaurant) {
             const score = restaurant.brussels_score || 0;
-            // Gold-Silver-Bronze tier system (warmer, richer colors)
-            if (score >= 0.55) return '#F59E0B';  // Gold - warm amber
-            if (score >= 0.48) return '#9CA3AF';  // Silver - cool gray
-            if (score >= 0.30) return '#B45309';  // Bronze - rich amber brown
+            // 2-tier system: Go first, Go there, Unranked
+            if (score >= 0.55) return '#F59E0B';  // Go first - warm amber
+            if (score >= 0.48) return '#10B981';  // Go there - emerald green
             return '#94A3B8';  // Gray - slate
         }
 
@@ -2657,40 +2656,33 @@
         }
 
         // Professional food map icons - 18px with refined color palette
-        // Colors: Gold (must try), Emerald (recommended), Blue (above avg), Gray (average)
-        function createPinIcon(color, isSelected = false, tier = 'average') {
+        // 2-tier system: "Go there first" and "Go there", plus Unranked
+        function createPinIcon(color, isSelected = false, tier = 'unranked') {
             const size = 18;
 
-            // Gold/Silver/Bronze tier colors (warmer, richer palette)
+            // 2-tier color palette
             const tierColors = {
-                'must_try': '#F59E0B',      // Gold - warm amber
-                'recommended': '#9CA3AF',   // Silver - cool gray
-                'above_average': '#B45309', // Bronze - rich amber brown
-                'average': '#94A3B8'        // Gray - slate
+                'go_first': '#F59E0B',      // Amber - go there first (top 15%)
+                'go_there': '#10B981',      // Emerald green - go there (next 18%)
+                'unranked': '#94A3B8'       // Slate gray - unranked
             };
 
-            const iconColor = tierColors[tier] || tierColors['average'];
+            const iconColor = tierColors[tier] || tierColors['unranked'];
 
             // Tier icons with symbols
             const tierIcons = {
-                // Crown icon - Gold tier
-                'must_try': `
+                // Star icon - Go there first (top tier)
+                'go_first': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
-                    <path d="M5 12h8l-1-5-2 2-1-3-1 3-2-2-1 5z" fill="white"/>
-                    <rect x="5" y="12" width="8" height="1.5" rx="0.5" fill="white"/>
+                    <path d="M9 4l1.5 3 3.5.5-2.5 2.5.5 3.5L9 12l-3 1.5.5-3.5L4 7.5 7.5 7 9 4z" fill="white"/>
                 `,
-                // Heart icon - Silver tier
-                'recommended': `
+                // Checkmark icon - Go there (recommended)
+                'go_there': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
-                    <path d="M9 13l-4-4c-1-1-1-2.5 0-3.5s2.5-1 3.5 0l.5.5.5-.5c1-1 2.5-1 3.5 0s1 2.5 0 3.5l-4 4z" fill="white"/>
+                    <path d="M6 9l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                 `,
-                // Fork & knife icon - Bronze tier
-                'above_average': `
-                    <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
-                    <path d="M6 5v4l1 .5V14h1V9.5L9 9V5H8v3h-.5V5H7v3h-.5V5H6zm5 0c0 1.5.5 2.5 1.5 3v6h1V8c1-.5 1.5-1.5 1.5-3h-1v2h-.5V5h-1v2h-.5V5h-1z" fill="white"/>
-                `,
-                // Simple dot - Unranked tier
-                'average': `
+                // Simple dot - Unranked
+                'unranked': `
                     <circle cx="9" cy="9" r="8.5" fill="${iconColor}"/>
                     <circle cx="9" cy="9" r="2.5" fill="white"/>
                 `
@@ -2699,10 +2691,9 @@
             if (isSelected) {
                 // Selected: larger (26px) with shadow and bounce effect
                 const pinSize = 26;
-                const scale = pinSize / size;
                 const svg = `
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="${pinSize}" height="${pinSize}" style="filter: drop-shadow(0 3px 4px rgba(0,0,0,0.35));">
-                        ${tierIcons[tier] || tierIcons['average']}
+                        ${tierIcons[tier] || tierIcons['unranked']}
                     </svg>
                 `;
                 return L.divIcon({
@@ -2713,21 +2704,21 @@
                     popupAnchor: [0, -pinSize / 2]
                 });
             } else {
-                // Gold tier: larger (22px) with glow effect
+                // Go first tier: larger (22px) with glow effect
                 // Other tiers: 18px
-                const isGold = tier === 'must_try';
-                const markerSize = isGold ? 22 : size;
-                const shadowStyle = isGold
+                const isTopTier = tier === 'go_first';
+                const markerSize = isTopTier ? 22 : size;
+                const shadowStyle = isTopTier
                     ? 'filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.6)) drop-shadow(0 2px 3px rgba(0,0,0,0.25));'
                     : 'filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));';
 
                 const svg = `
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="${markerSize}" height="${markerSize}" style="${shadowStyle}">
-                        ${tierIcons[tier] || tierIcons['average']}
+                        ${tierIcons[tier] || tierIcons['unranked']}
                     </svg>
                 `;
                 return L.divIcon({
-                    className: 'pin-marker pin-dot' + (isGold ? ' pin-gold' : ''),
+                    className: 'pin-marker pin-dot' + (isTopTier ? ' pin-top-tier' : ''),
                     html: svg,
                     iconSize: [markerSize, markerSize],
                     iconAnchor: [markerSize / 2, markerSize / 2],
@@ -2737,13 +2728,11 @@
         }
 
         // Get tier from brussels_score
-        // Thresholds matching backend (brussels_reranking.py _determine_tier)
-        // Gold: ~6%, Silver: ~15%, Bronze: ~47%, Unranked: ~32%
+        // 2-tier system: Go there first (top 15%), Go there (next 18%), Unranked (rest)
         function getTierFromScore(score) {
-            if (score >= 0.55) return 'must_try';      // Gold
-            if (score >= 0.48) return 'recommended';   // Silver
-            if (score >= 0.30) return 'above_average'; // Bronze
-            return 'average';                          // Unranked
+            if (score >= 0.55) return 'go_first';   // Go there first - top 15%
+            if (score >= 0.48) return 'go_there';   // Go there - next 18%
+            return 'unranked';                       // Unranked - rest 67%
         }
 
         let selectedMarker = null;

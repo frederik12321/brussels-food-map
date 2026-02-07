@@ -87,20 +87,18 @@ In Brussels (1.2M people), review count tells you who's eating there:
 
 ## The Tier System
 
-Restaurants are sorted into four tiers displayed with colored markers:
+Restaurants are sorted into three tiers displayed with colored markers:
 
 | Tier | Score | Color | What It Means |
 |------|-------|-------|---------------|
-| **Gold** | 55%+ | 🟡 Amber | Must try - exceptional quality |
-| **Silver** | 48-55% | ⚪ Gray | Great choice - highly recommended |
-| **Bronze** | 30-48% | 🟤 Brown | Solid - decent option |
-| **Unranked** | <30% | ⚫ Slate | Skip it |
+| **⭐ Go There First** | 55%+ | 🟡 Amber | Top picks - the best Brussels has to offer |
+| **✓ Go There** | 48-55% | 🟢 Emerald | Recommended - solid local favorites |
+| **Unranked** | <48% | ⚪ Gray | Not recommended - still visible for reference |
 
 Current distribution:
-- Gold: ~6% of restaurants
-- Silver: ~15%
-- Bronze: ~47%
-- Unranked: ~32%
+- Go There First: ~15% of restaurants
+- Go There: ~18%
+- Unranked: ~67%
 
 ---
 
