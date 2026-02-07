@@ -2003,8 +2003,8 @@
 
         // Initialize map centered on Brussels - optimized for mobile
         const isMobile = window.innerWidth <= 768;
-        const initialCenter = savedState?.center || [50.8503, 4.3517];
-        const initialZoom = savedState?.zoom || 13;
+        const initialCenter = (savedState && savedState.center) || [50.8503, 4.3517];
+        const initialZoom = (savedState && savedState.zoom) || 13;
 
         const map = L.map('map', {
             zoomControl: false,
@@ -2566,7 +2566,7 @@
                     label: 'Base rating',
                     value: restaurant.score_base_quality,
                     max: 0.35,
-                    description: `${restaurant.rating?.toFixed(1)}★ Google rating`
+                    description: `${(restaurant.rating || 0).toFixed(1)}★ Google rating`
                 });
             }
 
@@ -2864,7 +2864,7 @@
         // Generate diaspora context HTML (informational - cultural geography)
         function generateDiasporaHtml(restaurant) {
             const context = restaurant.diaspora_context;
-            if (!context || (!context.is_in_diaspora_area && !context.diaspora_streets?.length && !context.community_description)) {
+            if (!context || (!context.is_in_diaspora_area && !(context.diaspora_streets && context.diaspora_streets.length) && !context.community_description)) {
                 return '';
             }
 
@@ -2933,7 +2933,7 @@
                 <div class="popup-commune">${escapeHtml(commune)}${escapeHtml(neighborhood)}</div>
                 <div class="popup-cuisine">${escapeHtml(cuisineDisplay)}${regionalTag}</div>
                 <div class="popup-stats">
-                    <span>★ ${restaurant.rating?.toFixed(1) || 'N/A'}</span>
+                    <span>★ ${restaurant.rating ? restaurant.rating.toFixed(1) : 'N/A'}</span>
                     <span>${restaurant.review_count || 0} reviews</span>
                     ${score ? `<span title="Brussels Score: ${Math.round(score * 100)}/100">Score: ${Math.round(score * 100)}</span>` : ''}
                 </div>
@@ -3042,9 +3042,9 @@
                 if (!match) continue;
 
                 let startHour = parseInt(match[1]);
-                const startAMPM = match[3]?.toUpperCase();
+                const startAMPM = match[3] ? match[3].toUpperCase() : null;
                 let endHour = parseInt(match[4]);
-                const endAMPM = match[6]?.toUpperCase();
+                const endAMPM = match[6] ? match[6].toUpperCase() : null;
 
                 // If only end has AM/PM, it applies to both (Google format)
                 // e.g., "6:30 – 9:30 PM" means 6:30 PM – 9:30 PM
@@ -3249,7 +3249,7 @@
                         <div class="restaurant-meta">
                             <span class="restaurant-rating">
                                 <span class="star">★</span>
-                                ${r.rating?.toFixed(1) || 'N/A'}
+                                ${r.rating ? r.rating.toFixed(1) : 'N/A'}
                             </span>
                             <span>${r.review_count || 0} reviews</span>
                             <span>${'€'.repeat(r.price_numeric || 2)}</span>
