@@ -243,6 +243,12 @@ def sitemap():
     return send_from_directory(app.static_folder, "sitemap.xml")
 
 
+@app.route("/google20aefc36a75f7949.html")
+def google_verify():
+    """Google Search Console verification."""
+    return send_from_directory(app.static_folder, "google20aefc36a75f7949.html")
+
+
 @app.route("/dashboard")
 def dashboard():
     """Admin dashboard with visitor statistics."""
