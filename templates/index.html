@@ -1929,8 +1929,14 @@
     <!-- Marker clustering plugin -->
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <script>
+        // Restore map state from sessionStorage (persists when returning from Google Maps)
+        const savedState = JSON.parse(sessionStorage.getItem('mapState') || 'null');
+
         // Initialize map centered on Brussels - optimized for mobile
         const isMobile = window.innerWidth <= 768;
+        const initialCenter = savedState?.center || [50.8503, 4.3517];
+        const initialZoom = savedState?.zoom || 13;
+
         const map = L.map('map', {
             zoomControl: false,
             // Disable animations on mobile for snappier feel
@@ -1942,7 +1948,18 @@
             tapTolerance: 15,
             touchZoom: 'center',
             bounceAtZoomLimits: false
-        }).setView([50.8503, 4.3517], 13);
+        }).setView(initialCenter, initialZoom);
+
+        // Save map state on move/zoom (for when user returns from Google Maps)
+        function saveMapState() {
+            const center = map.getCenter();
+            sessionStorage.setItem('mapState', JSON.stringify({
+                center: [center.lat, center.lng],
+                zoom: map.getZoom()
+            }));
+        }
+        map.on('moveend', saveMapState);
+        map.on('zoomend', saveMapState);
 
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
@@ -3279,6 +3296,7 @@
             currentFilter = filter;
             document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`show-${filter === 'all' ? 'all' : filter.replace('_', '-')}`).classList.add('active');
+            saveFilterState();
             loadRestaurants();
         }
 
@@ -3299,6 +3317,48 @@
                 timeout = setTimeout(() => func.apply(this, args), wait);
             };
         }
+
+        // Restore filters from sessionStorage (persists when returning from Google Maps)
+        const savedFilters = JSON.parse(sessionStorage.getItem('filterState') || 'null');
+        if (savedFilters) {
+            if (savedFilters.commune) document.getElementById('commune-filter').value = savedFilters.commune;
+            if (savedFilters.cuisine) document.getElementById('cuisine-filter').value = savedFilters.cuisine;
+            if (savedFilters.rating) document.getElementById('rating-filter').value = savedFilters.rating;
+            if (savedFilters.price) document.getElementById('price-filter').value = savedFilters.price;
+            if (savedFilters.venue) document.getElementById('venue-filter').value = savedFilters.venue;
+            if (savedFilters.guide) document.getElementById('guide-filter').value = savedFilters.guide;
+            if (savedFilters.day) document.getElementById('day-filter').value = savedFilters.day;
+            if (savedFilters.time) document.getElementById('time-filter').value = savedFilters.time;
+            if (savedFilters.distance) document.getElementById('distance-filter').value = savedFilters.distance;
+            if (savedFilters.currentFilter) {
+                currentFilter = savedFilters.currentFilter;
+                document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+                const btnId = currentFilter === 'all' ? 'show-all' : `show-${currentFilter.replace('_', '-')}`;
+                const btn = document.getElementById(btnId);
+                if (btn) btn.classList.add('active');
+            }
+        }
+
+        // Save filters on change
+        function saveFilterState() {
+            sessionStorage.setItem('filterState', JSON.stringify({
+                commune: document.getElementById('commune-filter').value,
+                cuisine: document.getElementById('cuisine-filter').value,
+                rating: document.getElementById('rating-filter').value,
+                price: document.getElementById('price-filter').value,
+                venue: document.getElementById('venue-filter').value,
+                guide: document.getElementById('guide-filter').value,
+                day: document.getElementById('day-filter').value,
+                time: document.getElementById('time-filter').value,
+                distance: document.getElementById('distance-filter').value,
+                currentFilter: currentFilter
+            }));
+        }
+
+        // Add saveFilterState to all filter change events
+        document.querySelectorAll('#commune-filter, #cuisine-filter, #rating-filter, #price-filter, #venue-filter, #guide-filter, #day-filter, #time-filter, #distance-filter').forEach(el => {
+            el.addEventListener('change', saveFilterState);
+        });
 
         loadRestaurants();
 
