@@ -15,7 +15,7 @@ from threading import Lock
 import pandas as pd
 import h3
 import requests
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_from_directory
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -229,6 +229,18 @@ def terms():
 def methodology():
     """Methodology page explaining the ranking system."""
     return render_template("methodology.html")
+
+
+@app.route("/robots.txt")
+def robots():
+    """Serve robots.txt for SEO."""
+    return send_from_directory(app.static_folder, "robots.txt")
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    """Serve sitemap.xml for SEO."""
+    return send_from_directory(app.static_folder, "sitemap.xml")
 
 
 @app.route("/dashboard")

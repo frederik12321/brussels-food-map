@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://brussels-food-map.up.railway.app/sitemap.xml
