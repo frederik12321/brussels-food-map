@@ -2060,8 +2060,10 @@
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
         // Use CartoDB Voyager for clean Google Maps-like appearance
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap &copy; CARTO',
+        // CARTO Basemaps API key (required for raster tiles since 2026;
+        // free non-commercial tier, key is public by design in tile URLs)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_46eo_1_4f4ce1b0918a03e04a392f38', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
             maxZoom: 19,
             // Better tile loading on mobile
             updateWhenIdle: isMobile,
